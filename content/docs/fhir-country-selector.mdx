@@ -1,0 +1,148 @@
+---
+title: FHIR Country Selector
+description: ISO-3166-1 alpha-2 country selector component with search functionality.
+---
+
+import { FHIRCountrySelector } from "@/registry/fhir-ui/fhir-country-selector"
+import { FHIRCountrySelectorDemo } from "@/components/docs/fhir-country-selector-demo"
+
+# FHIR Country Selector
+
+The `FHIRCountrySelector` component provides a searchable dropdown for selecting countries based on the **ISO-3166-1 alpha-2** standard. This is useful for capturing nationality, country of birth, or address country fields in FHIR resources.
+
+---
+
+## Interactive Preview
+
+Try searching for countries by name or code:
+
+<ComponentPreview 
+  component="fhir-country-selector" 
+  example="preview"
+  code={`import React, { useState } from "react";
+import { FHIRCountrySelector } from "@/registry/fhir-ui/fhir-country-selector"
+import { FHIRCountrySelectorDemo } from "@/components/docs/fhir-country-selector-demo";
+
+export default function CountryForm() {
+  const [country, setCountry] = useState<{ code: string; name: string } | undefined>();
+
+  return (
+    <div className="w-full max-w-md">
+      <FHIRCountrySelector
+        value={country}
+        onChange={setCountry}
+        showLabel={true}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRCountrySelectorDemo />
+</ComponentPreview>
+
+---
+
+## Features
+
+- **Complete Country List**: Includes all ISO-3166-1 alpha-2 countries (Indonesia, United States, etc.)
+- **Searchable**: Search by country name or code
+- **Type-safe**: Returns `{ code: string; name: string }` object
+- **Controlled Component**: Full control over selection state
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `{ code: string; name: string } \| undefined` | `undefined` | Currently selected country. |
+| `onChange` | `(item: { code: string; name: string }) => void` | `undefined` | Callback when a country is selected. |
+| `showLabel` | `boolean` | `false` | If `true`, displays the field label. |
+| `label` | `string` | `"Country"` | Custom label text. |
+| `placeholder` | `string` | `"Search country..."` | Placeholder text for search input. |
+| `readOnly` | `boolean` | `false` | Disables the selector if `true`. |
+| `disabled` | `boolean` | `false` | Disables the selector if `true`. |
+| `className` | `string` | `undefined` | Additional CSS classes. |
+
+---
+
+## Usage Example
+
+### Basic Usage
+
+```tsx
+import { FHIRCountrySelector } from "@/registry/fhir-ui/fhir-country-selector";
+
+function NationalityField() {
+  const [nationality, setNationality] = useState<{ code: string; name: string }>();
+
+  return (
+    <FHIRCountrySelector
+      value={nationality}
+      onChange={setNationality}
+      label="Nationality"
+      placeholder="Search nationality..."
+    />
+  );
+}
+```
+
+### With FHIR Integration
+
+For FHIR Patient resources, this can be used for the birth country or address country:
+
+```tsx
+// For patient birthPlace extension
+const handleCountryChange = (item: { code: string; name: string }) => {
+  setBirthPlace({
+    city: selectedCity,
+    country: item.code === "ID" ? "ID" : undefined,
+  });
+};
+
+<FHIRCountrySelector
+  value={countryCode ? { code: countryCode, name: countryName } : undefined}
+  onChange={handleCountryChange}
+/>
+```
+
+---
+
+## Data Format
+
+The component returns a country object with:
+
+```typescript
+{
+  code: string;  // ISO-3166-1 alpha-2 code (e.g., "ID", "US", "SG")
+  name: string;  // Full country name (e.g., "Indonesia", "United States", "Singapore")
+}
+```
+
+---
+
+## ISO-3166-1 Alpha-2 Codes
+
+Common codes used in SATUSEHAT:
+
+| Code | Country |
+| :--- | :--- |
+| `ID` | Indonesia |
+| `MY` | Malaysia |
+| `SG` | Singapore |
+| `AU` | Australia |
+| `US` | United States |
+| `GB` | United Kingdom |
+| `JP` | Japan |
+| `CN` | China |
+| `IN` | India |
+| `SA` | Saudi Arabia |
+
+---
+
+## Related Components
+
+- [`FHIRRegionalSelector`](./fhir-regional-selector) - For Indonesian administrative regions
+- [`FHIRAddressInput`](./fhir-address-input) - For full address with country

@@ -1,0 +1,73 @@
+---
+title: FHIR Attachment Input
+description: FHIR R4 Attachment Input component for file uploads supporting Kemenkes SATUSEHAT document schemas.
+---
+
+import { FHIRAttachmentInput } from "@/registry/fhir-ui/fhir-attachment-input"
+import { FHIRAttachmentInputDemo } from "@/components/docs/fhir-attachment-input-demo"
+
+# FHIR Attachment Input
+
+The `FHIRAttachmentInput` component is an intuitive drag-and-drop file uploader designed to automatically convert local files into the FHIR R4 `Attachment` data type.
+
+It handles reading the file locally, extracting metadata (filename, content type, and size), and encoding the payload into a Base64 string (`Attachment.data`), which is the standard format used by FHIR APIs and the Kemenkes SATUSEHAT platform for document submissions (e.g., KTP/Identity Card scans or lab result PDFs).
+
+---
+
+## Interactive Preview
+
+The preview below demonstrates uploading a file and viewing the resulting FHIR payload. The Base64 string is truncated for display purposes.
+
+<ComponentPreview
+  component="fhir-attachment-input"
+  example="preview"
+  code={`import React, { useState } from "react";
+import { type Attachment } from "@medplum/fhirtypes";
+import { FHIRAttachmentInput } from "@/registry/fhir-ui/fhir-attachment-input"
+import { FHIRAttachmentInputDemo } from "@/components/docs/fhir-attachment-input-demo";
+
+export default function DocumentUploadForm() {
+  const [attachment, setAttachment] = useState<Attachment>();
+
+  return (
+    <div className="max-w-md w-full">
+      <FHIRAttachmentInput
+        label="Patient ID Document (KTP)"
+        accept="image/jpeg, image/png, application/pdf"
+        maxSizeMB={2}
+        value={attachment}
+        onChange={setAttachment}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRAttachmentInputDemo />
+</ComponentPreview>
+
+---
+
+## SATUSEHAT Integration Tips
+
+When submitting documents to SATUSEHAT (like in a `DocumentReference` or `DiagnosticReport` resource), ensuring the `Attachment` object is correctly formatted is critical.
+
+This component automatically:
+1. **Determines Content Type**: Safely extracts the MIME type and maps it to `Attachment.contentType`.
+2. **Encodes Data**: Generates the required Base64 string without data URI prefixes (`data:image/jpeg;base64,` is stripped automatically).
+3. **Captures Metadata**: Logs the original filename (`title`) and file size in bytes (`size`), as well as setting the `creation` timestamp.
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Attachment` | `undefined` | The controlled FHIR Attachment object. |
+| `onChange` | `(value?: Attachment) => void` | `undefined` | Callback fired when a file is processed or removed. |
+| `showLabel` | `boolean` | `false` | Whether to display the text label above the drag-and-drop zone. |
+| `label` | `string` | `"Attachment"` | The text used for the label. |
+| `readOnly` | `boolean` | `false` | Disables file selection and removal, showing a faded, un-interactive state. |
+| `accept` | `string` | `undefined` | Standard HTML file input \`accept\` attribute string (e.g., \`"image/*, .pdf"\`). |
+| `maxSizeMB` | `number` | `5` | The maximum allowed file size in megabytes. |

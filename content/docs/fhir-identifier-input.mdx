@@ -1,0 +1,131 @@
+---
+title: FHIR Identifier Input
+description: FHIR R4 Identifier Input component with SATUSEHAT validation presets (NIK, BPJS, STR, SIP).
+---
+
+import { FHIRIdentifierInput } from "@/registry/fhir-ui/fhir-identifier-input"
+import { FHIRIdentifierInputDemo } from "@/components/docs/fhir-identifier-input-demo"
+
+# FHIR Identifier Input
+
+The `FHIRIdentifierInput` component captures official identification credentials conforming to the FHIR R4 standard (`Identifier`). 
+
+This component supports prop-based configuration presets for common Indonesian **SATUSEHAT** identifiers, automatically locking system URLs and enforcing real-time numeric/length constraints.
+
+---
+
+## Interactive Preview
+
+The preview below showcases two instances of the `FHIRIdentifierInput` using presets for **NIK (National ID)** and **BPJS Kesehatan**. Try entering invalid lengths to trigger the visual validation indicators.
+
+<ComponentPreview 
+  component="fhir-identifier-input" 
+  example="preview-simple"
+  code={`import React from "react";
+import { type Identifier } from "@medplum/fhirtypes";
+import { FHIRIdentifierInput } from "@/registry/fhir-ui/fhir-identifier-input"
+import { FHIRIdentifierInputDemo } from "@/components/docs/fhir-identifier-input-demo";
+
+export default function RegistrationForm() {
+  const [nik, setNik] = React.useState<Identifier>();
+  const [bpjs, setBpjs] = React.useState<Identifier>();
+
+  return (
+    <div className="space-y-4 max-w-md">
+      {/* NIK Input */}
+      <FHIRIdentifierInput
+        preset="nik"
+        value={nik}
+        onChange={setNik}
+      />
+
+      {/* BPJS Input */}
+      <FHIRIdentifierInput
+        preset="bpjs"
+        value={bpjs}
+        onChange={setBpjs}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRIdentifierInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features to Know
+
+### SATUSEHAT System Presets
+Providing a `preset` prop automatically locks the internal configuration to SATUSEHAT compliance and applies input constraints (e.g. ignoring alphabetical keys, capping maximum length):
+
+- **NIK (KTP)** (`preset="nik"`):
+  - **System**: `https://fhir.kemkes.go.id/id/nik`
+  - **Constraint**: Exactly 16 digits. Strips non-numerics on the fly.
+- **NIK Ibu (Mother's NIK)** (`preset="nik-ibu"`):
+  - **System**: `https://fhir.kemkes.go.id/id/nik-ibu`
+  - **Constraint**: Exactly 16 digits.
+- **SATUSEHAT ID - Patient** (`preset="ihs"`):
+  - **System**: `https://fhir.kemkes.go.id/id/ihs-number`
+- **SATUSEHAT ID - Practitioner** (`preset="nakes"`):
+  - **System**: `https://fhir.kemkes.go.id/id/nakes-his-number`
+- **BPJS Kesehatan** (`preset="bpjs"`):
+  - **System**: `https://fhir.kemkes.go.id/id/bpjs-kesehatan`
+  - **Constraint**: Exactly 13 digits. Strips non-numerics on the fly.
+- **STR (Tenaga Medis)** (`preset="str"`):
+  - **System**: `https://fhir.kemkes.go.id/id/str`
+  - **Constraint**: Exactly 16 alphanumeric characters.
+- **SIP (Izin Praktik)** (`preset="sip"`):
+  - **System**: `https://fhir.kemkes.go.id/id/sip`
+- **Paspor (Passport)** (`preset="paspor"`):
+  - **System**: `https://fhir.kemkes.go.id/id/paspor`
+  - **Constraint**: 6 to 12 alphanumeric characters.
+
+### Real-Time Validation
+When a user blurs (focus leaves the field) and the input value does not meet the preset's criteria (e.g., a 15-digit NIK), the input sets `aria-invalid="true"`. This triggers standard CSS border/ring highlight colors.
+
+---
+
+## Quick Integration Example
+
+### Custom / Local Identifiers
+If you are capturing local clinic registration cards or local MRNs (Medical Record Numbers), you can omit the `preset` prop and pass a custom system URL and label:
+
+```tsx
+import React from "react";
+import { type Identifier } from "@medplum/fhirtypes";
+import { FHIRIdentifierInput } from "@/registry/fhir-ui/fhir-identifier-input";
+
+export default function CustomRegistration() {
+  const [mrn, setMrn] = React.useState<Identifier>();
+
+  return (
+    <FHIRIdentifierInput
+      label="Local Medical Record Number"
+      system="http://sys-ids.kemkes.go.id/patient/10080017"
+      systemName="MRN"
+      placeholder="e.g. MRN-100234"
+      value={mrn}
+      onChange={setMrn}
+    />
+  );
+}
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Identifier` | `undefined` | Controlled value conforming to the FHIR R4 schema. |
+| `onChange` | `(value: Identifier) => void` | `undefined` | Callback fired on value or metadata modification. |
+| `preset` | `"nik" \| "nik-ibu" \| "ihs" \| "nakes" \| "bpjs" \| "str" \| "sip" \| "paspor"` | `undefined` | Loads predefined SATUSEHAT configurations and validation constraints. |
+| `label` | `string` | *Derived from preset/system* | Legend label displayed above the input group. |
+| `variant` | `"simple" \| "detailed"` | `"simple"` | Render mode. `"simple"` shows an inline input with sliders. `"detailed"` renders a form grid with validity periods. |
+| `description` | `string` | `undefined` | Optional helper text displayed below the field. |
+| `placeholder` | `string` | *Derived from preset* | Input field placeholder text. |
+| `system` | `string` | `undefined` | Custom terminology system URL. Ignored if `preset` is set. |
+| `systemName` | `string` | `undefined` | Custom prefix label shown in the addon box. Ignored if `preset` is set. |

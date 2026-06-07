@@ -1,0 +1,129 @@
+---
+title: FHIR Practitioner Input
+description: FHIR R4 Practitioner Input component for SATUSEHAT healthcare worker selection.
+---
+
+import { FHIRPractitionerInput } from "@/registry/fhir-ui/fhir-practitioner-input"
+import { FHIRPractitionerInputDemo } from "@/components/docs/fhir-practitioner-input-demo"
+
+# FHIR Practitioner Input
+
+The `FHIRPractitionerInput` component captures healthcare worker (Practitioner) references conforming to the FHIR R4 standard. Designed for **SATUSEHAT** Nakes (Tenaga Kesehatan) integration with role and specialty filtering.
+
+---
+
+## Interactive Preview
+
+<ComponentPreview
+  component="fhir-practitioner-input"
+  example="preview-simple"
+  code={`import React from "react";
+import { type Reference } from "@medplum/fhirtypes";
+import { FHIRPractitionerInput } from "@/registry/fhir-ui/fhir-practitioner-input"
+import { FHIRPractitionerInputDemo } from "@/components/docs/fhir-practitioner-input-demo";
+
+export default function DoctorSelector() {
+  const [specialist, setSpecialist] = React.useState<Reference>();
+
+  const handleSearch = async (query: string, filters?: { role?: string; specialty?: string }) => {
+    // Call Satusehat Practitioner API
+    const response = await fetch(\`https://api-satusehat.kemkes.go.id/fhir/Practitioner?name=\${query}&role=\${filters?.role}\`);
+    return response.json();
+  };
+
+  return (
+    <FHIRPractitionerInput
+      label="Dokter Spesialis"
+      value={specialist}
+      onChange={setSpecialist}
+      role="specialist"
+      onSearch={handleSearch}
+    />
+  );
+}`}
+>
+  <FHIRPractitionerInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features
+
+### Role Filtering
+
+Filter healthcare workers by role:
+
+| Role | Description |
+| :--- | :--- |
+| `"doctor"` | Dokter Umum |
+| `"specialist"` | Dokter Spesialis |
+| `"dentist"` | Dokter Gigi |
+| `"nurse"` | Perawat |
+| `"midwife"` | Bidan |
+| `"pharmacist"` | Apoteker |
+| `"nutritionist"` | Ahli Gizi |
+| `"psychologist"` | Psikolog |
+| `"lab-tech"` | Teknisi Laboratorium |
+| `"radiographer"` | Radiografer |
+
+### Specialty Filtering
+
+For specialist doctors, filter by specialty:
+
+| Specialty | Description |
+| :--- | :--- |
+| `"internal-medicine"` | Sp. Penyakit Dalam |
+| `"pediatrics"` | Sp. Anak |
+| `"surgery"` | Sp. Bedah |
+| `"ob-gyn"` | Sp. Kandungan |
+| `"cardiology"` | Sp. Jantung |
+| `"neurology"` | Sp. Saraf |
+| `"pulmonology"` | Sp. Paru |
+| `"dermatology"` | Sp. Kulit & Kelamin |
+| `"ophthalmology"` | Sp. Mata |
+| `"ENT"` | Sp. THT |
+| `"psychiatry"` | Sp. Jiwa |
+| `"anesthesiology"` | Sp. Anestesi |
+
+### Nakes ID Integration
+
+Displays Satusehat Practitioner ID (Nakes ID) alongside the name:
+
+```
+Dr. Budi Santoso 👨
+Nakes: N10000001  🏥 RS UPN Dr. Cipto Mangunkusumo
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Reference` | `undefined` | Currently selected practitioner as FHIR Reference. |
+| `onChange` | `(value: Reference) => void` | `undefined` | Callback fired on selection change. |
+| `label` | `string` | `"Tenaga Kesehatan"` | Label displayed above the input. |
+| `description` | `string` | `undefined` | Optional helper text. |
+| `placeholder` | `string` | `"Cari nama tenaga kesehatan..."` | Input placeholder text. |
+| `role` | `PractitionerRole` | `undefined` | Filter by practitioner role. |
+| `specialty` | `PractitionerSpecialty` | `undefined` | Filter by specialty (for specialists). |
+| `organizationId` | `string` | `undefined` | Filter by employing organization. |
+| `activeOnly` | `boolean` | `true` | Only show active practitioners. |
+| `onSearch` | `async (query, filters) => Promise<PractitionerItem[]>` | `undefined` | Async search handler. |
+| `options` | `PractitionerItem[]` | `[]` | Static options. |
+| `disabled` | `boolean` | `false` | Disable the input. |
+
+### PractitionerItem
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `id` | `string` | Practitioner ID. |
+| `name` | `string` | Full name. |
+| `nakesId` | `string` | Satusehat Practitioner ID (N1xxxxxxxx). |
+| `nik` | `string` | NIK (National ID). |
+| `role` | `PractitionerRole` | Primary role. |
+| `specialty` | `PractitionerSpecialty` | Specialty (for specialists). |
+| `gender` | `"male" \| "female" \| "other"` | Gender. |
+| `status` | `"active" \| "inactive" \| "suspended"` | Practitioner status. |

@@ -1,0 +1,72 @@
+---
+title: FHIR DateTime Input
+description: Specialized input component splitting dates, times, and Indonesian timezone offsets into FHIR-compliant dateTime strings.
+---
+
+import { FHIRDateTimeInput } from "@/registry/fhir-ui/fhir-datetime-input"
+import { FHIRDateTimeInputDemo } from "@/components/docs/fhir-datetime-input-demo"
+
+# FHIR DateTime Input
+
+The `FHIRDateTimeInput` component captures calendar dates and clock times alongside explicit timezone offsets, formatting them into compliant FHIR R4 `dateTime` ISO-8601 strings. 
+
+This component solves the common browser timezone-naive date-time issue (where `<input type="datetime-local">` outputs local times without offset) to prevent Kemenkes **SATUSEHAT** submission validation failures.
+
+---
+
+## Interactive Preview
+
+Adjust date, time, and timezone offsets in the interactive playground below and watch the compiled FHIR string update reactively.
+
+<ComponentPreview 
+  component="fhir-datetime-input" 
+  example="preview"
+  code={`import React from "react";
+import { FHIRDateTimeInput } from "@/registry/fhir-ui/fhir-datetime-input"
+import { FHIRDateTimeInputDemo } from "@/components/docs/fhir-datetime-input-demo";
+
+export default function DateTimeForm() {
+  const [timestamp, setTimestamp] = React.useState<string>("2026-06-05T02:35:00+07:00");
+
+  return (
+    <div className="w-full max-w-md">
+      <FHIRDateTimeInput
+        value={timestamp}
+        onChange={setTimestamp}
+        showLabel={true}
+        defaultOffset="+07:00" // Defaults to Western Indonesia (WIB)
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRDateTimeInputDemo />
+</ComponentPreview>
+
+---
+
+## Timezone Mappings
+
+The offset dropdown includes Indonesian clinical-reporting defaults:
+
+| Offset Code | Standard Name | Region Coverage |
+| :--- | :--- | :--- |
+| `+07:00` | WIB | Western Indonesia (Jakarta, Sumatra, Java) |
+| `+08:00` | WITA | Central Indonesia (Bali, Nusa Tenggara, Sulawesi) |
+| `+09:00` | WIT | Eastern Indonesia (Maluku, Papua) |
+| `Z` | UTC | Coordinated Universal Time |
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `string` | `undefined` | Controlled value representing the FHIR `dateTime` string. |
+| `onChange` | `(value: string) => void` | `undefined` | Callback triggered on date, time, or offset updates. Emits `""` if date is cleared. |
+| `showLabel` | `boolean` | `false` | Displays input helper labels when `true`. |
+| `label` | `string` | `"Date & Time"` | Custom label printed if `showLabel={true}`. |
+| `readOnly` | `boolean` | `false` | Sets all input fields and dropdowns to disabled/read-only mode when `true`. |
+| `defaultOffset` | `string` | `"+07:00"` | Default timezone offset utilized when constructing new timestamps. |

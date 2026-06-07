@@ -1,0 +1,120 @@
+---
+title: FHIR Location Input
+description: FHIR R4 Location Input component for healthcare facility location selection (wards, rooms, beds).
+---
+
+import { FHIRLocationInput } from "@/registry/fhir-ui/fhir-location-input"
+import { FHIRLocationInputDemo } from "@/components/docs/fhir-location-input-demo"
+
+# FHIR Location Input
+
+The `FHIRLocationInput` component captures physical location references within healthcare facilities, conforming to the FHIR R4 standard. Designed for bed management, room assignment, and location-based workflows in **SATUSEHAT** integration.
+
+---
+
+## Interactive Preview
+
+<ComponentPreview
+  component="fhir-location-input"
+  example="preview-simple"
+  code={`import React from "react";
+import { type Reference } from "@medplum/fhirtypes";
+import { FHIRLocationInput } from "@/registry/fhir-ui/fhir-location-input"
+import { FHIRLocationInputDemo } from "@/components/docs/fhir-location-input-demo";
+
+export default function BedSelector() {
+  const [bed, setBed] = React.useState<Reference>();
+
+  const handleSearch = async (query: string, filters?: { physicalType?: string }) => {
+    // Call Satusehat Location API
+    const response = await fetch(\`https://api-satusehat.kemkes.go.id/fhir/Location?name=\${query}&physical-type=\${filters?.physicalType}\`);
+    return response.json();
+  };
+
+  return (
+    <FHIRLocationInput
+      label="Tempat Tidur (Bed)"
+      value={bed}
+      onChange={setBed}
+      physicalType="bed"
+      onSearch={handleSearch}
+    />
+  );
+}`}
+>
+  <FHIRLocationInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features
+
+### Physical Type Filtering
+
+Filter locations by physical type:
+
+| Type | Description |
+| :--- | :--- |
+| `"building"` | Gedung |
+| `"ward"` | Ruang Rawat Inap |
+| `"floor"` | Lantai |
+| `"room"` | Kamar |
+| `"bed"` | Tempat Tidur |
+| `"clinic"` | Klinik |
+| `"department"` | Poliklinik |
+| `"icu"` | ICU |
+| `"er"` | IGD |
+| `"or"` | OK |
+| `"pharmacy"` | Apotek |
+
+### Hierarchy Display
+
+Locations display their parent context for clarity:
+
+```
+Bed-1 ↪ ICU-01 ↪ ICU Floor 3
+```
+
+### Status Filtering
+
+Control active/inactive location visibility:
+
+```tsx
+<FHIRLocationInput
+  activeOnly={true} // Only show active locations
+  onSearch={searchLocations}
+/>
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Reference` | `undefined` | Currently selected location as FHIR Reference. |
+| `onChange` | `(value: Reference) => void` | `undefined` | Callback fired on selection change. |
+| `label` | `string` | `"Lokasi Fasilitas"` | Label displayed above the input. |
+| `description` | `string` | `undefined` | Optional helper text. |
+| `placeholder` | `string` | `"Cari lokasi..."` | Input placeholder text. |
+| `physicalType` | `LocationPhysicalType` | `undefined` | Filter by physical type. |
+| `organizationId` | `string` | `undefined` | Filter by parent organization. |
+| `parentLocationId` | `string` | `undefined` | Filter by parent location. |
+| `activeOnly` | `boolean` | `true` | Only show active locations. |
+| `onSearch` | `async (query, filters) => Promise<LocationItem[]>` | `undefined` | Async search handler. |
+| `options` | `LocationItem[]` | `[]` | Static options. |
+| `disabled` | `boolean` | `false` | Disable the input. |
+
+### LocationItem
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `id` | `string` | Location ID. |
+| `name` | `string` | Location name. |
+| `description` | `string` | Optional description. |
+| `physicalType` | `LocationPhysicalType` | Physical type classification. |
+| `status` | `"active" \| "suspended" \| "inactive"` | Location status. |
+| `parentId` | `string` | Parent location ID. |
+| `organizationId` | `string` | Parent organization ID. |

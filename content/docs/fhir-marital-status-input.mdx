@@ -1,0 +1,71 @@
+---
+title: FHIR Marital Status Input
+description: Segmented button group and select dropdown for capturing patient marital status codes mapping to standard HL7 v3-MaritalStatus CodeSystem.
+---
+
+import { FHIRMaritalStatusInput } from "@/registry/fhir-ui/fhir-marital-status-input"
+import { FHIRMaritalStatusInputDemo } from "@/components/docs/fhir-marital-status-input-demo"
+
+# FHIR Marital Status Input
+
+The `FHIRMaritalStatusInput` component captures patient marital status mapping to the standard HL7 `v3-MaritalStatus` code system. It emits a FHIR R4 `CodeableConcept` object which is standard for the `Patient.maritalStatus` field.
+
+---
+
+## Interactive Preview
+
+Toggle configurations to preview segmented buttons (`variant="toggle"`) versus a select dropdown (`variant="select"`), and inspect the emitted `CodeableConcept` payload.
+
+<ComponentPreview 
+  component="fhir-marital-status-input" 
+  example="preview"
+  code={`import React from "react";
+import { type CodeableConcept } from "@medplum/fhirtypes";
+import { FHIRMaritalStatusInput } from "@/registry/fhir-ui/fhir-marital-status-input"
+import { FHIRMaritalStatusInputDemo } from "@/components/docs/fhir-marital-status-input-demo";
+
+export default function DemographicsForm() {
+  const [maritalStatus, setMaritalStatus] = React.useState<CodeableConcept>();
+
+  return (
+    <div className="w-full max-w-md">
+      <FHIRMaritalStatusInput
+        value={maritalStatus}
+        onChange={setMaritalStatus}
+        variant="toggle"
+        showLabel={true}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRMaritalStatusInputDemo />
+</ComponentPreview>
+
+---
+
+## Marital Status Codes
+
+The component maps options to standard HL7 values:
+
+| Code | FHIR Display | Localized Label |
+| :--- | :--- | :--- |
+| `S` | Never Married | Belum Kawin |
+| `M` | Married | Kawin |
+| `D` | Divorced | Cerai Hidup |
+| `W` | Widowed | Cerai Mati |
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `CodeableConcept` | `undefined` | Controlled value representing the FHIR CodeableConcept payload. |
+| `onChange` | `(value: CodeableConcept) => void` | `undefined` | Callback triggered when a new option is selected. |
+| `variant` | `"toggle" \| "select"` | `"toggle"` | Layout variant of the input selector. |
+| `showLabel` | `boolean` | `false` | Displays the label above the field when `true`. |
+| `label` | `string` | `"Marital Status"` | Label text printed if `showLabel={true}`. |
+| `readOnly` | `boolean` | `false` | Locks the field and renders in disabled mode when `true`. |

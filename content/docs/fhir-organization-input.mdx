@@ -1,0 +1,117 @@
+---
+title: FHIR Organization Input
+description: FHIR R4 Organization Input component for SATUSEHAT healthcare facility selection.
+---
+
+import { FHIROrganizationInput } from "@/registry/fhir-ui/fhir-organization-input"
+import { FHIROrganizationInputDemo } from "@/components/docs/fhir-organization-input-demo"
+
+# FHIR Organization Input
+
+The `FHIROrganizationInput` component captures healthcare facility (Organization) references conforming to the FHIR R4 standard. Designed for **SATUSEHAT** integration, it supports facility type filtering and async search against the Master Sarana Index (MSI).
+
+---
+
+## Interactive Preview
+
+<ComponentPreview
+  component="fhir-organization-input"
+  example="preview-simple"
+  code={`import React from "react";
+import { type Reference } from "@medplum/fhirtypes";
+import { FHIROrganizationInput } from "@/registry/fhir-ui/fhir-organization-input";
+
+export default function FacilitySelector() {
+  const [hospital, setHospital] = React.useState<Reference>();
+
+  const handleSearch = async (query: string, filters?: { facilityType?: string; part?: string }) => {
+    // Call Satusehat MSI API
+    const response = await fetch(\`https://api-satusehat.kemkes.go.id/kfa/v1/facilities?name=\${query}\`);
+    return response.json();
+  };
+
+  return (
+    <FHIROrganizationInput
+      label="Rumah Sakit"
+      value={hospital}
+      onChange={setHospital}
+      facilityType="hospital"
+      onSearch={handleSearch}
+    />
+  );
+}`}
+>
+  <FHIROrganizationInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features
+
+### Facility Type Filtering
+
+Filter healthcare facilities by type using the `facilityType` prop:
+
+| Type | Description |
+| :--- | :--- |
+| `"hospital"` | Rumah Sakit |
+| `"clinic"` | Klinik |
+| `"puskesmas"` | Pusat Kesehatan Masyarakat |
+| `"pharmacy"` | Apotek |
+| `"lab"` | Laboratorium |
+| `"doctor-practice"` | Praktik Mandiri Dokter |
+| `"blood-unit"` | Unit Transfusi Darah |
+| `"optical"` | Kacamata/Opthalmolog |
+
+### Administrative Division Filtering
+
+Use the `part` prop to filter facilities by province/district code:
+
+```tsx
+<FHIROrganizationInput
+  part="31" // DKI Jakarta
+  onSearch={searchFacilities}
+/>
+```
+
+### Async Search Integration
+
+The `onSearch` callback enables real-time search against Satusehat API:
+
+```tsx
+const handleSearch = async (query: string, filters?: { facilityType?: string; part?: string }) => {
+  const response = await fetch(
+    \`https://api-satusehat.kemkes.go.id/kfa/v1/facilities?name=\${query}&type=\${filters?.facilityType}\`
+  );
+  return response.json();
+};
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Reference` | `undefined` | Currently selected organization as FHIR Reference. |
+| `onChange` | `(value: Reference) => void` | `undefined` | Callback fired on selection change. |
+| `label` | `string` | `"Fasilitas Kesehatan"` | Label displayed above the input. |
+| `description` | `string` | `undefined` | Optional helper text. |
+| `placeholder` | `string` | `"Cari nama fasilitas..."` | Input placeholder text. |
+| `facilityType` | `FacilityType` | `undefined` | Filter by facility type. |
+| `part` | `string` | `undefined` | Filter by administrative division code. |
+| `onSearch` | `async (query, filters) => Promise<OrganizationItem[]>` | `undefined` | Async search handler. |
+| `options` | `OrganizationItem[]` | `[]` | Static options (without async search). |
+| `disabled` | `boolean` | `false` | Disable the input. |
+
+### OrganizationItem
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `id` | `string` | Organization ID. |
+| `name` | `string` | Organization name. |
+| `identifier` | `string` | SSFK code (Satu Sehat Fasilitas Kesehatan). |
+| `facilityType` | `FacilityType` | Facility type classification. |
+| `part` | `string` | Administrative division code. |

@@ -1,0 +1,126 @@
+---
+title: FHIR Reference Input
+description: FHIR R4 Reference Input component for linking resources like Patients, Practitioners, and Locations.
+---
+
+import { FHIRReferenceInput } from "@/registry/fhir-ui/fhir-reference-input"
+import { FHIRReferenceInputDemo } from "@/components/docs/fhir-reference-input-demo"
+
+# FHIR Reference Input
+
+The `FHIRReferenceInput` component is used to capture FHIR `Reference` data types. In the SATUSEHAT ecosystem, referencing other resources (such as linking a Patient to an Encounter, or a Practitioner to an Observation) is a foundational requirement.
+
+This component provides an asynchronous search interface (Combobox) to query FHIR APIs and construct proper Reference payloads automatically.
+
+---
+
+## Interactive Preview
+
+The preview below demonstrates a generic reference picker simulating a SATUSEHAT API backend. Try searching for `"Budi"` (Patient) or `"Dr. Andi"` (Practitioner).
+
+<ComponentPreview 
+  component="fhir-reference-input" 
+  example="preview-simple"
+  code={`import React from "react";
+import { type Reference } from "@medplum/fhirtypes";
+import { FHIRReferenceInput } from "@/registry/fhir-ui/fhir-reference-input"
+import { FHIRReferenceInputDemo } from "@/components/docs/fhir-reference-input-demo";
+
+export default function GenericLinker() {
+  const [reference, setReference] = React.useState<Reference | undefined>(undefined);
+
+  // In a real app, this queries your FHIR server or SATUSEHAT proxy
+  const searchResources = async (query: string) => {
+    const res = await fetch(\`/api/fhir-search?q=\${encodeURIComponent(query)}\`);
+    return res.json() as Promise<Reference[]>;
+  };
+
+  return (
+    <FHIRReferenceInput
+      label="Link Resource"
+      value={reference}
+      onChange={setReference}
+      onSearch={searchResources}
+      placeholder="Search any resource..."
+    />
+  );
+}`}
+>
+  <FHIRReferenceInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features to Know
+
+### Resource Type Locking
+
+Often, you only want the user to pick a specific type of resource (e.g., only picking a `Patient` for a Registration form). You can lock the component using the `resourceType` prop.
+
+<ComponentPreview 
+  component="fhir-reference-input" 
+  example="preview-locked"
+  code={`import React from "react";
+import { type Reference } from "@medplum/fhirtypes";
+import { FHIRReferenceInput } from "@/registry/fhir-ui/fhir-reference-input";
+
+export default function PatientLinker() {
+  const [patient, setPatient] = React.useState<Reference>();
+
+  const searchPatients = async (query: string, type?: string) => {
+    // type is forwarded as "Patient" because we set resourceType="Patient" below
+    const res = await fetch(\`/api/fhir/\${type}?name=\${query}\`);
+    return res.json();
+  };
+
+  return (
+    <FHIRReferenceInput
+      resourceType="Patient"
+      label="Select Patient"
+      onSearch={searchPatients}
+      value={patient}
+      onChange={setPatient}
+    />
+  );
+}`}
+>
+  <FHIRReferenceInputDemo />
+</ComponentPreview>
+
+* **Scoped Searching:** When `resourceType` is defined, it is passed as the second argument to `onSearch(query, resourceType)`. This lets you cleanly route API calls on the backend.
+* **Auto-hiding Badges:** When generic (no `resourceType` set), the dropdown list will show small badges indicating if a result is a `Patient`, `Practitioner`, etc. Once locked to a specific type, these badges are hidden since the context is already known.
+
+### Static Options
+
+If you have a small, predefined list of references (for example, a clinic only has 5 specific \`Location\` rooms), you can pass an array directly to the \`options\` prop instead of using \`onSearch\`:
+
+```tsx
+const ROOM_OPTIONS: Reference[] = [
+  { reference: "Location/1", type: "Location", display: "Poliklinik Umum" },
+  { reference: "Location/2", type: "Location", display: "Poliklinik Gigi" },
+];
+
+<FHIRReferenceInput
+  label="Select Clinic Room"
+  options={ROOM_OPTIONS}
+  value={room}
+  onChange={setRoom}
+/>
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Reference` | `undefined` | Controlled value conforming to the FHIR R4 schema. |
+| `onChange` | `(value: Reference) => void` | `undefined` | Callback fired on selection modification. |
+| `resourceType` | `string` | `undefined` | Locks the input to a specific FHIR resource type (e.g. `"Patient"`). Used for scoping searches and UI context. |
+| `label` | `string` | `"Resource Reference"` | Legend label displayed above the input group. |
+| `description` | `string` | `undefined` | Optional helper text or description displayed at the bottom of the field. |
+| `placeholder` | `string` | `"Search resources..."` | Placeholder text for the search input. |
+| `options` | `Reference[]` | `[]` | Static list of options. Useful for small, finite value sets. |
+| `onSearch` | `(query: string, type?: string) => Promise<Reference[]>` | `undefined` | Async function for fetching terminology options remotely. Receives the `resourceType` prop as the second parameter if configured. |

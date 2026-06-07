@@ -1,0 +1,103 @@
+---
+title: FHIR Dosage Input
+description: Horizontal layout FHIR R4 Dosage Input component with conditional labels and automated instruction synthesis conforming to Kemenkes SATUSEHAT standards.
+---
+
+import { FHIRDosageInput } from "@/registry/fhir-ui/fhir-dosage-input"
+import { FHIRDosageInputDemo } from "@/components/docs/fhir-dosage-input-demo"
+
+# FHIR Dosage Input
+
+The `FHIRDosageInput` component captures complex medication scheduling details and formats them into a standard FHIR R4 `Dosage` structure. Designed specifically for Indonesian **SATUSEHAT** compliance (e-prescriptions and dispensing records), it packs timing, meal relationships, route mapping, and dose quantities into a clean, horizontal row.
+
+---
+
+## Interactive Preview
+
+Toggle the `showLabel` option to see the layout switch between a clean, compact inline row and a labeled input form. Adjust the inputs to see the resulting FHIR JSON object update in real-time.
+
+<ComponentPreview 
+  component="fhir-dosage-input" 
+  example="preview"
+  code={`import React from "react";
+import { type Dosage } from "@medplum/fhirtypes";
+import { FHIRDosageInput } from "@/registry/fhir-ui/fhir-dosage-input"
+import { FHIRDosageInputDemo } from "@/components/docs/fhir-dosage-input-demo";
+
+export default function PrescriptionForm() {
+  const [dosage, setDosage] = React.useState<Dosage>();
+
+  return (
+    <div className="w-full max-w-2xl">
+      {/* Labeled layout */}
+      <FHIRDosageInput
+        value={dosage}
+        onChange={setDosage}
+        showLabel={true}
+      />
+
+      {/* Pure horizontal layout (default) */}
+      <FHIRDosageInput
+        value={dosage}
+        onChange={setDosage}
+        showLabel={false}
+        className="mt-6"
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRDosageInputDemo />
+</ComponentPreview>
+
+---
+
+## Mappings & Compliance
+
+### 1. Show Label Prop (`showLabel`)
+By default, `showLabel={false}` renders only the inputs horizontally to save maximum interface space. Setting `showLabel={true}` displays helper labels above each field:
+* **Seq**: Sequence ordering number (available under advanced options).
+* **Frequency & Period**: Split timing input fields (e.g. `3` x `1` Day).
+* **Meal Instruction**: Timing relationship dropdown (AC, PC, CC, HS).
+* **Dose Quantity**: Numerical amount and unit selection dropdown.
+* **Route**: SNOMED-CT pre-mapped administration route selector.
+* **Instruction Text**: Editable override for the generated instruction text.
+
+### 2. Timing Schedule
+Nested FHIR timing repeat structures are handled automatically:
+* **Frequency**: Mapped to `timing.repeat.frequency` (e.g. `3`).
+* **Period & PeriodUnit**: Mapped to `timing.repeat.period` (e.g. `1`) and `timing.repeat.periodUnit` (`d` for day, `h` for hour, `wk` for week, `mo` for month).
+
+### 3. Meal Relationships (`timing.repeat.when`)
+Mapped to standardized HL7 event timing boundaries:
+* **Before Meals (AC)** &rarr; `["AC"]`
+* **After Meals (PC)** &rarr; `["PC"]`
+* **With Meals (CC)** &rarr; `["CC"]`
+* **Before Sleep (HS)** &rarr; `["HS"]`
+
+### 4. SNOMED-CT Route of Administration
+Pre-mapped list matching Kemenkes SATUSEHAT requirements:
+
+| Route | SNOMED CT Code | FHIR Display |
+| :--- | :--- | :--- |
+| **Oral** | `26643006` | Oral route |
+| **Intravenous (IV)** | `47625008` | Intravenous route |
+| **Intramuscular (IM)** | `78421000` | Intramuscular route |
+| **Subcutaneous (SC)** | `34246000` | Subcutaneous route |
+| **Inhalation** | `30737004` | Inhalation route |
+| **Topical** | `372454008` | Topical route |
+| **Drops** | `46706006` | Administration of medicine by drops |
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Dosage` | `undefined` | Controlled FHIR R4 Dosage object. |
+| `onChange` | `(value: Dosage) => void` | `undefined` | Callback fired on modification of any timing, dose, route, or text parameters. |
+| `showLabel` | `boolean` | `false` | If `true`, displays field labels above each horizontal input component. |
+| `readOnly` | `boolean` | `false` | If `true`, disables all input fields and selections. |
+

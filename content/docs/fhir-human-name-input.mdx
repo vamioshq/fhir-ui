@@ -1,0 +1,136 @@
+---
+title: FHIR Human Name Input
+description: FHIR R4 Human Name Input component with automatic text parsing, detailed field editing, and title/credentials sorting.
+---
+
+import { FHIRHumanNameInput } from "@/registry/fhir-ui/fhir-human-name-input"
+import { FHIRHumanNameInputDemo } from "@/components/docs/fhir-human-name-input-demo"
+
+# FHIR Human Name Input
+
+The `FHIRHumanNameInput` component captures patient names conforming to the FHIR R4 standard. Capturing structured patient names in clinical systems is challenging due to prefixes (titles), multiple given names, family names, and suffixes (credentials). This component simplifies data entry by parsing full strings on-the-fly, while retaining granular controls.
+
+---
+
+## Layout Variants
+
+You can choose between two visual layouts depending on your UI layout space.
+
+### 1. Simple Variant (Default)
+
+The `simple` variant provides a compact layout. It is the recommended layout for general registration forms.
+
+* **Main UI Fields:** Displays a single text input where users type their full name.
+* **Advanced Dialog:** Includes a sliders settings button. Clicking it opens a modal Dialog containing detailed inputs (Use Type, Family Name, Given Names list, Prefix, Suffix).
+* **Why use it?** Uses intelligent parsing heuristics to automatically sort prefixes, given names, family names, and suffixes as the user types, while allowing manual overrides via the modal.
+
+<ComponentPreview 
+  component="fhir-human-name-input" 
+  example="preview"
+  code={`import React from "react";
+import { FHIRHumanNameInput } from "@/registry/fhir-ui/fhir-human-name-input"
+import { FHIRHumanNameInputDemo } from "@/components/docs/fhir-human-name-input-demo";
+import { type HumanName } from "@medplum/fhirtypes";
+
+export default function RegisterName() {
+  const [name, setName] = React.useState<HumanName>({});
+  return (
+    <FHIRHumanNameInput
+      variant="simple"
+      value={name}
+      description="Full name as written in identity card (KTP)"
+      onChange={setName}
+    />
+  );
+}`}
+>
+  <FHIRHumanNameInputDemo />
+</ComponentPreview>
+
+### 2. Detailed Variant
+
+The `detailed` variant renders all inputs directly inline as an open grid layout.
+
+* **Main UI Fields:** Exposes Name Use selector, Family Name/Surname, Given Names list (with dynamic Add/Remove name buttons), Prefix/Title, and Suffix/Credentials inputs.
+* **Why use it?** Best suited for administrative databases or passport-matching steps where data entry operators must explicitly verify and categorise name parts.
+
+<ComponentPreview 
+  component="fhir-human-name-input" 
+  example="preview-detailed"
+  code={`import React from "react";
+import { FHIRHumanNameInput } from "@/registry/fhir-ui/fhir-human-name-input";
+import { type HumanName } from "@medplum/fhirtypes";
+
+export default function AdminNameForm() {
+  const [name, setName] = React.useState<HumanName>({});
+  return (
+    <FHIRHumanNameInput
+      variant="detailed"
+      value={name}
+      description="Enter official name details as per civil registry"
+      onChange={setName}
+    />
+  );
+}`}
+>
+  <FHIRHumanNameInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features to Know
+
+If you are a developer integrating this component, keep these automated behaviors in mind:
+
+### Name Parsing Heuristics
+When typing in the `simple` variant, the input automatically parses the string:
+* **Prefixes:** Captures typical titles (`Dr`, `Mr`, `Mrs`, `Ms`, `Prof`, `Sir`, `Sister`) at the start of the string into `name.prefix`.
+* **Suffixes:** Captures standard suffixes and credentials (`Jr`, `Sr`, `MD`, `PhD`, `II`, `III`, `IV`) at the end of the string into `name.suffix`.
+* **Given & Family Names:** Splits the remaining string. The last word is allocated as `name.family` (Family Name / Surname), and all preceding words are mapped into the `name.given` array.
+* **Mononymous Patients:** If only one name is typed, it is treated as a given name to support patients who only use a single name.
+
+---
+
+## Quick Integration Example
+
+Connecting the component to your page is straightforward. Simply import the component and pass an `onChange` listener to capture the resulting FHIR HumanName payload.
+
+```tsx
+import React from "react";
+import { FHIRHumanNameInput } from "@/registry/fhir-ui/fhir-human-name-input";
+import { type HumanName } from "@medplum/fhirtypes";
+
+export default function RegisterNameStep() {
+  const [patientName, setPatientName] = React.useState<HumanName>({});
+
+  const handleNameChange = (newName: HumanName) => {
+    setPatientName(newName);
+    console.log("FHIR Payload emitted:", newName);
+  };
+
+  return (
+    <div className="max-w-xl mx-auto p-6 bg-card rounded-xl border">
+      <h2 className="text-lg font-bold mb-4">Patient Name</h2>
+      <FHIRHumanNameInput
+        variant="simple"
+        description="Patient's official legal name"
+        onChange={handleNameChange}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `HumanName` | `undefined` | Controlled name value conforming to the FHIR R4 schema. |
+| `onChange` | `(value: HumanName) => void` | `undefined` | Callback fired when the name object is updated. |
+| `variant` | `"simple" \| "detailed"` | `"simple"` | Visual variant to display. |
+| `label` | `string` | `"Name Information"` | Label text shown at the top of the component. |
+| `description` | `string` | `undefined` | Optional helper text or description displayed at the bottom of the field. |

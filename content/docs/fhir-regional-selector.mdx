@@ -1,0 +1,186 @@
+---
+title: FHIR Regional Selector
+description: Indonesian regional selector for province, city, district, and village with async search.
+---
+
+import { FHIRRegionalSelector } from "@/registry/fhir-ui/fhir-regional-selector"
+import { FHIRRegionalSelectorDemo } from "@/components/docs/fhir-regional-selector-demo"
+
+# FHIR Regional Selector
+
+The `FHIRRegionalSelector` component provides an async searchable dropdown for selecting Indonesian administrative regions. It supports all levels of regional hierarchy from **province** down to **village** (kelurahan/desa).
+
+---
+
+## Interactive Preview
+
+Try searching for Indonesian regions by name or code:
+
+<ComponentPreview 
+  component="fhir-regional-selector" 
+  example="preview"
+  code={`import React, { useState } from "react";
+import { FHIRRegionalSelector, type RegionalItem } from "@/registry/fhir-ui/fhir-regional-selector";
+
+export default function RegionalForm() {
+  const [province, setProvince] = useState<{ code: string; name: string } | undefined>();
+
+  const handleSearch = async (query?: string): Promise<RegionalItem[]> => {
+    // Call your API to fetch provinces
+    const response = await fetch(\`/api/provinces?search=\${query}\`);
+    return response.json();
+  };
+
+  return (
+    <div className="w-full max-w-md">
+      <FHIRRegionalSelector
+        label="Provinsi"
+        placeholder="Cari provinsi..."
+        valueCode={province?.code}
+        valueName={province?.name}
+        onChange={(code, name) => setProvince({ code, name })}
+        onFetchData={handleSearch}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRRegionalSelectorDemo />
+</ComponentPreview>
+
+---
+
+## Features
+
+- **Async Search**: Fetch data on-demand from your API
+- **Multiple Levels**: Province → City → District → Village
+- **Loading State**: Shows loading spinner during async operations
+- **Flexible API**: Works with any regional data source
+- **Type-safe**: Returns `{ code: string; name: string }` object
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `label` | `string` | **Required** | Field label text. |
+| `placeholder` | `string` | `"Search..."` | Placeholder text for search input. |
+| `valueCode` | `string \| undefined` | `undefined` | Currently selected region code. |
+| `valueName` | `string \| undefined` | `undefined` | Currently selected region name. |
+| `onChange` | `(code: string, name: string) => void` | `undefined` | Callback when a region is selected. |
+| `onFetchData` | `(query?: string) => Promise\<RegionalItem[]\>` | **Required** | Async function to fetch regional data. |
+| `disabled` | `boolean` | `false` | Disables the selector if `true`. |
+| `showLabel` | `boolean` | `false` | If `true`, displays the field label. |
+| `className` | `string` | `undefined` | Additional CSS classes. |
+
+### RegionalItem Type
+
+```typescript
+interface RegionalItem {
+  code: string;  // Regional code (e.g., "31" for DKI Jakarta)
+  name: string;  // Regional name (e.g., "DKI Jakarta")
+}
+```
+
+---
+
+## Usage Example
+
+### Province Selector with SATUSEHAT API
+
+```tsx
+import { FHIRRegionalSelector, type RegionalItem } from "@/registry/fhir-ui/fhir-regional-selector";
+
+function ProvinceField() {
+  const [province, setProvince] = useState<{ code: string; name: string } | undefined>();
+
+  const fetchProvinces = async (query?: string): Promise<RegionalItem[]> => {
+    const response = await fetch(
+      \`https://api-satusehat.kemkes.go.id/masterdata/v1/provinces?search=\${query || ""}\`,
+      { headers: { Authorization: \`Bearer \${token}\` } }
+    );
+    const data = await response.json();
+    return data.map((item: any) => ({ code: item.code, name: item.name }));
+  };
+
+  return (
+    <FHIRRegionalSelector
+      label="Provinsi"
+      valueCode={province?.code}
+      valueName={province?.name}
+      onChange={(code, name) => setProvince({ code, name })}
+      onFetchData={fetchProvinces}
+    />
+  );
+}
+```
+
+### Multi-level Regional Selection
+
+```tsx
+function AddressForm() {
+  const [province, setProvince] = useState<RegionalItem>();
+  const [city, setCity] = useState<RegionalItem>();
+
+  const fetchCities = async (query?: string) => {
+    if (!province) return [];
+    const response = await fetch(
+      \`/api/cities?province=\${province.code}&search=\${query || ""}\`
+    );
+    return response.json();
+  };
+
+  return (
+    <>
+      <FHIRRegionalSelector
+        label="Provinsi"
+        valueCode={province?.code}
+        valueName={province?.name}
+        onChange={(c, n) => {
+          setProvince({ code: c, name: n });
+          setCity(undefined); // Reset city when province changes
+        }}
+        onFetchData={fetchProvinces}
+      />
+      <FHIRRegionalSelector
+        label="Kota/Kabupaten"
+        valueCode={city?.code}
+        valueName={city?.name}
+        onChange={(c, n) => setCity({ code: c, name: n })}
+        onFetchData={fetchCities}
+        disabled={!province}
+      />
+    </>
+  );
+}
+```
+
+---
+
+## Indonesian Regional Code Format
+
+| Level | Code Length | Example | Format |
+| :--- | :--- | :--- | :--- |
+| Province | 2 digits | `"31"` | Provinsi code |
+| City/Regency | 4 digits | `"3175"` | Kota/Kabupaten code |
+| District | 6 digits | `"317501"` | Kecamatan code |
+| Village | 10 digits | `"3175010001"` | Kelurahan/Desa code |
+
+---
+
+## Integration with SATUSEHAT
+
+For SATUSEHAT integration, use the **Master Wilayah** API:
+
+- **Sandbox**: `https://api-satusehat-stg.dto.kemkes.go.id/masterdata/v1/wilayah`
+- **Production**: `https://api-satusehat.kemkes.go.id/masterdata/v1/wilayah`
+
+---
+
+## Related Components
+
+- [`FHIRCountrySelector`](./fhir-country-selector) - For country selection
+- [`FHIRAddressInput`](./fhir-address-input) - For full address with regional data

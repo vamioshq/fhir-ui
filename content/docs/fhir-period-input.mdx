@@ -1,0 +1,68 @@
+---
+title: FHIR Period Input
+description: Composite input component for capturing start and end bounds of a FHIR Period with chronological range validation.
+---
+
+import { FHIRPeriodInput } from "@/registry/fhir-ui/fhir-period-input"
+import { FHIRPeriodInputDemo } from "@/components/docs/fhir-period-input-demo"
+
+# FHIR Period Input
+
+The `FHIRPeriodInput` component captures start and optional end bounds of a FHIR `Period` structure (e.g. `Encounter.period`, `MedicationRequest.dispenseRequest.validityPeriod`). It wraps two `FHIRDateTimeInput` fields and validates that the end time does not precede the start time.
+
+---
+
+## Interactive Preview
+
+Adjust the start and end dates/times below. Entering an end timestamp preceding the start timestamp triggers an warning badge and invalidates the state.
+
+<ComponentPreview 
+  component="fhir-period-input" 
+  example="preview"
+  code={`import React from "react";
+import { type Period } from "@medplum/fhirtypes";
+import { FHIRPeriodInput } from "@/registry/fhir-ui/fhir-period-input"
+import { FHIRPeriodInputDemo } from "@/components/docs/fhir-period-input-demo";
+
+export default function PeriodForm() {
+  const [period, setPeriod] = React.useState<Period>({
+    start: "2026-06-05T08:00:00+07:00",
+    end: "2026-06-05T17:00:00+07:00"
+  });
+
+  return (
+    <div className="w-full max-w-xl">
+      <FHIRPeriodInput
+        value={period}
+        onChange={setPeriod}
+        showLabel={true}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRPeriodInputDemo />
+</ComponentPreview>
+
+---
+
+## Period Validation
+
+If both `start` and `end` times are populated:
+* The component parses and compares timestamps using absolute milliseconds.
+* If `end < start`, an `"End is before Start"` badge is displayed in the header.
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Period` | `undefined` | Controlled value representing the FHIR `Period` object. |
+| `onChange` | `(value: Period) => void` | `undefined` | Callback fired on start or end bounds modification. |
+| `showLabel` | `boolean` | `false` | Displays the section header label when `true`. |
+| `label` | `string` | `"Period Bounds"` | Custom section label text. |
+| `readOnly` | `boolean` | `false` | Disables both inner date-time selectors. |
+| `defaultOffset` | `string` | `"+07:00"` | Default timezone offset passed down to the date-time inputs. |

@@ -1,14 +1,93 @@
 ---
-title: FHIR UI
-description: A collection of FHIR-themed UI components built with shadcn/ui
+title: Introduction
+description: Welcome to the FHIR UI Components Registry.
 ---
 
-# Welcome to FHIR UI
+FHIR UI is a premium, strictly-typed React component library designed for healthcare. Built on the shadcn/ui architecture and Medplum FHIR types, it provides the building blocks for creating modern, accessible, and compliant healthcare applications.
 
-A collection of FHIR-themed UI components built with [shadcn/ui](https://ui.shadcn.com).
+## Installation
 
-## Getting Started
+This is a registry, meaning you don't install it as an npm package. Instead, you add the components directly to your codebase.
 
-This registry provides components specifically designed for FHIR (Fast Healthcare Interoperability Resources) applications.
+### 1. Configure Shadcn UI
+Ensure your project is set up with shadcn/ui.
+```bash
+npx shadcn@latest init
+```
 
-Browse the documentation to learn about available components and how to use them.
+### 2. Install Medplum Types
+The components heavily rely on strict typing from `@medplum/fhirtypes`.
+```bash
+npm install @medplum/fhirtypes
+```
+
+### 3. Add Components
+You can now add any component from the registry to your project.
+```bash
+npx shadcn@latest add https://<your-registry-url>/r/<component>.json
+```
+
+*(Note: Replace the URL with the actual deployment URL of this registry once published).*
+
+## Philosophy
+
+Every component is designed to map directly to FHIR R4 resources. They are not black boxes; you own the code. You can copy, paste, and customize them to fit your specific design system and clinical workflow requirements.
+
+---
+
+## Component Categories
+
+Our components are organized into four categories based on their purpose and origin:
+
+### Basic FHIR Types
+
+Primitive input components that map directly to standard FHIR data types. These are universal building blocks applicable to any FHIR implementation.
+
+| Component | FHIR Type | Description |
+| :--- | :--- | :--- |
+| [FHIRAddressInput](/docs/fhir-address-input) | `Address` | Street address with postal validation |
+| [FHIRAttachmentInput](/docs/fhir-attachment-input) | `Attachment` | File upload with preview |
+| [FHIRCodeableConceptInput](/docs/fhir-codeable-concept-input) | `CodeableConcept` | Coded values with system |
+| [FHIRContactPointInput](/docs/fhir-contact-point-input) | `ContactPoint` | Phone/email with use codes |
+| [FHIRDateInput](/docs/fhir-date-input) | `date` | Date picker (day precision) |
+| [FHIRDateTimeInput](/docs/fhir-datetime-input) | `dateTime` | DateTime with timezone support |
+| [FHIRHumanNameInput](/docs/fhir-human-name-input) | `HumanName` | Person name with prefixes/suffixes |
+| [FHIRIdentifierInput](/docs/fhir-identifier-input) | `Identifier` | ID numbers with systems |
+| [FHIRPeriodInput](/docs/fhir-period-input) | `Period` | Start/end date range |
+| [FHIRQuantityInput](/docs/fhir-quantity-input) | `Quantity` | Measurements with units |
+| [FHIRReferenceInput](/docs/fhir-reference-input) | `Reference` | Links to other FHIR resources |
+
+### SATUSEHAT Specific
+
+Components designed for Indonesian healthcare data requirements as specified by SATUSEHAT (Indonesia's national health data platform).
+
+| Component | Purpose | Description |
+| :--- | :--- | :--- |
+| [FHIRBirthPlaceInput](/docs/fhir-birth-place-input) | Birth place | City of birth selection |
+| [FHIRCitizenshipStatusInput](/docs/fhir-citizenship-status-input) | Citizenship | Indonesian citizenship status |
+| [FHIRCountrySelector](/docs/fhir-country-selector) | Country | ISO-3166-1 alpha-2 country codes |
+| [FHIRGenderInput](/docs/fhir-gender-input) | Gender | Indonesian gender options |
+| [FHIRMaritalStatusInput](/docs/fhir-marital-status-input) | Marital status | Indonesian marital statuses |
+| [FHIRReligionInput](/docs/fhir-religion-input) | Religion | Official Indonesian religions |
+| [FHIRRegionalSelector](/docs/fhir-regional-selector) | Regional data | Province → City → District → Village |
+
+### Resources
+
+Components for working with complete FHIR resources rather than individual data types.
+
+| Component | Resource | Description |
+| :--- | :--- | :--- |
+| [FHIRLocationInput](/docs/fhir-location-input) | `Location` | Healthcare facility addresses |
+| [FHIREorganizationInput](/docs/fhir-organization-input) | `Organization` | Organization details |
+| [FHIRPractitionerInput](/docs/fhir-practitioner-input) | `Practitioner` | Healthcare provider info |
+
+### Specialized
+
+Domain-specific components for complex clinical or administrative workflows.
+
+| Component | Purpose | Description |
+| :--- | :--- | :--- |
+| [FHIRDosageInput](/docs/fhir-dosage-input) | Medication dosage | Dosing instructions |
+| [FHIRMoneyInput](/docs/fhir-money-input) | Currency | Monetary amounts with precision |
+| [FHIROdontogramInput](/docs/fhir-odontogram-input) | Dental chart | Visual tooth condition mapping |
+| [FHIRVitalSignsInput](/docs/fhir-vital-signs-input) | Observations | Blood pressure, height, weight |

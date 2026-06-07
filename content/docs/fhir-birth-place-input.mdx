@@ -1,0 +1,94 @@
+---
+title: FHIR Birth Place Input
+description: Free text input with country dropdown (Indonesia / Luar Negeri) for capturing patient birth place, returning FHIR Extension with SATUSEHAT birthPlace structure.
+---
+
+import { FHIRBirthPlaceInput } from "@/registry/fhir-ui/fhir-birth-place-input"
+import { FHIRBirthPlaceInputDemo } from "@/components/docs/fhir-birth-place-input-demo"
+
+# FHIR Birth Place Input
+
+The `FHIRBirthPlaceInput` component is a specialized input for capturing patient birth place information. It uses a free text input for the city name with a country dropdown (Indonesia / Luar Negeri).
+
+This component returns a FHIR R4 `Extension` object with the SATUSEHAT `birthPlace` structure. For foreign births, the `country` field is omitted from `valueAddress`.
+
+---
+
+## Interactive Preview
+
+<ComponentPreview
+  component="fhir-birth-place-input"
+  example="preview"
+  code={`import React from "react";
+import { FHIRBirthPlaceInput } from "@/registry/fhir-ui/fhir-birth-place-input"
+import { FHIRBirthPlaceInputDemo } from "@/components/docs/fhir-birth-place-input-demo";
+import { type Extension } from "@medplum/fhirtypes";
+
+export default function PatientForm() {
+  const [birthPlace, setBirthPlace] = React.useState<Extension | undefined>();
+
+  return (
+    <div className="w-full max-w-md">
+      <FHIRBirthPlaceInput
+        value={birthPlace}
+        onChange={setBirthPlace}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRBirthPlaceInputDemo />
+</ComponentPreview>
+
+---
+
+## Output Format
+
+### Indonesia Birth Place
+
+When "Indonesia" is selected:
+
+```json
+{
+  "url": "https://fhir.kemkes.go.id/r4/StructureDefinition/birthPlace",
+  "valueAddress": {
+    "city": "Bandung",
+    "country": "ID"
+  }
+}
+```
+
+### Foreign Birth Place (Luar Negeri)
+
+When "Luar Negeri" is selected, the `country` field is omitted from `valueAddress`:
+
+```json
+{
+  "url": "https://fhir.kemkes.go.id/r4/StructureDefinition/birthPlace",
+  "valueAddress": {
+    "city": "Singapore"
+  }
+}
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Extension` | `undefined` | Controlled value representing the birthPlace Extension. |
+| `onChange` | `(value: Extension) => void` | `undefined` | Callback triggered when birth place changes. |
+| `label` | `string` | `"Birth Place (Tempat Lahir)"` | Custom label text. |
+| `description` | `string` | `undefined` | Additional helper text displayed below the label. |
+| `placeholder` | `string` | `"e.g., Bandung, Singapore, etc."` | Input placeholder text. |
+| `readOnly` | `boolean` | `false` | Disables the input if set to `true`. |
+
+---
+
+## Related Components
+
+- [FHIRAddressInput](./fhir-address-input) - Full address input with RT/RW, postal code, and regional selectors
+- [FHIRMoneyInput](./fhir-money-input) - Similar input group pattern with currency dropdown

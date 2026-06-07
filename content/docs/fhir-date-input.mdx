@@ -1,0 +1,57 @@
+---
+title: FHIR Date Input
+description: FHIR R4 timezone-naive Date Input component optimized for Patient demographics like birth dates.
+---
+
+import { FHIRDateInput } from "@/registry/fhir-ui/fhir-date-input"
+import { FHIRDateInputDemo } from "@/components/docs/fhir-date-input-demo"
+
+# FHIR Date Input
+
+The `FHIRDateInput` component handles capturing plain dates conforming strictly to the FHIR R4 \`date\` data type format (YYYY-MM-DD).
+
+Unlike a full \`dateTime\` component, this input ensures that the value is entirely timezone-naive. This is crucial for demographics like `Patient.birthDate`, where a person's birthday remains the same calendar date regardless of the server's or browser's local timezone.
+
+---
+
+## Interactive Preview
+
+The preview below demonstrates capturing a date and correctly emitting the `YYYY-MM-DD` FHIR standard output.
+
+<ComponentPreview
+  component="fhir-date-input"
+  example="preview"
+  code={`import React, { useState } from "react";
+import { FHIRDateInput } from "@/registry/fhir-ui/fhir-date-input"
+import { FHIRDateInputDemo } from "@/components/docs/fhir-date-input-demo";
+
+export default function BirthDateForm() {
+  const [date, setDate] = useState<string>("1990-05-15");
+
+  return (
+    <div className="max-w-[240px] w-full">
+      <FHIRDateInput
+        label="Date of Birth"
+        value={date}
+        onChange={setDate}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRDateInputDemo />
+</ComponentPreview>
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `string` | `undefined` | The controlled value conforming to FHIR \`date\` schema (e.g. "1990-05-15"). |
+| `onChange` | `(value: string) => void` | `undefined` | Callback fired on date selection. Outputs YYYY-MM-DD. |
+| `showLabel` | `boolean` | `false` | Whether to display the text label above the input. |
+| `label` | `string` | `"Date"` | The text used for the label. |
+| `readOnly` | `boolean` | `false` | Disables interaction with the date picker. |

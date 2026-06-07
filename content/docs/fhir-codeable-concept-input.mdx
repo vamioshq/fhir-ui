@@ -1,0 +1,172 @@
+---
+title: FHIR CodeableConcept Input
+description: FHIR R4 CodeableConcept Input component optimized for SATUSEHAT terminologies like ICD-10 and KFA.
+---
+
+import { FHIRCodeableConceptInput } from "@/registry/fhir-ui/fhir-codeable-concept-input"
+import { FHIRCodeableConceptInputDemo } from "@/components/docs/fhir-codeable-concept-input-demo"
+
+# FHIR CodeableConcept Input
+
+The `FHIRCodeableConceptInput` component captures clinical concepts conforming to the FHIR R4 standard (`CodeableConcept`).
+
+This component is specifically optimized for **SATUSEHAT** integration, natively supporting visual badges for common terminology systems such as **ICD-10** (Diagnoses), **KFA** (Medications), **LOINC** (Observations), and **SNOMED CT**. 
+
+By utilizing an asynchronous `onSearch` prop, this component can interface directly with terminology servers (or SATUSEHAT proxies) without bundling thousands of medical codes into the browser.
+
+---
+
+## Interactive Preview
+
+The preview below demonstrates an async search lookup simulating a terminology server backend. Try searching for `"Cholera"` or `"Paracetamol"`.
+
+<ComponentPreview 
+  component="fhir-codeable-concept-input" 
+  example="preview-simple"
+  code={`import React from "react";
+import { type CodeableConcept } from "@medplum/fhirtypes";
+import { FHIRCodeableConceptInput } from "@/registry/fhir-ui/fhir-codeable-concept-input"
+import { FHIRCodeableConceptInputDemo } from "@/components/docs/fhir-codeable-concept-input-demo";
+
+export default function DiagnosisForm() {
+  const [concept, setConcept] = React.useState<CodeableConcept | undefined>(undefined);
+
+  // In a real app, this would fetch from your backend or SATUSEHAT terminology server
+  const searchTerminology = async (query: string) => {
+    const res = await fetch(\`/api/terminology?q=\${encodeURIComponent(query)}\`);
+    const data = await res.json();
+    return data as CodeableConcept[];
+  };
+
+  return (
+    <div className="max-w-md w-full">
+      <FHIRCodeableConceptInput
+        label="Clinical Diagnosis (ICD-10)"
+        description="Search via terminology server"
+        value={concept}
+        onChange={setConcept}
+        onSearch={searchTerminology}
+        placeholder="E.g. Cholera..."
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRCodeableConceptInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features to Know
+
+### SATUSEHAT System Badges
+The component automatically recognizes common SATUSEHAT terminology systems and renders a distinct visual badge next to the item in the dropdown:
+- **ICD-10**: `http://hl7.org/fhir/sid/icd-10`
+- **KFA**: `http://sys-ids.kemkes.go.id/kfa`
+- **LOINC**: `http://loinc.org`
+- **SNOMED**: `http://snomed.info/sct`
+
+### Terminology System Filtering
+You can lock the input to a specific system by providing the `system` prop (e.g. `system="http://hl7.org/fhir/sid/icd-10"`). 
+* **Scoped Async Search**: When `system` is defined, it is forwarded as the second parameter to `onSearch(query, system)`. This allows your API lookup logic to filter results on the server-side.
+* **Auto-Hiding Redundant Badges**: When the component is locked to a specific system, displaying the taxonomy badge (e.g. "ICD-10" on every row) becomes redundant. The component automatically detects this and hides the badges inside the dropdown list for a cleaner UI.
+
+### SATUSEHAT System Presets
+To make integration even easier, you can use the `preset` prop to automatically configure the label, placeholder, and system terminology for SATUSEHAT standard terminologies.
+
+Available presets:
+- **`icd10`**: Locks to `http://hl7.org/fhir/sid/icd-10`
+- **`kfa`**: Locks to `http://sys-ids.kemkes.go.id/kfa`
+- **`loinc`**: Locks to `http://loinc.org`
+- **`snomed`**: Locks to `http://snomed.info/sct`
+
+Using a preset automatically hides redundant badges in the dropdown list, since the system is already scoped.
+
+### Data Fetching Strategies
+You can feed data into the component using two primary methods depending on your needs:
+
+1. **Async Searching (`onSearch`)**: Best for massive terminology lists like ICD-10 or KFA. The developer provides an async function that queries a backend and returns a `CodeableConcept[]`. 
+2. **Static Value Sets (`options`)**: Best for small, finite custom value sets (like administrative codes or specialized local lookup tables). You pass an array of `CodeableConcept[]` directly.
+
+---
+
+## Quick Integration Example
+
+### Scoped Terminology Search (e.g., ICD-10 Diagnoses)
+
+To lock the input to diagnoses, simply specify the `preset` and consume the `system` parameter in your query callback:
+
+```tsx
+import React from "react";
+import { type CodeableConcept } from "@medplum/fhirtypes";
+import { FHIRCodeableConceptInput } from "@/registry/fhir-ui/fhir-codeable-concept-input";
+
+export default function DiagnosisPicker() {
+  const [value, setValue] = React.useState<CodeableConcept>();
+
+  const searchDiagnoses = async (query: string, system?: string) => {
+    // Because preset="icd10", system is passed here as "http://hl7.org/fhir/sid/icd-10"
+    const response = await fetch(`/api/diagnoses?q=${query}&system=${system}`);
+    return response.json();
+  };
+
+  return (
+    <FHIRCodeableConceptInput
+      preset="icd10"
+      onSearch={searchDiagnoses}
+      value={value}
+      onChange={setValue}
+    />
+  );
+}
+```
+
+### Static Options
+
+If you have a small, known list of options, you can use the `options` prop directly without `onSearch`:
+
+```tsx
+import React from "react";
+import { type CodeableConcept } from "@medplum/fhirtypes";
+import { FHIRCodeableConceptInput } from "@/registry/fhir-ui/fhir-codeable-concept-input";
+
+const MOCK_OPTIONS: CodeableConcept[] = [
+  {
+    coding: [{ system: "http://hl7.org/fhir/sid/icd-10", code: "A00.0", display: "Cholera due to Vibrio cholerae 01" }]
+  },
+  {
+    coding: [{ system: "http://sys-ids.kemkes.go.id/kfa", code: "93000578", display: "Paracetamol 500 mg Tablet" }]
+  }
+];
+
+export default function StaticConceptForm() {
+  const [value, setValue] = React.useState<CodeableConcept>();
+
+  return (
+    <FHIRCodeableConceptInput
+      label="Select Concept"
+      options={MOCK_OPTIONS}
+      value={value}
+      onChange={setValue}
+    />
+  );
+}
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `CodeableConcept` | `undefined` | Controlled value conforming to the FHIR R4 schema. |
+| `onChange` | `(value: CodeableConcept) => void` | `undefined` | Callback fired on selection modification. |
+| `preset` | `"icd10" \| "kfa" \| "loinc" \| "snomed"` | `undefined` | Loads predefined labels, placeholders, and system URL for SATUSEHAT standards. |
+| `label` | `string` | `"Concept"` | Legend label displayed above the input group. Overrides preset label. |
+| `description` | `string` | `undefined` | Optional helper text or description displayed at the bottom of the field. |
+| `placeholder` | `string` | `"Search..."` | Placeholder text for the search input. Overrides preset placeholder. |
+| `options` | `CodeableConcept[]` | `[]` | Static list of options. Useful for small, finite value sets. |
+| `onSearch` | `(query: string, system?: string) => Promise<CodeableConcept[]>` | `undefined` | Async function for fetching terminology options remotely on user input. Receives the resolved `system` as the second parameter. |
+| `system` | `string` | `undefined` | Custom coding system URL used to scope searches. Ignored if `preset` is set. |

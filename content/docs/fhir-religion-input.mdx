@@ -1,0 +1,78 @@
+---
+title: FHIR Religion Input
+description: Specialized select dropdown and toggle group for capturing patient religion mapping to Kemenkes SATUSEHAT patient-religion extension.
+---
+
+import { FHIRReligionInput } from "@/registry/fhir-ui/fhir-religion-input"
+import { FHIRReligionInputDemo } from "@/components/docs/fhir-religion-input-demo"
+
+# FHIR Religion Input
+
+The `FHIRReligionInput` component captures patient religion mapping to the Kemenkes SATUSEHAT custom `patient-religion` extension. It outputs a fully compiled FHIR R4 `Extension` object ready to be pushed directly into the `Patient.extension` array.
+
+---
+
+## Interactive Preview
+
+Preview both layout variants and inspect the resulting SATUSEHAT-compliant `Extension` output below.
+
+<ComponentPreview 
+  component="fhir-religion-input" 
+  example="preview"
+  code={`import React from "react";
+import { type Extension } from "@medplum/fhirtypes";
+import { FHIRReligionInput } from "@/registry/fhir-ui/fhir-religion-input"
+import { FHIRReligionInputDemo } from "@/components/docs/fhir-religion-input-demo";
+
+export default function DemographicsForm() {
+  const [religionExt, setReligionExt] = React.useState<Extension>();
+
+  return (
+    <div className="w-full max-w-md">
+      <FHIRReligionInput
+        value={religionExt}
+        onChange={setReligionExt}
+        variant="select"
+        showLabel={true}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRReligionInputDemo />
+</ComponentPreview>
+
+---
+
+## Extension Structure & Codes
+
+The component maps user choice to a FHIR Extension payload:
+
+* **Extension URL**: `https://fhir.kemkes.go.id/r4/StructureDefinition/patient-religion`
+* **CodeableConcept System**: `http://terminology.kemkes.go.id/CodeSystem/religion`
+
+### Religion Codes Mapping
+
+| Code | Value Display |
+| :--- | :--- |
+| `1` | Islam |
+| `2` | Protestan |
+| `3` | Katolik |
+| `4` | Hindu |
+| `5` | Buddha |
+| `6` | Khonghucu |
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Extension` | `undefined` | Controlled value representing the FHIR Extension payload. |
+| `onChange` | `(value: Extension) => void` | `undefined` | Callback triggered when a new option is selected. |
+| `variant` | `"toggle" \| "select"` | `"select"` | Layout variant of the input selector. Defaults to `"select"`. |
+| `showLabel` | `boolean` | `false` | Displays the label above the field when `true`. |
+| `label` | `string` | `"Religion"` | Label text printed if `showLabel={true}`. |
+| `readOnly` | `boolean` | `false` | Locks the field and renders in disabled mode when `true`. |

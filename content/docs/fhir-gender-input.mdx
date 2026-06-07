@@ -1,0 +1,82 @@
+---
+title: FHIR Gender Input
+description: Segmented toggle group and select dropdown selector conforming to FHIR R4 AdministrativeGender standards for Kemenkes SATUSEHAT integration.
+---
+
+import { FHIRGenderInput } from "@/registry/fhir-ui/fhir-gender-input"
+import { FHIRGenderInputDemo } from "@/components/docs/fhir-gender-input-demo"
+
+# FHIR Gender Input
+
+The `FHIRGenderInput` component is a specialized selector for administrative gender codes conforming to the FHIR R4 `AdministrativeGender` value set. 
+
+This component offers a modern, single-click **Toggle Group** (segmented control) variant with custom gender-themed highlights, alongside a space-saving **Select Dropdown** variant. It is designed to capture patient demographic details for Indonesian **SATUSEHAT** patient registrations and updates.
+
+---
+
+## Interactive Preview
+
+Adjust the configurations in the control panel to preview both layout variants (`toggle` vs `select`), enable read-only locking, or toggle the field labels.
+
+<ComponentPreview 
+  component="fhir-gender-input" 
+  example="preview"
+  code={`import React from "react";
+import { FHIRGenderInput } from "@/registry/fhir-ui/fhir-gender-input"
+import { FHIRGenderInputDemo } from "@/components/docs/fhir-gender-input-demo";
+
+export default function DemographicsForm() {
+  const [gender, setGender] = React.useState<"male" | "female" | "other" | "unknown">("male");
+
+  return (
+    <div className="w-full max-w-md">
+      {/* 1. Toggle Segmented Group (Default) */}
+      <FHIRGenderInput
+        value={gender}
+        onChange={setGender}
+        variant="toggle"
+        showLabel={true}
+      />
+
+      {/* 2. Select Dropdown Fallback */}
+      <FHIRGenderInput
+        value={gender}
+        onChange={setGender}
+        variant="select"
+        showLabel={true}
+        className="mt-6"
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRGenderInputDemo />
+</ComponentPreview>
+
+---
+
+## Administrative Gender Codes
+
+The component maps user selection directly to HL7 FHIR AdministrativeGender codes:
+
+| Value Code | Display Label | UI Icon | Selected Visual Accent |
+| :--- | :--- | :--- | :--- |
+| `male` | Male | Mars (♂) | Light Blue theme (`sky`) |
+| `female` | Female | Venus (♀) | Light Rose theme (`rose`) |
+| `other` | Other | Genderless | Light Purple theme (`purple`) |
+| `unknown` | Unknown | HelpCircle | Muted Border & Background |
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `"male" \| "female" \| "other" \| "unknown"` | `undefined` | Controlled value representing the FHIR AdministrativeGender code. |
+| `onChange` | `(value: "male" \| "female" \| "other" \| "unknown") => void` | `undefined` | Callback triggered when a new option is selected. |
+| `variant` | `"toggle" \| "select"` | `"toggle"` | Layout style of the input component. Segmented button group or select dropdown. |
+| `showLabel` | `boolean` | `false` | If `true`, displays the field label above the selector. |
+| `label` | `string` | `"Administrative Gender"` | Custom label text rendered if `showLabel={true}`. |
+| `readOnly` | `boolean` | `false` | Locks all actions and renders disabled styles if set to `true`. |

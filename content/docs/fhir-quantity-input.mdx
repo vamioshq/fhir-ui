@@ -1,0 +1,172 @@
+---
+title: FHIR Quantity Input
+description: FHIR R4 Quantity Input component with developer-locked unit configurations and a unified inline control.
+---
+
+import { FHIRQuantityInput } from "@/registry/fhir-ui/fhir-quantity-input"
+import { FHIRQuantityInputDemo } from "@/components/docs/fhir-quantity-input-demo"
+
+# FHIR Quantity Input
+
+The `FHIRQuantityInput` component captures measurements and clinical quantities conforming to the FHIR R4 standard.
+
+To guarantee clinical database integrity and eliminate unit name pollution (e.g. users typing `"kg"`, `"KG"`, or `"kilograms"` in a free-text input), the measurement units are configured as developer-locked component props. The unit renders as a clean, read-only badge on the right of the single inline `<InputGroup>`.
+
+---
+
+## Interactive Preview
+
+The preview below demonstrates a clinical vitals entry form (Systolic & Diastolic Blood Pressure, Body Temperature, Weight, Height) rendered via a unified interface, mapping the results into standard FHIR objects.
+
+<ComponentPreview 
+  component="fhir-quantity-input" 
+  example="preview-simple"
+  code={`import React from "react";
+import { FHIRQuantityInput } from "@/registry/fhir-ui/fhir-quantity-input"
+import { FHIRQuantityInputDemo } from "@/components/docs/fhir-quantity-input-demo";
+import { type Quantity } from "@medplum/fhirtypes";
+
+export default function VitalsForm() {
+  const [systolic, setSystolic] = React.useState<Quantity>({});
+  const [diastolic, setDiastolic] = React.useState<Quantity>({});
+  const [temperature, setTemperature] = React.useState<Quantity>({});
+  const [weight, setWeight] = React.useState<Quantity>({});
+  const [height, setHeight] = React.useState<Quantity>({});
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <FHIRQuantityInput
+        code="mm[Hg]"
+        label="Systolic Blood Pressure"
+        description="Normal: < 120 mmHg"
+        onChange={setSystolic}
+      />
+      <FHIRQuantityInput
+        code="mm[Hg]"
+        label="Diastolic Blood Pressure"
+        onChange={setDiastolic}
+      />
+      <FHIRQuantityInput
+        code="Cel"
+        label="Body Temperature"
+        onChange={setTemperature}
+      />
+      <FHIRQuantityInput
+        code="kg"
+        label="Weight"
+        description="Measured at registration"
+        onChange={setWeight}
+      />
+      <div>
+        <FHIRQuantityInput
+          code="cm"
+          label="Height"
+          onChange={setHeight}
+        />
+      </div>
+    </div>
+  );
+}`}
+>
+  <FHIRQuantityInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features to Know
+
+### Locked Terminology Unit
+The component accepts a standard UCUM terminology `code` prop.
+* **Automated Unit Resolution:** If you provide a standard code (e.g., `"Cel"`, `"mm[Hg]"`, `"kg"`, `"/min"`), the component automatically resolves the human-readable unit badge (`"°C"`, `"mmHg"`, `"kg"`, `"bpm"`) using a built-in UCUM mapping dictionary.
+* **Typo Elimination:** Users cannot edit or pollute the unit representation.
+* **Standardized Coding:** Emitted payloads automatically pair the user's measurement value with the correct terminology code.
+
+### Standard UCUM Coding System
+If a `code` or `unit` prop is provided, the terminology `system` is automatically hardcoded to UCUM (`http://unitsofmeasure.org`). This covers the vast majority of standard clinical observations and measurements.
+
+### Presets & Validation Badges
+To simplify inputs for standard patient measurements, the component offers a `preset` prop. Passing a preset auto-configures the label, units, standard codes, and normal-range placeholders, and enables automatic clinical validation badges:
+
+* **BP / Pulse / Temperature:** Auto-checks standard clinical thresholds (e.g. fever warnings, tachycardia, critical hypoxia).
+* **Waist Circumference (`waist-circumference`):** Integrates gender-specific validation boundaries when `patientGender` (`"male" | "female"`) is provided.
+* **Comparator Bypass:** Presets automatically hide the comparator selection dropdown (`hideComparator = true` by default) since clinical vital signs represent absolute measurements.
+
+### Standardized Operators
+The operator select dropdown on the left maps directly to standard FHIR Quantity comparator symbols: `=`, `<`, `<=`, `>=`, and `>`. Choosing `=` strips the comparator from the emitted JSON object (per the FHIR standard specification).
+
+---
+
+## Preset Interactive Previews
+
+#### Temperature Preset (`preset="temperature"`)
+
+<ComponentPreview 
+  component="fhir-quantity-input" 
+  example="temperature-preset"
+  code={`import React from "react";
+import { FHIRQuantityInput } from "@/registry/fhir-ui/fhir-quantity-input";
+import { type Quantity } from "@medplum/fhirtypes";
+
+export default function TemperatureForm() {
+  const [val, setVal] = React.useState<Quantity>({});
+
+  return (
+    <FHIRQuantityInput
+      preset="temperature"
+      value={val}
+      onChange={setVal}
+    />
+  );
+}`}
+>
+  <FHIRQuantityInputDemo />
+</ComponentPreview>
+
+#### Waist Circumference Preset (`preset="waist-circumference"`)
+
+Evaluates Indonesian Kemenkes/BPJS central obesity thresholds ($\ge 80$ cm for females):
+
+<ComponentPreview 
+  component="fhir-quantity-input" 
+  example="waist-circumference-preset"
+  code={`import React from "react";
+import { FHIRQuantityInput } from "@/registry/fhir-ui/fhir-quantity-input";
+import { type Quantity } from "@medplum/fhirtypes";
+
+export default function WaistCircumferenceForm() {
+  const [val, setVal] = React.useState<Quantity>({});
+
+  return (
+    <FHIRQuantityInput
+      preset="waist-circumference"
+      patientGender="female"
+      value={val}
+      onChange={setVal}
+    />
+  );
+}`}
+>
+  <FHIRQuantityInputDemo />
+</ComponentPreview>
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Quantity` | `undefined` | Controlled quantity value conforming to the FHIR R4 schema. |
+| `onChange` | `(value: Quantity) => void` | `undefined` | Callback fired on any quantity modification. |
+| `label` | `string` | `"Measurement (Quantity)"` | Legend label displayed above the input group. |
+| `unit` | `string` | `"unit"` | Human-readable unit label (e.g., `"kg"`, `"mg/dL"`). Displays as a read-only badge. |
+| `code` | `string` | *Matches unit* | Standardized terminology code. If omitted, defaults to matching the value of `unit`. |
+| `description` | `string` | `undefined` | Optional helper text or description displayed at the bottom of the field. |
+| `hideComparator` | `boolean` | `false` | If true, hides the operator comparison select dropdown on the left. |
+| `readOnly` | `boolean` | `false` | Sets the input field and dropdown to read-only/disabled mode. |
+| `preset` | `QuantityPreset` | `undefined` | Lock-in configuration preset (e.g. `systolic`, `temperature`, `waist-circumference`). |
+| `validationBadge` | `{ label: string; color: string }` | `undefined` | Custom validation indicator badge object to override preset auto-validation. |
+| `placeholder` | `string` | `undefined` | Explicit text input placeholder to override preset defaults. |
+| `patientGender` | `"male" \| "female"` | `undefined` | Optional patient gender to drive gender-specific validation presets (like waist circumference). |
+

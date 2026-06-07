@@ -1,0 +1,77 @@
+---
+title: FHIR Citizenship Status Input
+description: Simple select dropdown for WNI/WNA citizenship status, returning FHIR Extension with SATUSEHAT citizenshipStatus structure.
+---
+
+import { FHIRCitizenshipStatusInput } from "@/registry/fhir-ui/fhir-citizenship-status-input"
+import { FHIRCitizenshipStatusInputDemo } from "@/components/docs/fhir-citizenship-status-input-demo"
+
+# FHIR Citizenship Status Input
+
+The `FHIRCitizenshipStatusInput` component is a simple dropdown for selecting patient citizenship status (WNI or WNA).
+
+This component returns a FHIR R4 `Extension` object with the SATUSEHAT `citizenshipStatus` structure.
+
+---
+
+## Interactive Preview
+
+<ComponentPreview
+  component="fhir-citizenship-status-input"
+  example="preview"
+  code={`import React from "react";
+import { FHIRCitizenshipStatusInput } from "@/registry/fhir-ui/fhir-citizenship-status-input"
+import { FHIRCitizenshipStatusInputDemo } from "@/components/docs/fhir-citizenship-status-input-demo";
+import { type Extension } from "@medplum/fhirtypes";
+
+export default function PatientForm() {
+  const [citizenship, setCitizenship] = React.useState<Extension | undefined>();
+
+  return (
+    <div className="w-full max-w-md">
+      <FHIRCitizenshipStatusInput
+        value={citizenship}
+        onChange={setCitizenship}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRCitizenshipStatusInputDemo />
+</ComponentPreview>
+
+---
+
+## Output Format
+
+```json
+{
+  "url": "https://fhir.kemkes.go.id/r4/StructureDefinition/citizenshipStatus",
+  "valueCode": "WNI"
+}
+```
+
+**Valid values:**
+- `"WNI"` - Warga Negara Indonesia (Indonesian Citizen)
+- `"WNA"` - Warga Negara Asing (Foreign Citizen)
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Extension` | `undefined` | Controlled value representing the citizenshipStatus Extension. |
+| `onChange` | `(value: Extension) => void` | `undefined` | Callback triggered when citizenship status changes. |
+| `label` | `string` | `"Citizenship Status"` | Custom label text. |
+| `description` | `string` | `undefined` | Additional helper text displayed below the label. |
+| `placeholder` | `string` | `"Select citizenship status"` | Select placeholder text. |
+| `readOnly` | `boolean` | `false` | Disables the input if set to `true`. |
+
+---
+
+## Related Components
+
+- [FHIRBirthPlaceInput](./fhir-birth-place-input) - Birth place input with country dropdown

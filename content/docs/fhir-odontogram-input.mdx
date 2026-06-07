@@ -1,0 +1,59 @@
+---
+title: FHIR Odontogram Input
+description: A massive, interactive SVG component for capturing dental charts (Rekam Medis Gigi) compliant with SATUSEHAT standards.
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+
+
+## Overview
+
+FHIR doesn't natively have an "Odontogram" resource. SATUSEHAT models dental records using an array of `Observation`, `Condition`, and `Procedure` resources, with each action explicitly tied to a `bodySite` using SNOMED CT codes representing specific teeth (FDI notation).
+
+The `FHIROdontogramInput` component acts as a high-level UI orchestrator. You interact visually with a chart of 32 permanent and 20 deciduous teeth, and it dynamically generates a list of strict FHIR Resources.
+
+## Features
+
+- Interactive 32-adult and 20-child SVG dental chart using FDI notation.
+- Visual mapping of common conditions (Caries, Missing, Crown, Sealant, Amalgam, Composite, Root Canal).
+- Automatically parses and generates standard FHIR resources.
+- Fully Shadcn UI compliant architecture.
+
+## Installation
+
+This component depends on Shadcn's `ToggleGroup` and `Toggle`.
+
+<Tabs items={['CLI', 'Manual']}>
+  <Tab value="CLI">
+    ```bash
+    npx shadcn@latest add toggle toggle-group
+    ```
+  </Tab>
+  <Tab value="Manual">
+    Add the `ToggleGroup` and `Toggle` components to your workspace from the shadcn registry.
+  </Tab>
+</Tabs>
+
+## Code
+
+`FHIROdontogramInput` handles the toolbar and high-level FHIR arrays.
+
+<Tabs items={['fhir-odontogram-input.tsx', 'fhir-odontogram-tooth.tsx']}>
+  <Tab value="fhir-odontogram-input.tsx">
+    ```tsx file=<rootDir>/packages/ui/src/registry/fhir-odontogram-input.tsx
+    ```
+  </Tab>
+  <Tab value="fhir-odontogram-tooth.tsx">
+    ```tsx file=<rootDir>/packages/ui/src/registry/fhir-odontogram-tooth.tsx
+    ```
+  </Tab>
+</Tabs>
+
+## Props
+
+| Prop | Type | Description |
+| :--- | :--- | :--- |
+| `value` | `any[]` | Array of FHIR Resources (`Condition`, `Procedure`, `Observation`) representing the chart state. |
+| `onChange` | `(resources: any[]) => void` | Callback fired when a new resource is generated. |
+| `readOnly` | `boolean` | Disables interactivity, transforming the component into a read-only visualizer. |

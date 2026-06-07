@@ -1,0 +1,141 @@
+---
+title: FHIR Address Input
+description: FHIR R4 Address Input component with Kemenkes SATUSEHAT integration, administrative area comboboxes, and validation indicators.
+---
+
+import { FHIRAddressInput } from "@/registry/fhir-ui/fhir-address-input"
+import { FHIRAddressInputDemo } from "@/components/docs/fhir-address-input-demo";
+
+# FHIR Address Input
+
+The `FHIRAddressInput` component captures patient addresses conforming to the FHIR R4 standard. It is pre-configured and optimized to support the nested extension schema required by the **Kemenkes SATUSEHAT** health data exchange platform in Indonesia, while maintaining a clean, fallback schema for international addresses.
+
+---
+
+## Layout Variants
+
+You can choose between two visual layouts depending on your UI layout space.
+
+### 1. Simple Variant (Default)
+
+The `simple` variant provides a compact form factor. It is the recommended layout for patient registration forms.
+
+* **Main UI Fields:** Displays a Street Address text input and a single **Combined Subdistrict Selector** search-as-you-type combobox (when the country is Indonesia).
+* **Advanced Dialog:** Includes a sliders icon button. Clicking it opens a modal Dialog where users can edit advanced fields like RT, RW, Country, or ZIP code.
+* **Why use it?** Reduces screen clutter and form fatigue by combining Province, City, District, and Village selection into a single searchable search field.
+
+<ComponentPreview 
+  component="fhir-address-input" 
+  example="preview-simple"
+  code={`import React from "react";
+import { FHIRAddressInput } from "@/registry/fhir-ui/fhir-address-input";
+import { type Address } from "@medplum/fhirtypes";
+
+export default function PatientRegistration() {
+  const [address, setAddress] = React.useState<Address>({});
+  return (
+    <FHIRAddressInput
+      variant="simple"
+      value={address}
+      description="Enter patient's primary residential address"
+      onChange={setAddress}
+    />
+  );
+}`}
+>
+  <FHIRAddressInputDemo />
+</ComponentPreview>
+
+### 2. Detailed Variant
+
+The `detailed` variant renders all inputs directly inline as an open grid layout.
+
+* **Main UI Fields:** Exposes Country, Street Address, RT/RW inputs, cascading comboboxes (Province, City, District, Village), and a ZIP code input field.
+* **Why use it?** Perfect for administrative back-offices or dashboards where clerks need to explicitly see and tab through every field inline.
+
+<ComponentPreview 
+  component="fhir-address-input" 
+  example="preview-detailed"
+  code={`import React from "react";
+import { FHIRAddressInput } from "@/registry/fhir-ui/fhir-address-input";
+import { type Address } from "@medplum/fhirtypes";
+
+export default function AdminAddressForm() {
+  const [address, setAddress] = React.useState<Address>({});
+  return (
+    <FHIRAddressInput
+      variant="detailed"
+      value={address}
+      description="Granular address form for insurance billing verification"
+      onChange={setAddress}
+    />
+  );
+}`}
+>
+  <FHIRAddressInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features to Know
+
+If you are a developer integrating this component, keep these automated behaviors in mind:
+
+### Indonesian vs International Mode
+The form dynamically adapts to the selected country:
+* **Indonesia (`"ID"`):** Emits structured administrative codes (Province, City, District, Village BPS codes) in the nested FHIR `extension` array matching the SATUSEHAT specification.
+* **International (Non-`"ID"`):** Disables RT/RW and Village comboboxes, replacing them with generic manual text inputs (State, City, District). It automatically strips out the SATUSEHAT extensions on payload emission.
+
+### RT/RW Formatting
+Numeric inputs for RT and RW are automatically padded to 3 digits on blur (e.g., `8` becomes `008`, `23` becomes `023`) to satisfy Kemenkes database constraints.
+
+---
+
+## Quick Integration Example
+
+Connecting the component to your page is straightforward. Simply import the component and pass an `onChange` listener to capture the resulting FHIR Address payload.
+
+```tsx
+import React from "react";
+import { FHIRAddressInput } from "@/registry/fhir-ui/fhir-address-input";
+import { type Address } from "@medplum/fhirtypes";
+
+export default function RegisterAddressStep() {
+  const [address, setAddress] = React.useState<Address>({});
+
+  const handleAddressChange = (newAddress: Address) => {
+    setAddress(newAddress);
+    console.log("FHIR Payload emitted:", newAddress);
+  };
+
+  return (
+    <div className="max-w-xl mx-auto p-6 bg-card rounded-xl border">
+      <h2 className="text-lg font-bold mb-4">Patient Address</h2>
+      <FHIRAddressInput
+        variant="simple"
+        description="Patient's current place of residence"
+        onChange={handleAddressChange}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Address` | `undefined` | Controlled address value conforming to the FHIR R4 schema. |
+| `onChange` | `(value: Address) => void` | `undefined` | Callback fired on any address field or subdistrict selection change. |
+| `variant` | `"simple" \| "detailed"` | `"simple"` | Visual variant to display. |
+| `label` | `string` | `"Address Information"` | Custom legend text displayed at the top of the grid. |
+| `description` | `string` | `undefined` | Optional helper text or description displayed at the bottom of the field. |
+| `onFetchAllSubdistricts` | `(query?: string) => Promise<CombinedSubdistrictItem[]>` | *Mock Fetcher* | Async callback to query combined subdistrict data for the simple variant combobox. |
+| `onFetchProvinces` | `(query?: string) => Promise<RegionalItem[]>` | *Mock Fetcher* | Async callback to load provinces for cascading selectors. |
+| `onFetchCities` | `(provCode: string, query?: string) => Promise<RegionalItem[]>` | *Mock Fetcher* | Async callback to load cities based on selected province code. |
+| `onFetchDistricts` | `(cityCode: string, query?: string) => Promise<RegionalItem[]>` | *Mock Fetcher* | Async callback to load districts based on selected city code. |
+| `onFetchVillages` | `(distCode: string, query?: string) => Promise<RegionalItem[]>` | *Mock Fetcher* | Async callback to load villages based on selected district code. |

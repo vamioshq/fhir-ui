@@ -1,0 +1,155 @@
+---
+title: FHIR Contact Point Input
+description: FHIR R4 ContactPoint Input component with prop-driven system configuration, usage selector, and integrated edit dialog.
+---
+
+import { FHIRContactPointInput } from "@/registry/fhir-ui/fhir-contact-point-input"
+import { FHIRContactPointInputDemo } from "@/components/docs/fhir-contact-point-input-demo"
+
+# FHIR Contact Point Input
+
+The `FHIRContactPointInput` component captures patient contact details conforming to the FHIR R4 standard (such as phone numbers, email addresses, and website URLs). 
+
+Unlike legacy designs where users choose the contact system type via a dropdown, this component relies on developer-configured props. This guarantees input validation integrity and optimizes mobile browser soft keyboards (e.g., telephone pads for phones, email keyboards for emails).
+
+---
+
+## Interactive Preview
+
+The preview below displays a patient registration contact form containing all standard contact systems, rendering their JSON states collectively in real-time.
+
+<ComponentPreview 
+  component="fhir-contact-point-input" 
+  example="preview-simple"
+  code={`import React from "react";
+import { FHIRContactPointInput } from "@/registry/fhir-ui/fhir-contact-point-input"
+import { FHIRContactPointInputDemo } from "@/components/docs/fhir-contact-point-input-demo";
+import { type ContactPoint } from "@medplum/fhirtypes";
+
+export default function ContactChannelsForm() {
+  const [phone, setPhone] = React.useState<ContactPoint>({});
+  const [email, setEmail] = React.useState<ContactPoint>({});
+  const [url, setUrl] = React.useState<ContactPoint>({});
+  const [sms, setSms] = React.useState<ContactPoint>({});
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <FHIRContactPointInput
+        system="phone"
+        label="Phone Number"
+        description="Include country code, e.g., +62"
+        onChange={setPhone}
+      />
+      <FHIRContactPointInput
+        system="email"
+        label="Email Address"
+        description="Primary email for medical reports"
+        onChange={setEmail}
+      />
+      <FHIRContactPointInput
+        system="url"
+        label="Website URL"
+        onChange={setUrl}
+      />
+      <FHIRContactPointInput
+        system="sms"
+        label="SMS Number"
+        onChange={setSms}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRContactPointInputDemo />
+</ComponentPreview>
+
+---
+
+## Layout Variants
+
+You can choose between two visual layouts based on your form space requirements.
+
+### 1. Simple Variant (Default)
+The `simple` variant renders a compact, single-field layout.
+* **Main UI Input:** Clean text input field with a responsive layout.
+* **Advanced Dialog:** Includes a sliders icon button. Clicking it opens a modal Dialog containing detailed inputs to modify the classification (Usage Type) and value manually.
+
+### 2. Detailed Variant
+The `detailed` variant renders inputs directly inline inside an accessible fieldset.
+* **Main UI Fields:** Exposes the contact value input and the Usage selector dropdown inline side-by-side.
+
+---
+
+## Key Features to Know
+
+### Contact Point System Classifications
+The component configures standard HTML input attributes, placeholders, and mobile soft keypads based on the `system` prop:
+* `phone`: A standard voice telephone number. Configures `<input type="tel">`.
+* `email`: An email address. Configures `<input type="email">`.
+* `url`: A web URL. Configures `<input type="url">`.
+* `sms`: An SMS-capable text message number. Configures `<input type="tel">`.
+* `fax`: A telefax number. Configures `<input type="text">`.
+* `pager`: A numeric pager number or code. Configures `<input type="text">`.
+* `other`: Any alternative contact point system type. Configures `<input type="text">`.
+
+### Contact Point Use Classifications
+The component maps how the contact details are intended to be used via the standard FHIR `use` field:
+* `home`: Residence contact details.
+* `work`: Workplace or business contact details.
+* `mobile`: Mobile telephone or cellular device (default).
+* `temp`: A temporary contact point.
+* `old`: An obsolete, outdated contact point.
+
+---
+
+## Quick Integration Example
+
+You can render separate inputs for phone and email on your form, keeping data cleanly separated.
+
+```tsx
+import React from "react";
+import { FHIRContactPointInput } from "@/registry/fhir-ui/fhir-contact-point-input";
+import { type ContactPoint } from "@medplum/fhirtypes";
+
+export default function RegisterContactStep() {
+  const [phone, setPhone] = React.useState<ContactPoint>({});
+  const [email, setEmail] = React.useState<ContactPoint>({});
+
+  return (
+    <div className="max-w-xl mx-auto p-6 bg-card rounded-xl border space-y-6">
+      <h2 className="text-lg font-bold">Contact Details</h2>
+
+      {/* Phone Input (Locked to Phone keypad) */}
+      <FHIRContactPointInput
+        system="phone"
+        label="Mobile Number"
+        description="Active mobile number for SMS notifications"
+        onChange={setPhone}
+      />
+
+      {/* Email Input (Locked to Email keypad) */}
+      <FHIRContactPointInput
+        system="email"
+        label="Email Address"
+        description="Primary email for medical reports"
+        onChange={setEmail}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `ContactPoint` | `undefined` | Controlled contact point value conforming to the FHIR R4 schema. |
+| `onChange` | `(value: ContactPoint) => void` | `undefined` | Callback fired when the value or usage is updated. |
+| `variant` | `"simple" \| "detailed"` | `"simple"` | Visual variant layout to display. |
+| `system` | `"phone" \| "email" \| "url" \| "sms" \| "fax" \| "pager" \| "other"` | `"phone"` | Sets the contact system type and configures soft keyboards. |
+| `label` | `string` | `"Contact Information"` | Label text shown above the input. |
+| `description` | `string` | `undefined` | Optional helper text or description displayed at the bottom of the field. |

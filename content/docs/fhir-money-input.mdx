@@ -1,0 +1,109 @@
+---
+title: FHIR Money Input
+description: FHIR R4 Money Input component with a left-aligned currency selector dropdown and local decimal formats.
+---
+
+import { FHIRMoneyInput } from "@/registry/fhir-ui/fhir-money-input"
+import { FHIRMoneyInputDemo } from "@/components/docs/fhir-money-input-demo"
+
+# FHIR Money Input
+
+The `FHIRMoneyInput` component captures monetary values and currency codes conforming to the FHIR R4 standard (`Money`).
+
+Instead of a quantity comparator, the left-hand trigger displays a dropdown allowing clinical staff to select the currency code (defaulting to `IDR`), binding the value to clean currency payloads.
+
+---
+
+## Interactive Preview
+
+The preview below demonstrates a controlled `FHIRMoneyInput` instance. Try selecting a different currency code (e.g. `USD`, `EUR`) to see the emitted FHIR `Money` structure update in real-time.
+
+<ComponentPreview 
+  component="fhir-money-input" 
+  example="preview-simple"
+  code={`import React from "react";
+import { type Money } from "@medplum/fhirtypes";
+import { FHIRMoneyInput } from "@/registry/fhir-ui/fhir-money-input"
+import { FHIRMoneyInputDemo } from "@/components/docs/fhir-money-input-demo";
+
+export default function BillItem() {
+  const [fee, setFee] = React.useState<Money>({
+    value: 150000,
+    currency: "IDR",
+  });
+
+  return (
+    <FHIRMoneyInput
+      label="Consultation Fee"
+      value={fee}
+      onChange={setFee}
+    />
+  );
+}`}
+>
+  <FHIRMoneyInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features to Know
+
+### ISO 4217 Currency Selector
+The component renders the active currency code on the left side of the input.
+- **Dynamic Selection**: Clicking the currency code triggers a standard dropdown menu to switch between common global currencies (e.g., `IDR`, `USD`, `EUR`, `SGD`, `MYR`).
+- **Custom Currency Lists**: Developers can override the default currency selection list by passing an array of ISO 4217 codes via the `currencies` prop.
+
+### Decimal Filtering and Indonesian Decimals
+The input filters characters on-the-fly to guarantee numeric data cleanliness:
+- Only digits, a single decimal point, and a leading minus sign are allowed.
+- Indonesian commas are translated into standard decimal dots on-the-fly (e.g. typing `150000,50` translates to `150000.50` internally).
+
+---
+
+## Quick Integration Example
+
+You can render separate inputs for invoicing and bill calculations, managing them via simple state hooks:
+
+```tsx
+import React from "react";
+import { type Money } from "@medplum/fhirtypes";
+import { FHIRMoneyInput } from "@/registry/fhir-ui/fhir-money-input";
+
+export default function InvoiceForm() {
+  const [subtotal, setSubtotal] = React.useState<Money>({ value: 500000, currency: "IDR" });
+  const [tax, setTax] = React.useState<Money>({ value: 55000, currency: "IDR" });
+
+  return (
+    <div className="max-w-md space-y-4">
+      {/* Subtotal */}
+      <FHIRMoneyInput
+        label="Subtotal Amount"
+        value={subtotal}
+        onChange={setSubtotal}
+      />
+
+      {/* Tax rate */}
+      <FHIRMoneyInput
+        label="Applied VAT (Tax)"
+        value={tax}
+        onChange={setTax}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `Money` | `undefined` | Controlled monetary value conforming to the FHIR R4 schema. |
+| `onChange` | `(value: Money) => void` | `undefined` | Callback fired on value or currency modification. |
+| `label` | `string` | `"Amount (Money)"` | Legend label displayed above the input group. |
+| `description` | `string` | `undefined` | Helper text displayed below the input field. |
+| `currencies` | `string[]` | `["IDR", "USD", "EUR", "SGD", "AUD", "JPY", "GBP", "MYR"]` | List of ISO 4217 currency options available in the select dropdown. |
+| `readOnly` | `boolean` | `false` | Disables the currency selection dropdown and the numeric input field. |
