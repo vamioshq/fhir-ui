@@ -4,7 +4,25 @@
       "WebSearch",
       "Bash(pnpm install:*)",
       "Bash(pnpm peers:*)",
-      "Bash(timeout 30 pnpm dev)"
+      "Bash(timeout 30 pnpm dev)",
+      "Read(//c/dev/docs-new/**)",
+      "Read(//c/dev/docs-next/**)",
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(npx next:*)",
+      "Bash(ppm install:*)",
+      "Bash(pnpm config:*)",
+      "Read(//c/Users/arief/AppData/Local/pnpm/**)",
+      "Bash(npx fumadocs-mdx:*)",
+      "Bash(taskkill /PID 20308 /F)",
+      "Bash(cmd.exe //c \"taskkill //PID 20308 //F\")",
+      "Bash(powershell.exe -Command \"Stop-Process -Id 33564 -Force\")",
+      "Bash(powershell.exe -Command \"Stop-Process -Id 2736 -Force\")",
+      "Bash(powershell.exe -Command \"Stop-Process -Id 33720 -Force\")",
+      "Bash(pnpm build:*)",
+      "Bash(rm -rf .source)",
+      "Bash(pnpm exec:*)",
+      "Bash(taskkill //PID 25788 //F)"
     ]
   }
 }

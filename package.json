@@ -3,22 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "registry:build": "shadcn build"
+    "registry:build": "shadcn build",
+    "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",
+    "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "fumadocs-core": "16.9.3",
+    "fumadocs-mdx": "15.0.11",
+    "fumadocs-ui": "16.9.3",
     "lucide-react": "^1.17.0",
     "next": "16.2.7",
+    "radix-ui": "^1.5.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "shadcn": "^3.0.0",
+    "shadcn": "^4.10.0",
     "tailwind-merge": "^3.6.0",
     "tw-animate-css": "^1.3.6",
     "zod": "^4.4.3"
@@ -26,12 +32,14 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4.2.4",
+    "@types/mdx": "^2.0.13",
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.35.0",
     "eslint-config-next": "16.2.7",
-    "tailwindcss": "^4.2.4",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3"
   }
 }
