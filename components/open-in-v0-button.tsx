@@ -2,17 +2,12 @@
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { useEffect, useState } from "react"
 
 export function OpenInV0Button({
   name,
   className,
 }: { name: string } & React.ComponentProps<typeof Button>) {
-  const [baseUrl, setBaseUrl] = useState("")
-
-  useEffect(() => {
-    setBaseUrl(window.location.origin)
-  }, [])
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : ""
 
   if (!baseUrl) return null
 
@@ -21,7 +16,7 @@ export function OpenInV0Button({
       aria-label="Open in v0"
       size="sm"
       className={cn(
-        "shadow-none bg-black text-white hover:bg-black hover:text-white dark:bg-white dark:text-black",
+        "bg-black text-white shadow-none hover:bg-black hover:text-white dark:bg-white dark:text-black",
         className
       )}
       asChild

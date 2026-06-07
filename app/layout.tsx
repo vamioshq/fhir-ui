@@ -10,12 +10,14 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "FHIR UI",
   description: "A collection of FHIR-themed UI components",
+  // metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  // Uncomment above and set NEXT_PUBLIC_SITE_URL in .env for production OG images
 };
 
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="flex flex-col min-h-screen">
+      <body className="flex min-h-screen flex-col">
         <RootProvider>{children}</RootProvider>
       </body>
     </html>

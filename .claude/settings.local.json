@@ -22,7 +22,26 @@
       "Bash(pnpm build:*)",
       "Bash(rm -rf .source)",
       "Bash(pnpm exec:*)",
-      "Bash(taskkill //PID 25788 //F)"
+      "Bash(taskkill //PID 25788 //F)",
+      "Bash(taskkill //PID 35004 //F)",
+      "Bash(pnpm remove:*)",
+      "Bash(taskkill //PID 41912 //F)",
+      "Bash(taskkill //PID 45900 //F)",
+      "Bash(xargs ls:*)",
+      "Bash(taskkill //PID 51276 //F)",
+      "Bash(taskkill //PID 29980 //F)",
+      "Bash(pnpm registry:build)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(npx eslint:*)",
+      "Bash(pnpm add:*)",
+      "Bash(ls tailwind.config.*)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(pnpm view:*)",
+      "Bash(pnpm types:check)"
     ]
   }
 }
