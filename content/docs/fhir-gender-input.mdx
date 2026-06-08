@@ -23,28 +23,17 @@ Adjust the configurations in the control panel to preview both layout variants (
   example="preview"
   code={`import React from "react";
 import { FHIRGenderInput } from "@/registry/fhir-ui/fhir-gender-input"
-import { FHIRGenderInputDemo } from "@/components/docs/fhir-gender-input-demo";
 
 export default function DemographicsForm() {
   const [gender, setGender] = React.useState<"male" | "female" | "other" | "unknown">("male");
 
   return (
     <div className="w-full max-w-md">
-      {/* 1. Toggle Segmented Group (Default) */}
       <FHIRGenderInput
         value={gender}
         onChange={setGender}
         variant="toggle"
         showLabel={true}
-      />
-
-      {/* 2. Select Dropdown Fallback */}
-      <FHIRGenderInput
-        value={gender}
-        onChange={setGender}
-        variant="select"
-        showLabel={true}
-        className="mt-6"
       />
     </div>
   );

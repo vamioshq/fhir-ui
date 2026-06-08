@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -186,10 +188,10 @@ export function FHIROdontogramTooth({
   };
 
   const renderNumberLabel = () => (
-    <div className="text-center h-5 flex items-center justify-center">
+    <div className="text-center h-4 flex items-center justify-center">
       <span
         className={cn(
-          "text-sm font-black select-none tracking-tight",
+          "text-xs font-black select-none tracking-tight",
           isMissing
             ? "text-destructive/50 line-through"
             : hasCondition
@@ -205,7 +207,7 @@ export function FHIROdontogramTooth({
   return (
     <div
       className={cn(
-        "flex flex-col relative group rounded-xl p-0 transition-all gap-1",
+        "flex flex-col relative group rounded-lg p-0 transition-all gap-0.5",
         interactiveClass,
         isSelected ? "bg-primary/5 ring-2 ring-primary/20" : "",
         className
@@ -220,7 +222,7 @@ export function FHIROdontogramTooth({
       {/* Tooth Body */}
       <div
         className={cn(
-          "w-10 h-10 md:w-12 md:h-12 relative transition-transform duration-150",
+          "w-8 h-8 md:w-9 md:h-9 relative transition-transform duration-150",
           isSelected && interactive ? "scale-110" : "group-hover:scale-120"
         )}
       >

@@ -22,26 +22,16 @@ Toggle the `showLabel` option to see the layout switch between a clean, compact 
   code={`import React from "react";
 import { type Dosage } from "@medplum/fhirtypes";
 import { FHIRDosageInput } from "@/registry/fhir-ui/fhir-dosage-input"
-import { FHIRDosageInputDemo } from "@/components/docs/fhir-dosage-input-demo";
 
 export default function PrescriptionForm() {
   const [dosage, setDosage] = React.useState<Dosage>();
 
   return (
     <div className="w-full max-w-2xl">
-      {/* Labeled layout */}
       <FHIRDosageInput
         value={dosage}
         onChange={setDosage}
         showLabel={true}
-      />
-
-      {/* Pure horizontal layout (default) */}
-      <FHIRDosageInput
-        value={dosage}
-        onChange={setDosage}
-        showLabel={false}
-        className="mt-6"
       />
     </div>
   );

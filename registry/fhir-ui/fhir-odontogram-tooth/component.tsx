@@ -220,7 +220,7 @@ export function FHIROdontogramTooth({
       {/* Tooth Body */}
       <div
         className={cn(
-          "w-10 h-10 md:w-12 md:h-12 relative transition-transform duration-150",
+          "size-6 md:size-8 relative transition-transform duration-150",
           isSelected && interactive ? "scale-110" : "group-hover:scale-120"
         )}
       >
@@ -276,13 +276,13 @@ export function FHIROdontogramTooth({
               r="47"
               fill="none"
               strokeDasharray="6 4"
-              className="stroke-amber-500 dark:stroke-amber-400 stroke-[3] pointer-events-none"
+              className="stroke-amber-500 dark:stroke-amber-400 stroke-3 pointer-events-none"
             />
           )}
 
           {/* Fracture (#) Overlay (Kemenkes Standard - Full Cover) */}
           {isFracture && !isMissing && (
-            <g className="stroke-destructive stroke-[6] pointer-events-none" strokeLinecap="round">
+            <g className="stroke-destructive stroke-6 pointer-events-none" strokeLinecap="round">
               <line x1="5" y1="35" x2="95" y2="35" />
               <line x1="5" y1="65" x2="95" y2="65" />
               <line x1="35" y1="5" x2="35" y2="95" />
@@ -298,7 +298,7 @@ export function FHIROdontogramTooth({
                 y1="50"
                 x2={hasBridgeRight ? "135" : "85"}
                 y2="50"
-                className="stroke-blue-500 dark:stroke-blue-400 stroke-[8]"
+                className="stroke-blue-500 dark:stroke-blue-400 stroke-8"
                 strokeLinecap="round"
               />
               <line
@@ -306,7 +306,7 @@ export function FHIROdontogramTooth({
                 y1="50"
                 x2={hasBridgeRight ? "135" : "85"}
                 y2="50"
-                className="stroke-background stroke-[2]"
+                className="stroke-background stroke-2"
                 strokeLinecap="round"
               />
             </g>

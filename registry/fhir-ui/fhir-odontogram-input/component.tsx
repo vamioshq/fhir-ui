@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -631,19 +633,19 @@ export function FHIROdontogramInput({
           </div>
         )}
 
-        <div className="p-4 md:p-8 overflow-x-auto">
-          <div className="min-w-[700px] flex flex-col items-center gap-2 relative">
+        <div className="p-2 md:p-4 overflow-x-auto">
+          <div className="min-w-175 flex flex-col items-center gap-2 relative">
 
-            <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-border -z-10" />
-            <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-border -translate-x-1/2 -z-10" />
+            <div className="absolute top-1/2 left-0 right-0 h-px bg-border -z-10" />
+            <div className="absolute top-0 bottom-0 left-1/2 w-px bg-border -translate-x-1/2 -z-10" />
 
             {/* Upper Adult Arch */}
             {(viewMode === "adult" || viewMode === "mixed") && (
-              <div className="flex justify-center gap-4 md:gap-16 pt-4">
-                <div className="flex gap-0 justify-end min-w-[300px]">
+              <div className="flex justify-center gap-3 md:gap-6 pt-4">
+                <div className="flex gap-1 justify-end min-w-75">
                   {renderArch(q1)}
                 </div>
-                <div className="flex gap-0 justify-start min-w-[300px]">
+                <div className="flex gap-1 justify-start min-w-75">
                   {renderArch(q2)}
                 </div>
               </div>
@@ -651,11 +653,11 @@ export function FHIROdontogramInput({
 
             {/* Upper Child Arch */}
             {(viewMode === "child" || viewMode === "mixed") && (
-              <div className="flex justify-center gap-4 md:gap-16 pt-1">
-                <div className="flex gap-0 justify-end min-w-[300px]">
+              <div className="flex justify-center gap-3 md:gap-6 pt-1">
+                <div className="flex gap-1 justify-end min-w-75">
                   {renderArch(q5)}
                 </div>
-                <div className="flex gap-0 justify-start min-w-[300px]">
+                <div className="flex gap-1 justify-start min-w-75">
                   {renderArch(q6)}
                 </div>
               </div>
@@ -666,11 +668,11 @@ export function FHIROdontogramInput({
 
             {/* Lower Child Arch */}
             {(viewMode === "child" || viewMode === "mixed") && (
-              <div className="flex justify-center gap-4 md:gap-16 pb-1">
-                <div className="flex gap-0 justify-end min-w-[300px]">
+              <div className="flex justify-center gap-3 md:gap-6 pb-1">
+                <div className="flex gap-1 justify-end min-w-75">
                   {renderArch(q8)}
                 </div>
-                <div className="flex gap-0 justify-start min-w-[300px]">
+                <div className="flex gap-1 justify-start min-w-75">
                   {renderArch(q7)}
                 </div>
               </div>
@@ -678,11 +680,11 @@ export function FHIROdontogramInput({
 
             {/* Lower Adult Arch */}
             {(viewMode === "adult" || viewMode === "mixed") && (
-              <div className="flex justify-center gap-4 md:gap-16 pb-4">
-                <div className="flex gap-0 justify-end min-w-[300px]">
+              <div className="flex justify-center gap-3 md:gap-6 pb-4">
+                <div className="flex gap-1 justify-end min-w-75">
                   {renderArch(q4)}
                 </div>
-                <div className="flex gap-0 justify-start min-w-[300px]">
+                <div className="flex gap-1 justify-start min-w-75">
                   {renderArch(q3)}
                 </div>
               </div>

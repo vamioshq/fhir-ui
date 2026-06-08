@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { type Extension } from "@medplum/fhirtypes";
-import { Field, FieldLabel, FieldDescription } from "@/components/ui/field";
+import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -10,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ButtonGroupSeparator } from "@/components/ui/button-group";
 
 export type CitizenshipStatus = "WNI" | "WNA";
 
@@ -23,9 +25,9 @@ export interface FHIRCitizenshipStatusInputProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   value?: Extension;
   onChange?: (value: Extension) => void;
+  variant?: "toggle" | "select";
+  showLabel?: boolean;
   label?: string;
-  description?: string;
-  placeholder?: string;
   readOnly?: boolean;
 }
 
@@ -45,9 +47,9 @@ function parseStatusFromValue(value?: Extension): CitizenshipStatus {
 export function FHIRCitizenshipStatusInput({
   value,
   onChange,
+  variant = "toggle",
+  showLabel = false,
   label = "Citizenship Status",
-  description,
-  placeholder = "Select citizenship status",
   readOnly = false,
   className,
   ...props
@@ -62,6 +64,7 @@ export function FHIRCitizenshipStatusInput({
   }, [value]);
 
   const handleValueChange = (newStatus: CitizenshipStatus) => {
+    if (readOnly) return;
     setStatus(newStatus);
     if (onChange) {
       onChange(buildCitizenshipStatusExtension(newStatus));
@@ -69,16 +72,38 @@ export function FHIRCitizenshipStatusInput({
   };
 
   return (
-    <div className={cn(className)} {...props}>
-      <Field>
-        <FieldLabel>{label}</FieldLabel>
+    <div className={cn("w-full flex flex-col gap-2", className)} {...props}>
+      {showLabel && <Label className="text-xs font-semibold text-muted-foreground">{label}</Label>}
+
+      {variant === "toggle" ? (
+        <ToggleGroup
+          type="single"
+          value={status}
+          onValueChange={(val) => val && handleValueChange(val as CitizenshipStatus)}
+          disabled={readOnly}
+          className="flex flex-row items-center border border-input rounded-lg overflow-hidden w-fit gap-0 bg-transparent h-8"
+        >
+          {CITIZENSHIP_OPTIONS.map((opt, idx) => (
+            <React.Fragment key={opt.value}>
+              {idx > 0 && <ButtonGroupSeparator className="bg-input" />}
+              <ToggleGroupItem
+                value={opt.value}
+                aria-label={`Select ${opt.label}`}
+                className="h-full rounded-none border-0 px-3 hover:bg-muted/50 hover:text-foreground font-medium text-xs transition-all outline-none"
+              >
+                <span>{opt.label}</span>
+              </ToggleGroupItem>
+            </React.Fragment>
+          ))}
+        </ToggleGroup>
+      ) : (
         <Select
           value={status}
           onValueChange={handleValueChange}
           disabled={readOnly}
         >
-          <SelectTrigger className="h-8">
-            <SelectValue placeholder={placeholder} />
+          <SelectTrigger className="h-8 w-full">
+            <SelectValue placeholder="Select citizenship status" />
           </SelectTrigger>
           <SelectContent>
             {CITIZENSHIP_OPTIONS.map((opt) => (
@@ -88,9 +113,7 @@ export function FHIRCitizenshipStatusInput({
             ))}
           </SelectContent>
         </Select>
-
-        {description && <FieldDescription>{description}</FieldDescription>}
-      </Field>
+      )}
     </div>
   );
 }

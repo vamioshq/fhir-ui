@@ -3,57 +3,112 @@ title: FHIR Odontogram Input
 description: A massive, interactive SVG component for capturing dental charts (Rekam Medis Gigi) compliant with SATUSEHAT standards.
 ---
 
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { FHIROdontogramInput } from "@/registry/fhir-ui/fhir-odontogram-input"
+import { FHIROdontogramInputDemo } from "@/components/docs/fhir-odontogram-input-demo"
 
+# FHIR Odontogram Input
 
-
-## Overview
+The `FHIROdontogramInput` component captures dental chart (Rekam Medis Gigi) data conforming to the **SATUSEHAT** FHIR R4 implementation guidelines.
 
 FHIR doesn't natively have an "Odontogram" resource. SATUSEHAT models dental records using an array of `Observation`, `Condition`, and `Procedure` resources, with each action explicitly tied to a `bodySite` using SNOMED CT codes representing specific teeth (FDI notation).
 
-The `FHIROdontogramInput` component acts as a high-level UI orchestrator. You interact visually with a chart of 32 permanent and 20 deciduous teeth, and it dynamically generates a list of strict FHIR Resources.
+You interact visually with a chart of 32 permanent and 20 deciduous teeth, and the component dynamically generates a list of strict FHIR Resources.
 
-## Features
+---
 
-- Interactive 32-adult and 20-child SVG dental chart using FDI notation.
-- Visual mapping of common conditions (Caries, Missing, Crown, Sealant, Amalgam, Composite, Root Canal).
-- Automatically parses and generates standard FHIR resources.
-- Fully Shadcn UI compliant architecture.
+## Interactive Preview
+
+Select a dental condition tool and click on any tooth to add it to the chart. The generated FHIR resources are displayed below.
+
+<ComponentPreview
+  component="fhir-odontogram-input"
+  example="preview"
+  code={`import React from "react";
+import { FHIROdontogramInput } from "@/registry/fhir-ui/fhir-odontogram-input";
+
+export default function DentalChartForm() {
+  const [resources, setResources] = React.useState<any[]>([]);
+
+  return (
+    <div className="flex flex-col gap-6 w-full max-w-4xl min-h-[600px]">
+      <div>
+        <h3 className="text-lg font-semibold">Odontogram (Rekam Medis Gigi)</h3>
+        <p className="text-sm text-muted-foreground">
+          Select a tool and click on a tooth to add a condition or procedure.
+        </p>
+      </div>
+
+      <FHIROdontogramInput
+        value={resources}
+        onChange={setResources}
+        className="w-full"
+      />
+
+      <div className="w-full p-4 bg-muted/50 rounded-lg overflow-auto max-h-[300px]">
+        <p className="text-sm font-semibold mb-2">
+          Generated FHIR Resources ({resources.length}):
+        </p>
+        <pre className="text-xs text-muted-foreground whitespace-pre-wrap">
+          {resources.length > 0
+            ? JSON.stringify(resources, null, 2)
+            : "No records added yet. Click on the chart to generate FHIR Resources."}
+        </pre>
+      </div>
+    </div>
+  );
+} `}
+>
+  <FHIROdontogramInputDemo />
+</ComponentPreview>
+
+---
+
+## Key Features
+
+### Interactive SVG Dental Chart
+
+- **32 Permanent Teeth** + **20 Deciduous Teeth** displayed using FDI two-digit notation
+- **Visual Condition Mapping** with color-coded markers for common dental conditions
+- Click-to-add interaction for quick data entry
+
+### Supported Dental Conditions
+
+| Condition | SNOMED CT | Description |
+| :--- | :--- | :--- |
+| Caries | `274899004` | Dental caries (karies gigi) |
+| Missing | `274768008` | Missing tooth (gigi tanggal) |
+| Crown | `242458000` | Crown restoration (mahkota tiruan) |
+| Sealant | `414151009` | Pit and fissure sealant (sealant) |
+| Amalgam | `282514008` | Amalgam restoration (tambalan amalgam) |
+| Composite | `282449005` | Composite restoration (tambalan komposit) |
+| Root Canal | `282507008` | Root canal treatment (saluran akar) |
+
+### FHIR Resource Generation
+
+Each tooth action generates appropriate FHIR resources:
+
+- **Condition** for clinical findings (Caries, Missing)
+- **Procedure** for treatments performed (Extraction, Restoration)
+- **Observation** for assessments (Tooth mobility, Periodontal status)
+
+---
 
 ## Installation
 
-This component depends on Shadcn's `ToggleGroup` and `Toggle`.
+This component depends on Shadcn's `ToggleGroup` and `Toggle` components for the condition toolbar.
 
-<Tabs items={['CLI', 'Manual']}>
-  <Tab value="CLI">
-    ```bash
-    npx shadcn@latest add toggle toggle-group
-    ```
-  </Tab>
-  <Tab value="Manual">
-    Add the `ToggleGroup` and `Toggle` components to your workspace from the shadcn registry.
-  </Tab>
-</Tabs>
+```bash
+npx shadcn@latest add toggle toggle-group
+```
 
-## Code
+---
 
-`FHIROdontogramInput` handles the toolbar and high-level FHIR arrays.
+## Component API Reference
 
-<Tabs items={['fhir-odontogram-input.tsx', 'fhir-odontogram-tooth.tsx']}>
-  <Tab value="fhir-odontogram-input.tsx">
-    ```tsx file=<rootDir>/packages/ui/src/registry/fhir-odontogram-input.tsx
-    ```
-  </Tab>
-  <Tab value="fhir-odontogram-tooth.tsx">
-    ```tsx file=<rootDir>/packages/ui/src/registry/fhir-odontogram-tooth.tsx
-    ```
-  </Tab>
-</Tabs>
+### Props
 
-## Props
-
-| Prop | Type | Description |
-| :--- | :--- | :--- |
-| `value` | `any[]` | Array of FHIR Resources (`Condition`, `Procedure`, `Observation`) representing the chart state. |
-| `onChange` | `(resources: any[]) => void` | Callback fired when a new resource is generated. |
-| `readOnly` | `boolean` | Disables interactivity, transforming the component into a read-only visualizer. |
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `any[]` | `[]` | Array of FHIR Resources (`Condition`, `Procedure`, `Observation`) representing the chart state. |
+| `onChange` | `(resources: any[]) => void` | `undefined` | Callback fired when a new resource is generated. |
+| `readOnly` | `boolean` | `false` | Disables interactivity, transforming the component into a read-only visualizer. |

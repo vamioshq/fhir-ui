@@ -1,6 +1,6 @@
 ---
 title: FHIR Citizenship Status Input
-description: Simple select dropdown for WNI/WNA citizenship status, returning FHIR Extension with SATUSEHAT citizenshipStatus structure.
+description: Segmented toggle group and select dropdown for WNI/WNA citizenship status, returning FHIR Extension with SATUSEHAT citizenshipStatus structure.
 ---
 
 import { FHIRCitizenshipStatusInput } from "@/registry/fhir-ui/fhir-citizenship-status-input"
@@ -8,20 +8,21 @@ import { FHIRCitizenshipStatusInputDemo } from "@/components/docs/fhir-citizensh
 
 # FHIR Citizenship Status Input
 
-The `FHIRCitizenshipStatusInput` component is a simple dropdown for selecting patient citizenship status (WNI or WNA).
+The `FHIRCitizenshipStatusInput` component is a specialized selector for citizenship status codes conforming to the SATUSEHAT `citizenshipStatus` extension structure.
 
-This component returns a FHIR R4 `Extension` object with the SATUSEHAT `citizenshipStatus` structure.
+This component offers a modern, single-click **Toggle Group** (segmented control) variant with clean visual separation, alongside a space-saving **Select Dropdown** variant. It is designed to capture patient citizenship details for Indonesian **SATUSEHAT** patient registrations and updates.
 
 ---
 
 ## Interactive Preview
 
-<ComponentPreview
-  component="fhir-citizenship-status-input"
+Adjust the configurations in the control panel to preview both layout variants (`toggle` vs `select`), enable read-only locking, or toggle the field labels.
+
+<ComponentPreview 
+  component="fhir-citizenship-status-input" 
   example="preview"
   code={`import React from "react";
 import { FHIRCitizenshipStatusInput } from "@/registry/fhir-ui/fhir-citizenship-status-input"
-import { FHIRCitizenshipStatusInputDemo } from "@/components/docs/fhir-citizenship-status-input-demo";
 import { type Extension } from "@medplum/fhirtypes";
 
 export default function PatientForm() {
@@ -32,6 +33,8 @@ export default function PatientForm() {
       <FHIRCitizenshipStatusInput
         value={citizenship}
         onChange={setCitizenship}
+        variant="toggle"
+        showLabel={true}
       />
     </div>
   );
@@ -42,7 +45,20 @@ export default function PatientForm() {
 
 ---
 
+## Citizenship Status Codes
+
+The component maps user selection directly to SATUSEHAT citizenship status codes:
+
+| Value Code | Display Label | Description |
+| :--- | :--- | :--- |
+| `WNI` | WNI | Warga Negara Indonesia (Indonesian Citizen) |
+| `WNA` | WNA | Warga Negara Asing (Foreign Citizen) |
+
+---
+
 ## Output Format
+
+The component returns a FHIR R4 `Extension` object with the SATUSEHAT `citizenshipStatus` structure:
 
 ```json
 {
@@ -50,10 +66,6 @@ export default function PatientForm() {
   "valueCode": "WNI"
 }
 ```
-
-**Valid values:**
-- `"WNI"` - Warga Negara Indonesia (Indonesian Citizen)
-- `"WNA"` - Warga Negara Asing (Foreign Citizen)
 
 ---
 
@@ -65,13 +77,14 @@ export default function PatientForm() {
 | :--- | :--- | :--- | :--- |
 | `value` | `Extension` | `undefined` | Controlled value representing the citizenshipStatus Extension. |
 | `onChange` | `(value: Extension) => void` | `undefined` | Callback triggered when citizenship status changes. |
-| `label` | `string` | `"Citizenship Status"` | Custom label text. |
-| `description` | `string` | `undefined` | Additional helper text displayed below the label. |
-| `placeholder` | `string` | `"Select citizenship status"` | Select placeholder text. |
-| `readOnly` | `boolean` | `false` | Disables the input if set to `true`. |
+| `variant` | `"toggle" \| "select"` | `"toggle"` | Layout style of the input component. Segmented button group or select dropdown. |
+| `showLabel` | `boolean` | `false` | If `true`, displays the field label above the selector. |
+| `label` | `string` | `"Citizenship Status"` | Custom label text rendered if `showLabel={true}`. |
+| `readOnly` | `boolean` | `false` | Locks all actions and renders disabled styles if set to `true`. |
 
 ---
 
 ## Related Components
 
 - [FHIRBirthPlaceInput](./fhir-birth-place-input) - Birth place input with country dropdown
+- [FHIRGenderInput](./fhir-gender-input) - Gender input with toggle group variant
