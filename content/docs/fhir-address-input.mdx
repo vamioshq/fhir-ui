@@ -12,7 +12,7 @@ The `FHIRAddressInput` component captures patient addresses conforming to the FH
 
 ---
 
-## Layout Variants
+## Interactive Preview
 
 You can choose between two visual layouts depending on your UI layout space.
 
@@ -77,21 +77,25 @@ export default function AdminAddressForm() {
 
 ---
 
-## Key Features to Know
+---
+
+## Key Features & FHIR Mapping
+
+### Key Features
 
 If you are a developer integrating this component, keep these automated behaviors in mind:
 
-### Indonesian vs International Mode
+#### Indonesian vs International Mode
 The form dynamically adapts to the selected country:
 * **Indonesia (`"ID"`):** Emits structured administrative codes (Province, City, District, Village BPS codes) in the nested FHIR `extension` array matching the SATUSEHAT specification.
 * **International (Non-`"ID"`):** Disables RT/RW and Village comboboxes, replacing them with generic manual text inputs (State, City, District). It automatically strips out the SATUSEHAT extensions on payload emission.
 
-### RT/RW Formatting
+#### RT/RW Formatting
 Numeric inputs for RT and RW are automatically padded to 3 digits on blur (e.g., `8` becomes `008`, `23` becomes `023`) to satisfy Kemenkes database constraints.
 
 ---
 
-## Quick Integration Example
+### Quick Integration Example
 
 Connecting the component to your page is straightforward. Simply import the component and pass an `onChange` listener to capture the resulting FHIR Address payload.
 
@@ -123,6 +127,8 @@ export default function RegisterAddressStep() {
 
 ---
 
+---
+
 ## Component API Reference
 
 ### Props
@@ -139,3 +145,4 @@ export default function RegisterAddressStep() {
 | `onFetchCities` | `(provCode: string, query?: string) => Promise<RegionalItem[]>` | *Mock Fetcher* | Async callback to load cities based on selected province code. |
 | `onFetchDistricts` | `(cityCode: string, query?: string) => Promise<RegionalItem[]>` | *Mock Fetcher* | Async callback to load districts based on selected city code. |
 | `onFetchVillages` | `(distCode: string, query?: string) => Promise<RegionalItem[]>` | *Mock Fetcher* | Async callback to load villages based on selected district code. |
+

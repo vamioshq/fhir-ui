@@ -50,6 +50,7 @@ export function FHIRMoneyInput({
     } else {
       setDisplayValue("");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- displayValue is intentionally omitted to avoid resetting the input formatting/cursor position while the user is typing
   }, [value]);
 
   const updateMoney = (

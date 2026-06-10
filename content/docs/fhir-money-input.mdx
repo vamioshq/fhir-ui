@@ -46,21 +46,25 @@ export default function BillItem() {
 
 ---
 
-## Key Features to Know
+---
 
-### ISO 4217 Currency Selector
+## Key Features & FHIR Mapping
+
+### Key Features
+
+#### ISO 4217 Currency Selector
 The component renders the active currency code on the left side of the input.
 - **Dynamic Selection**: Clicking the currency code triggers a standard dropdown menu to switch between common global currencies (e.g., `IDR`, `USD`, `EUR`, `SGD`, `MYR`).
 - **Custom Currency Lists**: Developers can override the default currency selection list by passing an array of ISO 4217 codes via the `currencies` prop.
 
-### Decimal Filtering and Indonesian Decimals
+#### Decimal Filtering and Indonesian Decimals
 The input filters characters on-the-fly to guarantee numeric data cleanliness:
 - Only digits, a single decimal point, and a leading minus sign are allowed.
 - Indonesian commas are translated into standard decimal dots on-the-fly (e.g. typing `150000,50` translates to `150000.50` internally).
 
 ---
 
-## Quick Integration Example
+### Quick Integration Example
 
 You can render separate inputs for invoicing and bill calculations, managing them via simple state hooks:
 
@@ -95,6 +99,8 @@ export default function InvoiceForm() {
 
 ---
 
+---
+
 ## Component API Reference
 
 ### Props
@@ -107,3 +113,4 @@ export default function InvoiceForm() {
 | `description` | `string` | `undefined` | Helper text displayed below the input field. |
 | `currencies` | `string[]` | `["IDR", "USD", "EUR", "SGD", "AUD", "JPY", "GBP", "MYR"]` | List of ISO 4217 currency options available in the select dropdown. |
 | `readOnly` | `boolean` | `false` | Disables the currency selection dropdown and the numeric input field. |
+

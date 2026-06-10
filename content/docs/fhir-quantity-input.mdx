@@ -73,32 +73,9 @@ export default function VitalsForm() {
 
 ---
 
-## Key Features to Know
+### Preset Interactive Previews
 
-### Locked Terminology Unit
-The component accepts a standard UCUM terminology `code` prop.
-* **Automated Unit Resolution:** If you provide a standard code (e.g., `"Cel"`, `"mm[Hg]"`, `"kg"`, `"/min"`), the component automatically resolves the human-readable unit badge (`"°C"`, `"mmHg"`, `"kg"`, `"bpm"`) using a built-in UCUM mapping dictionary.
-* **Typo Elimination:** Users cannot edit or pollute the unit representation.
-* **Standardized Coding:** Emitted payloads automatically pair the user's measurement value with the correct terminology code.
-
-### Standard UCUM Coding System
-If a `code` or `unit` prop is provided, the terminology `system` is automatically hardcoded to UCUM (`http://unitsofmeasure.org`). This covers the vast majority of standard clinical observations and measurements.
-
-### Presets & Validation Badges
-To simplify inputs for standard patient measurements, the component offers a `preset` prop. Passing a preset auto-configures the label, units, standard codes, and normal-range placeholders, and enables automatic clinical validation badges:
-
-* **BP / Pulse / Temperature:** Auto-checks standard clinical thresholds (e.g. fever warnings, tachycardia, critical hypoxia).
-* **Waist Circumference (`waist-circumference`):** Integrates gender-specific validation boundaries when `patientGender` (`"male" | "female"`) is provided.
-* **Comparator Bypass:** Presets automatically hide the comparator selection dropdown (`hideComparator = true` by default) since clinical vital signs represent absolute measurements.
-
-### Standardized Operators
-The operator select dropdown on the left maps directly to standard FHIR Quantity comparator symbols: `=`, `<`, `<=`, `>=`, and `>`. Choosing `=` strips the comparator from the emitted JSON object (per the FHIR standard specification).
-
----
-
-## Preset Interactive Previews
-
-#### Temperature Preset (`preset="temperature"`)
+##### Temperature Preset (`preset="temperature"`)
 
 <ComponentPreview 
   component="fhir-quantity-input" 
@@ -122,7 +99,7 @@ export default function TemperatureForm() {
   <FHIRQuantityInputDemo />
 </ComponentPreview>
 
-#### Waist Circumference Preset (`preset="waist-circumference"`)
+##### Waist Circumference Preset (`preset="waist-circumference"`)
 
 Evaluates Indonesian Kemenkes/BPJS central obesity thresholds ($\ge 80$ cm for females):
 
@@ -148,6 +125,33 @@ export default function WaistCircumferenceForm() {
 >
   <FHIRQuantityInputDemo />
 </ComponentPreview>
+
+---
+
+---
+
+## Key Features & FHIR Mapping
+
+### Locked Terminology Unit
+The component accepts a standard UCUM terminology `code` prop.
+* **Automated Unit Resolution:** If you provide a standard code (e.g., `"Cel"`, `"mm[Hg]"`, `"kg"`, `"/min"`), the component automatically resolves the human-readable unit badge (`"°C"`, `"mmHg"`, `"kg"`, `"bpm"`) using a built-in UCUM mapping dictionary.
+* **Typo Elimination:** Users cannot edit or pollute the unit representation.
+* **Standardized Coding:** Emitted payloads automatically pair the user's measurement value with the correct terminology code.
+
+### Standard UCUM Coding System
+If a `code` or `unit` prop is provided, the terminology `system` is automatically hardcoded to UCUM (`http://unitsofmeasure.org`). This covers the vast majority of standard clinical observations and measurements.
+
+### Presets & Validation Badges
+To simplify inputs for standard patient measurements, the component offers a `preset` prop. Passing a preset auto-configures the label, units, standard codes, and normal-range placeholders, and enables automatic clinical validation badges:
+
+* **BP / Pulse / Temperature:** Auto-checks standard clinical thresholds (e.g. fever warnings, tachycardia, critical hypoxia).
+* **Waist Circumference (`waist-circumference`):** Integrates gender-specific validation boundaries when `patientGender` (`"male" | "female"`) is provided.
+* **Comparator Bypass:** Presets automatically hide the comparator selection dropdown (`hideComparator = true` by default) since clinical vital signs represent absolute measurements.
+
+### Standardized Operators
+The operator select dropdown on the left maps directly to standard FHIR Quantity comparator symbols: `=`, `<`, `<=`, `>=`, and `>`. Choosing `=` strips the comparator from the emitted JSON object (per the FHIR standard specification).
+
+---
 
 ---
 

@@ -47,7 +47,9 @@ export default function DocumentUploadForm() {
 
 ---
 
-## SATUSEHAT Integration Tips
+---
+
+## Key Features & FHIR Mapping
 
 When submitting documents to SATUSEHAT (like in a `DocumentReference` or `DiagnosticReport` resource), ensuring the `Attachment` object is correctly formatted is critical.
 
@@ -55,6 +57,8 @@ This component automatically:
 1. **Determines Content Type**: Safely extracts the MIME type and maps it to `Attachment.contentType`.
 2. **Encodes Data**: Generates the required Base64 string without data URI prefixes (`data:image/jpeg;base64,` is stripped automatically).
 3. **Captures Metadata**: Logs the original filename (`title`) and file size in bytes (`size`), as well as setting the `creation` timestamp.
+
+---
 
 ---
 
@@ -71,3 +75,4 @@ This component automatically:
 | `readOnly` | `boolean` | `false` | Disables file selection and removal, showing a faded, un-interactive state. |
 | `accept` | `string` | `undefined` | Standard HTML file input \`accept\` attribute string (e.g., \`"image/*, .pdf"\`). |
 | `maxSizeMB` | `number` | `5` | The maximum allowed file size in megabytes. |
+

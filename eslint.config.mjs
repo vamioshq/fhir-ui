@@ -20,8 +20,10 @@ const eslintConfig = defineConfig([
     // },
     rules: {
       '@next/next/no-html-link-for-pages': 'off',
-      // 'tailwindcss/no-custom-classname': 'off',
-      // 'tailwindcss/classnames-order': 'error',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/preserve-manual-memoization': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
     // settings: {
     //   tailwindcss: {

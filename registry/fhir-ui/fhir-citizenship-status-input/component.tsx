@@ -54,18 +54,10 @@ export function FHIRCitizenshipStatusInput({
   className,
   ...props
 }: FHIRCitizenshipStatusInputProps) {
-  const [status, setStatus] = React.useState<CitizenshipStatus>(
-    parseStatusFromValue(value)
-  );
-
-  // Sync state if incoming value prop changes
-  React.useEffect(() => {
-    setStatus(parseStatusFromValue(value));
-  }, [value]);
+  const status = parseStatusFromValue(value);
 
   const handleValueChange = (newStatus: CitizenshipStatus) => {
     if (readOnly) return;
-    setStatus(newStatus);
     if (onChange) {
       onChange(buildCitizenshipStatusExtension(newStatus));
     }

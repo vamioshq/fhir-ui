@@ -63,15 +63,19 @@ export default function DentalChartForm() {
 
 ---
 
-## Key Features
+---
 
-### Interactive SVG Dental Chart
+## Key Features & FHIR Mapping
+
+### Key Features
+
+#### Interactive SVG Dental Chart
 
 - **32 Permanent Teeth** + **20 Deciduous Teeth** displayed using FDI two-digit notation
 - **Visual Condition Mapping** with color-coded markers for common dental conditions
 - Click-to-add interaction for quick data entry
 
-### Supported Dental Conditions
+#### Supported Dental Conditions
 
 | Condition | SNOMED CT | Description |
 | :--- | :--- | :--- |
@@ -83,7 +87,7 @@ export default function DentalChartForm() {
 | Composite | `282449005` | Composite restoration (tambalan komposit) |
 | Root Canal | `282507008` | Root canal treatment (saluran akar) |
 
-### FHIR Resource Generation
+#### FHIR Resource Generation
 
 Each tooth action generates appropriate FHIR resources:
 
@@ -93,13 +97,15 @@ Each tooth action generates appropriate FHIR resources:
 
 ---
 
-## Installation
+### Installation
 
 This component depends on Shadcn's `ToggleGroup` and `Toggle` components for the condition toolbar.
 
 ```bash
 npx shadcn@latest add toggle toggle-group
 ```
+
+---
 
 ---
 
@@ -112,3 +118,4 @@ npx shadcn@latest add toggle toggle-group
 | `value` | `any[]` | `[]` | Array of FHIR Resources (`Condition`, `Procedure`, `Observation`) representing the chart state. |
 | `onChange` | `(resources: any[]) => void` | `undefined` | Callback fired when a new resource is generated. |
 | `readOnly` | `boolean` | `false` | Disables interactivity, transforming the component into a read-only visualizer. |
+

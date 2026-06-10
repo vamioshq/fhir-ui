@@ -65,24 +65,28 @@ export default function ContactChannelsForm() {
 
 ---
 
-## Layout Variants
+### Layout Variants
 
 You can choose between two visual layouts based on your form space requirements.
 
-### 1. Simple Variant (Default)
+#### 1. Simple Variant (Default)
 The `simple` variant renders a compact, single-field layout.
 * **Main UI Input:** Clean text input field with a responsive layout.
 * **Advanced Dialog:** Includes a sliders icon button. Clicking it opens a modal Dialog containing detailed inputs to modify the classification (Usage Type) and value manually.
 
-### 2. Detailed Variant
+#### 2. Detailed Variant
 The `detailed` variant renders inputs directly inline inside an accessible fieldset.
 * **Main UI Fields:** Exposes the contact value input and the Usage selector dropdown inline side-by-side.
 
 ---
 
-## Key Features to Know
+---
 
-### Contact Point System Classifications
+## Key Features & FHIR Mapping
+
+### Key Features
+
+#### Contact Point System Classifications
 The component configures standard HTML input attributes, placeholders, and mobile soft keypads based on the `system` prop:
 * `phone`: A standard voice telephone number. Configures `<input type="tel">`.
 * `email`: An email address. Configures `<input type="email">`.
@@ -92,7 +96,7 @@ The component configures standard HTML input attributes, placeholders, and mobil
 * `pager`: A numeric pager number or code. Configures `<input type="text">`.
 * `other`: Any alternative contact point system type. Configures `<input type="text">`.
 
-### Contact Point Use Classifications
+#### Contact Point Use Classifications
 The component maps how the contact details are intended to be used via the standard FHIR `use` field:
 * `home`: Residence contact details.
 * `work`: Workplace or business contact details.
@@ -102,7 +106,7 @@ The component maps how the contact details are intended to be used via the stand
 
 ---
 
-## Quick Integration Example
+### Quick Integration Example
 
 You can render separate inputs for phone and email on your form, keeping data cleanly separated.
 
@@ -141,6 +145,8 @@ export default function RegisterContactStep() {
 
 ---
 
+---
+
 ## Component API Reference
 
 ### Props
@@ -153,3 +159,4 @@ export default function RegisterContactStep() {
 | `system` | `"phone" \| "email" \| "url" \| "sms" \| "fax" \| "pager" \| "other"` | `"phone"` | Sets the contact system type and configures soft keyboards. |
 | `label` | `string` | `"Contact Information"` | Label text shown above the input. |
 | `description` | `string` | `undefined` | Optional helper text or description displayed at the bottom of the field. |
+

@@ -44,14 +44,18 @@ export default function DemographicsForm() {
 
 ---
 
-## Extension Structure & Codes
+---
+
+## Key Features & FHIR Mapping
+
+### Extension Structure & Codes
 
 The component maps user choice to a FHIR Extension payload:
 
 * **Extension URL**: `https://fhir.kemkes.go.id/r4/StructureDefinition/patient-religion`
 * **CodeableConcept System**: `http://terminology.kemkes.go.id/CodeSystem/religion`
 
-### Religion Codes Mapping
+#### Religion Codes Mapping
 
 | Code | Value Display |
 | :--- | :--- |
@@ -61,6 +65,8 @@ The component maps user choice to a FHIR Extension payload:
 | `4` | Hindu |
 | `5` | Buddha |
 | `6` | Khonghucu |
+
+---
 
 ---
 
@@ -76,3 +82,4 @@ The component maps user choice to a FHIR Extension payload:
 | `showLabel` | `boolean` | `false` | Displays the label above the field when `true`. |
 | `label` | `string` | `"Religion"` | Label text printed if `showLabel={true}`. |
 | `readOnly` | `boolean` | `false` | Locks the field and renders in disabled mode when `true`. |
+

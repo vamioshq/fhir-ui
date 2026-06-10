@@ -12,7 +12,7 @@ The `FHIRHumanNameInput` component captures patient names conforming to the FHIR
 
 ---
 
-## Layout Variants
+## Interactive Preview
 
 You can choose between two visual layouts depending on your UI layout space.
 
@@ -78,11 +78,15 @@ export default function AdminNameForm() {
 
 ---
 
-## Key Features to Know
+---
+
+## Key Features & FHIR Mapping
+
+### Key Features
 
 If you are a developer integrating this component, keep these automated behaviors in mind:
 
-### Name Parsing Heuristics
+#### Name Parsing Heuristics
 When typing in the `simple` variant, the input automatically parses the string:
 * **Prefixes:** Captures typical titles (`Dr`, `Mr`, `Mrs`, `Ms`, `Prof`, `Sir`, `Sister`) at the start of the string into `name.prefix`.
 * **Suffixes:** Captures standard suffixes and credentials (`Jr`, `Sr`, `MD`, `PhD`, `II`, `III`, `IV`) at the end of the string into `name.suffix`.
@@ -91,7 +95,7 @@ When typing in the `simple` variant, the input automatically parses the string:
 
 ---
 
-## Quick Integration Example
+### Quick Integration Example
 
 Connecting the component to your page is straightforward. Simply import the component and pass an `onChange` listener to capture the resulting FHIR HumanName payload.
 
@@ -123,6 +127,8 @@ export default function RegisterNameStep() {
 
 ---
 
+---
+
 ## Component API Reference
 
 ### Props
@@ -134,3 +140,4 @@ export default function RegisterNameStep() {
 | `variant` | `"simple" \| "detailed"` | `"simple"` | Visual variant to display. |
 | `label` | `string` | `"Name Information"` | Label text shown at the top of the component. |
 | `description` | `string` | `undefined` | Optional helper text or description displayed at the bottom of the field. |
+

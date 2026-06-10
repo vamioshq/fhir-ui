@@ -203,6 +203,7 @@ export function FHIRPractitionerInput({
     if (value?.display && !inputValue) {
       setInputValue(value.display);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- inputValue is intentionally omitted to avoid overwriting typed input value on parent state updates
   }, [value]);
 
   // Handle search with debounce

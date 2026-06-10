@@ -42,7 +42,11 @@ export default function CountryForm() {
 
 ---
 
-## Features
+---
+
+## Key Features & FHIR Mapping
+
+### Key Features
 
 - **Complete Country List**: Includes all ISO-3166-1 alpha-2 countries (Indonesia, United States, etc.)
 - **Searchable**: Search by country name or code
@@ -51,26 +55,9 @@ export default function CountryForm() {
 
 ---
 
-## Component API Reference
+### Usage Example
 
-### Props
-
-| Prop Name | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `value` | `{ code: string; name: string } \| undefined` | `undefined` | Currently selected country. |
-| `onChange` | `(item: { code: string; name: string }) => void` | `undefined` | Callback when a country is selected. |
-| `showLabel` | `boolean` | `false` | If `true`, displays the field label. |
-| `label` | `string` | `"Country"` | Custom label text. |
-| `placeholder` | `string` | `"Search country..."` | Placeholder text for search input. |
-| `readOnly` | `boolean` | `false` | Disables the selector if `true`. |
-| `disabled` | `boolean` | `false` | Disables the selector if `true`. |
-| `className` | `string` | `undefined` | Additional CSS classes. |
-
----
-
-## Usage Example
-
-### Basic Usage
+#### Basic Usage
 
 ```tsx
 import { FHIRCountrySelector } from "@/registry/fhir-ui/fhir-country-selector";
@@ -89,7 +76,7 @@ function NationalityField() {
 }
 ```
 
-### With FHIR Integration
+#### With FHIR Integration
 
 For FHIR Patient resources, this can be used for the birth country or address country:
 
@@ -110,7 +97,7 @@ const handleCountryChange = (item: { code: string; name: string }) => {
 
 ---
 
-## Data Format
+### Data Format
 
 The component returns a country object with:
 
@@ -123,7 +110,7 @@ The component returns a country object with:
 
 ---
 
-## ISO-3166-1 Alpha-2 Codes
+### ISO-3166-1 Alpha-2 Codes
 
 Common codes used in SATUSEHAT:
 
@@ -139,6 +126,27 @@ Common codes used in SATUSEHAT:
 | `CN` | China |
 | `IN` | India |
 | `SA` | Saudi Arabia |
+
+---
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `value` | `{ code: string; name: string } \| undefined` | `undefined` | Currently selected country. |
+| `onChange` | `(item: { code: string; name: string }) => void` | `undefined` | Callback when a country is selected. |
+| `showLabel` | `boolean` | `false` | If `true`, displays the field label. |
+| `label` | `string` | `"Country"` | Custom label text. |
+| `placeholder` | `string` | `"Search country..."` | Placeholder text for search input. |
+| `readOnly` | `boolean` | `false` | Disables the selector if `true`. |
+| `disabled` | `boolean` | `false` | Disables the selector if `true`. |
+| `className` | `string` | `undefined` | Additional CSS classes. |
+
+---
 
 ---
 

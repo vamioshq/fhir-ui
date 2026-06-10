@@ -50,7 +50,11 @@ export default function RegionalForm() {
 
 ---
 
-## Features
+---
+
+## Key Features & FHIR Mapping
+
+### Key Features
 
 - **Async Search**: Fetch data on-demand from your API
 - **Multiple Levels**: Province → City → District → Village
@@ -60,36 +64,9 @@ export default function RegionalForm() {
 
 ---
 
-## Component API Reference
+### Usage Example
 
-### Props
-
-| Prop Name | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `label` | `string` | **Required** | Field label text. |
-| `placeholder` | `string` | `"Search..."` | Placeholder text for search input. |
-| `valueCode` | `string \| undefined` | `undefined` | Currently selected region code. |
-| `valueName` | `string \| undefined` | `undefined` | Currently selected region name. |
-| `onChange` | `(code: string, name: string) => void` | `undefined` | Callback when a region is selected. |
-| `onFetchData` | `(query?: string) => Promise\<RegionalItem[]\>` | **Required** | Async function to fetch regional data. |
-| `disabled` | `boolean` | `false` | Disables the selector if `true`. |
-| `showLabel` | `boolean` | `false` | If `true`, displays the field label. |
-| `className` | `string` | `undefined` | Additional CSS classes. |
-
-### RegionalItem Type
-
-```typescript
-interface RegionalItem {
-  code: string;  // Regional code (e.g., "31" for DKI Jakarta)
-  name: string;  // Regional name (e.g., "DKI Jakarta")
-}
-```
-
----
-
-## Usage Example
-
-### Province Selector with SATUSEHAT API
+#### Province Selector with SATUSEHAT API
 
 ```tsx
 import { FHIRRegionalSelector, type RegionalItem } from "@/registry/fhir-ui/fhir-regional-selector";
@@ -118,7 +95,7 @@ function ProvinceField() {
 }
 ```
 
-### Multi-level Regional Selection
+#### Multi-level Regional Selection
 
 ```tsx
 function AddressForm() {
@@ -160,7 +137,7 @@ function AddressForm() {
 
 ---
 
-## Indonesian Regional Code Format
+### Indonesian Regional Code Format
 
 | Level | Code Length | Example | Format |
 | :--- | :--- | :--- | :--- |
@@ -171,12 +148,43 @@ function AddressForm() {
 
 ---
 
-## Integration with SATUSEHAT
+### Integration with SATUSEHAT
 
 For SATUSEHAT integration, use the **Master Wilayah** API:
 
 - **Sandbox**: `https://api-satusehat-stg.dto.kemkes.go.id/masterdata/v1/wilayah`
 - **Production**: `https://api-satusehat.kemkes.go.id/masterdata/v1/wilayah`
+
+---
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `label` | `string` | **Required** | Field label text. |
+| `placeholder` | `string` | `"Search..."` | Placeholder text for search input. |
+| `valueCode` | `string \| undefined` | `undefined` | Currently selected region code. |
+| `valueName` | `string \| undefined` | `undefined` | Currently selected region name. |
+| `onChange` | `(code: string, name: string) => void` | `undefined` | Callback when a region is selected. |
+| `onFetchData` | `(query?: string) => Promise\<RegionalItem[]\>` | **Required** | Async function to fetch regional data. |
+| `disabled` | `boolean` | `false` | Disables the selector if `true`. |
+| `showLabel` | `boolean` | `false` | If `true`, displays the field label. |
+| `className` | `string` | `undefined` | Additional CSS classes. |
+
+### RegionalItem Type
+
+```typescript
+interface RegionalItem {
+  code: string;  // Regional code (e.g., "31" for DKI Jakarta)
+  name: string;  // Regional name (e.g., "DKI Jakarta")
+}
+```
+
+---
 
 ---
 

@@ -45,7 +45,11 @@ export default function PatientForm() {
 
 ---
 
-## Citizenship Status Codes
+---
+
+## Key Features & FHIR Mapping
+
+### Citizenship Status Codes
 
 The component maps user selection directly to SATUSEHAT citizenship status codes:
 
@@ -56,7 +60,7 @@ The component maps user selection directly to SATUSEHAT citizenship status codes
 
 ---
 
-## Output Format
+### Output Format
 
 The component returns a FHIR R4 `Extension` object with the SATUSEHAT `citizenshipStatus` structure:
 
@@ -66,6 +70,8 @@ The component returns a FHIR R4 `Extension` object with the SATUSEHAT `citizensh
   "valueCode": "WNI"
 }
 ```
+
+---
 
 ---
 
@@ -81,6 +87,8 @@ The component returns a FHIR R4 `Extension` object with the SATUSEHAT `citizensh
 | `showLabel` | `boolean` | `false` | If `true`, displays the field label above the selector. |
 | `label` | `string` | `"Citizenship Status"` | Custom label text rendered if `showLabel={true}`. |
 | `readOnly` | `boolean` | `false` | Locks all actions and renders disabled styles if set to `true`. |
+
+---
 
 ---
 

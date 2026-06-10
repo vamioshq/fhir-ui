@@ -51,7 +51,9 @@ export default function GenericLinker() {
 
 ---
 
-## Key Features to Know
+---
+
+## Key Features & FHIR Mapping
 
 ### Resource Type Locking
 
@@ -110,6 +112,8 @@ const ROOM_OPTIONS: Reference[] = [
 
 ---
 
+---
+
 ## Component API Reference
 
 ### Props
@@ -124,3 +128,4 @@ const ROOM_OPTIONS: Reference[] = [
 | `placeholder` | `string` | `"Search resources..."` | Placeholder text for the search input. |
 | `options` | `Reference[]` | `[]` | Static list of options. Useful for small, finite value sets. |
 | `onSearch` | `(query: string, type?: string) => Promise<Reference[]>` | `undefined` | Async function for fetching terminology options remotely. Receives the `resourceType` prop as the second parameter if configured. |
+

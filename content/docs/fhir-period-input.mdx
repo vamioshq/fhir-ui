@@ -46,11 +46,17 @@ export default function PeriodForm() {
 
 ---
 
-## Period Validation
+---
+
+## Key Features & FHIR Mapping
+
+### Period Validation
 
 If both `start` and `end` times are populated:
 * The component parses and compares timestamps using absolute milliseconds.
 * If `end < start`, an `"End is before Start"` badge is displayed in the header.
+
+---
 
 ---
 
@@ -66,3 +72,4 @@ If both `start` and `end` times are populated:
 | `label` | `string` | `"Period Bounds"` | Custom section label text. |
 | `readOnly` | `boolean` | `false` | Disables both inner date-time selectors. |
 | `defaultOffset` | `string` | `"+07:00"` | Default timezone offset passed down to the date-time inputs. |
+

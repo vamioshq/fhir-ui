@@ -14,7 +14,124 @@ This component supports direct configuration presets mapping each input field to
 
 ---
 
-## Interactive Preview (Full Panel)
+## Interactive Preview
+
+### Individual Input Previews
+
+You can render specific vital sign fields individually by passing the `preset` prop. This locks the input to the target metric and directly generates the appropriate FHIR `Observation` payload, omitting all other fields.
+
+#### Blood Pressure Preset (`preset="blood-pressure"`)
+
+Captures both systolic and diastolic blood pressure side-by-side:
+
+<ComponentPreview 
+  component="fhir-vital-signs-input" 
+  example="blood-pressure-preset"
+  code={`import React from "react";
+import { type Observation } from "@medplum/fhirtypes";
+import { FHIRVitalSignsInput } from "@/registry/fhir-ui/fhir-vital-signs-input";
+
+export default function BloodPressureForm() {
+  const [observations, setObservations] = React.useState<Observation[]>([]);
+
+  return (
+    <FHIRVitalSignsInput
+      preset="blood-pressure"
+      value={observations}
+      onChange={setObservations}
+    />
+  );
+}`}
+>
+  <FHIRVitalSignsInputDemo />
+</ComponentPreview>
+
+#### Body Temperature Preset (`preset="temperature"`)
+
+Captures patient temperature and validates fever thresholds:
+
+<ComponentPreview 
+  component="fhir-vital-signs-input" 
+  example="temperature-preset"
+  code={`import React from "react";
+import { type Observation } from "@medplum/fhirtypes";
+import { FHIRVitalSignsInput } from "@/registry/fhir-ui/fhir-vital-signs-input";
+
+export default function TemperatureForm() {
+  const [observations, setObservations] = React.useState<Observation[]>([]);
+
+  return (
+    <FHIRVitalSignsInput
+      preset="temperature"
+      value={observations}
+      onChange={setObservations}
+    />
+  );
+}`}
+>
+  <FHIRVitalSignsInputDemo />
+</ComponentPreview>
+
+#### Oxygen Saturation Preset (`preset="spo2"`)
+
+Captures blood oxygen levels (SpO2) and monitors for hypoxia (< 95%):
+
+<ComponentPreview 
+  component="fhir-vital-signs-input" 
+  example="spo2-preset"
+  code={`import React from "react";
+import { type Observation } from "@medplum/fhirtypes";
+import { FHIRVitalSignsInput } from "@/registry/fhir-ui/fhir-vital-signs-input";
+
+export default function SpO2Form() {
+  const [observations, setObservations] = React.useState<Observation[]>([]);
+
+  return (
+    <FHIRVitalSignsInput
+      preset="spo2"
+      value={observations}
+      onChange={setObservations}
+    />
+  );
+}`}
+>
+  <FHIRVitalSignsInputDemo />
+</ComponentPreview>
+
+#### Waist Circumference Preset (`preset="waist-circumference"`)
+
+Captures waist circumference ("Lingkar Perut") and applies Indonesian Kemenkes/BPJS validation guidelines. Try changing the patient gender in the preview header to see the validation thresholds switch dynamically ($\ge 80$ cm for females, $\ge 90$ cm for males):
+
+<ComponentPreview 
+  component="fhir-vital-signs-input" 
+  example="waist-circumference-preset"
+  code={`import React from "react";
+import { type Observation } from "@medplum/fhirtypes";
+import { FHIRVitalSignsInput } from "@/registry/fhir-ui/fhir-vital-signs-input";
+
+export default function WaistCircumferenceForm() {
+  const [observations, setObservations] = React.useState<Observation[]>([]);
+
+  return (
+    <FHIRVitalSignsInput
+      preset="waist-circumference"
+      patientGender="female" // Triggers Central Obesity badge at >= 80cm (Kemenkes limit)
+      value={observations}
+      onChange={setObservations}
+    />
+  );
+}`}
+>
+  <FHIRVitalSignsInputDemo />
+</ComponentPreview>
+
+---
+
+---
+
+## Key Features & FHIR Mapping
+
+### Interactive Preview (Full Panel)
 
 The preview below showcases the `FHIRVitalSignsInput` component rendering vital sign fields in a clean, non-opinionated grid. Try entering values (e.g. Temperature > 37.5°C or SpO2 < 95%) to trigger dynamic inline validation badges.
 
@@ -44,120 +161,9 @@ export default function VitalsForm() {
 
 ---
 
-## Individual Input Previews
+### Key Features
 
-You can render specific vital sign fields individually by passing the `preset` prop. This locks the input to the target metric and directly generates the appropriate FHIR `Observation` payload, omitting all other fields.
-
-### Blood Pressure Preset (`preset="blood-pressure"`)
-
-Captures both systolic and diastolic blood pressure side-by-side:
-
-<ComponentPreview 
-  component="fhir-vital-signs-input" 
-  example="blood-pressure-preset"
-  code={`import React from "react";
-import { type Observation } from "@medplum/fhirtypes";
-import { FHIRVitalSignsInput } from "@/registry/fhir-ui/fhir-vital-signs-input";
-
-export default function BloodPressureForm() {
-  const [observations, setObservations] = React.useState<Observation[]>([]);
-
-  return (
-    <FHIRVitalSignsInput
-      preset="blood-pressure"
-      value={observations}
-      onChange={setObservations}
-    />
-  );
-}`}
->
-  <FHIRVitalSignsInputDemo />
-</ComponentPreview>
-
-### Body Temperature Preset (`preset="temperature"`)
-
-Captures patient temperature and validates fever thresholds:
-
-<ComponentPreview 
-  component="fhir-vital-signs-input" 
-  example="temperature-preset"
-  code={`import React from "react";
-import { type Observation } from "@medplum/fhirtypes";
-import { FHIRVitalSignsInput } from "@/registry/fhir-ui/fhir-vital-signs-input";
-
-export default function TemperatureForm() {
-  const [observations, setObservations] = React.useState<Observation[]>([]);
-
-  return (
-    <FHIRVitalSignsInput
-      preset="temperature"
-      value={observations}
-      onChange={setObservations}
-    />
-  );
-}`}
->
-  <FHIRVitalSignsInputDemo />
-</ComponentPreview>
-
-### Oxygen Saturation Preset (`preset="spo2"`)
-
-Captures blood oxygen levels (SpO2) and monitors for hypoxia (< 95%):
-
-<ComponentPreview 
-  component="fhir-vital-signs-input" 
-  example="spo2-preset"
-  code={`import React from "react";
-import { type Observation } from "@medplum/fhirtypes";
-import { FHIRVitalSignsInput } from "@/registry/fhir-ui/fhir-vital-signs-input";
-
-export default function SpO2Form() {
-  const [observations, setObservations] = React.useState<Observation[]>([]);
-
-  return (
-    <FHIRVitalSignsInput
-      preset="spo2"
-      value={observations}
-      onChange={setObservations}
-    />
-  );
-}`}
->
-  <FHIRVitalSignsInputDemo />
-</ComponentPreview>
-
-### Waist Circumference Preset (`preset="waist-circumference"`)
-
-Captures waist circumference ("Lingkar Perut") and applies Indonesian Kemenkes/BPJS validation guidelines. Try changing the patient gender in the preview header to see the validation thresholds switch dynamically ($\ge 80$ cm for females, $\ge 90$ cm for males):
-
-<ComponentPreview 
-  component="fhir-vital-signs-input" 
-  example="waist-circumference-preset"
-  code={`import React from "react";
-import { type Observation } from "@medplum/fhirtypes";
-import { FHIRVitalSignsInput } from "@/registry/fhir-ui/fhir-vital-signs-input";
-
-export default function WaistCircumferenceForm() {
-  const [observations, setObservations] = React.useState<Observation[]>([]);
-
-  return (
-    <FHIRVitalSignsInput
-      preset="waist-circumference"
-      patientGender="female" // Triggers Central Obesity badge at >= 80cm (Kemenkes limit)
-      value={observations}
-      onChange={setObservations}
-    />
-  );
-}`}
->
-  <FHIRVitalSignsInputDemo />
-</ComponentPreview>
-
----
-
-## Key Features to Know
-
-### SATUSEHAT System & LOINC Presets
+#### SATUSEHAT System & LOINC Presets
 The individual inputs inside this component leverage self-contained vital signs presets, pre-configured with standard LOINC codes, UCUM units, and built-in validation thresholds:
 
 | Preset Name (`preset`) | LOINC Code | UCUM Unit | Standard Validation / Thresholds |
@@ -174,11 +180,13 @@ The individual inputs inside this component leverage self-contained vital signs 
 | `height-weight` | - | - | Composite height & weight side-by-side. Displays calculated BMI badge. |
 | `waist-circumference` | `8280-0` | `cm` | Central Obesity: Men `≥ 90 cm`, Women `≥ 80 cm`. |
 
-### Real-Time Validation
+#### Real-Time Validation
 When a value is entered, the input checks standard bounds on-the-fly and projects a validation label next to the input title. 
 
-### Auto-Calculated BMI
+#### Auto-Calculated BMI
 When height and weight are provided (and `preset` is omitted to show the full panel), the component automatically calculates the Body Mass Index (LOINC `39156-5`) and outputs a SATUSEHAT-compliant BMI observation containing a categorization badge (Underweight, Normal, Overweight, Obese).
+
+---
 
 ---
 

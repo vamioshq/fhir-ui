@@ -44,6 +44,15 @@ export default function BirthDateForm() {
 
 ---
 
+---
+
+## Key Features & FHIR Mapping
+
+### Timezone-Naive Date Format
+The component strictly outputs timezone-naive date strings in the standard `YYYY-MM-DD` format (conforming to the FHIR `date` type specification). This is crucial for demographics like `Patient.birthDate` where calendar dates must remain stable across different client and server timezones.
+
+---
+
 ## Component API Reference
 
 ### Props
@@ -55,3 +64,4 @@ export default function BirthDateForm() {
 | `showLabel` | `boolean` | `false` | Whether to display the text label above the input. |
 | `label` | `string` | `"Date"` | The text used for the label. |
 | `readOnly` | `boolean` | `false` | Disables interaction with the date picker. |
+

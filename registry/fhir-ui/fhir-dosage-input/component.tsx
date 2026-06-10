@@ -308,7 +308,7 @@ export function FHIRDosageInput({
 
   const autoText = React.useMemo(() => {
     return generateAutoText(state);
-  }, [state.doseValue, state.doseUnit, state.frequency, state.period, state.periodUnit, state.when, state.routeCode, state.asNeeded]);
+  }, [state]);
 
   return (
     <div className={cn("w-full text-foreground bg-transparent p-0 border-0 shadow-none", className)} {...props}>

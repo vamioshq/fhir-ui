@@ -54,9 +54,13 @@ export default function RegistrationForm() {
 
 ---
 
-## Key Features to Know
+---
 
-### SATUSEHAT System Presets
+## Key Features & FHIR Mapping
+
+### Key Features
+
+#### SATUSEHAT System Presets
 Providing a `preset` prop automatically locks the internal configuration to SATUSEHAT compliance and applies input constraints (e.g. ignoring alphabetical keys, capping maximum length):
 
 - **NIK (KTP)** (`preset="nik"`):
@@ -81,14 +85,14 @@ Providing a `preset` prop automatically locks the internal configuration to SATU
   - **System**: `https://fhir.kemkes.go.id/id/paspor`
   - **Constraint**: 6 to 12 alphanumeric characters.
 
-### Real-Time Validation
+#### Real-Time Validation
 When a user blurs (focus leaves the field) and the input value does not meet the preset's criteria (e.g., a 15-digit NIK), the input sets `aria-invalid="true"`. This triggers standard CSS border/ring highlight colors.
 
 ---
 
-## Quick Integration Example
+### Quick Integration Example
 
-### Custom / Local Identifiers
+#### Custom / Local Identifiers
 If you are capturing local clinic registration cards or local MRNs (Medical Record Numbers), you can omit the `preset` prop and pass a custom system URL and label:
 
 ```tsx
@@ -114,6 +118,8 @@ export default function CustomRegistration() {
 
 ---
 
+---
+
 ## Component API Reference
 
 ### Props
@@ -129,3 +135,4 @@ export default function CustomRegistration() {
 | `placeholder` | `string` | *Derived from preset* | Input field placeholder text. |
 | `system` | `string` | `undefined` | Custom terminology system URL. Ignored if `preset` is set. |
 | `systemName` | `string` | `undefined` | Custom prefix label shown in the addon box. Ignored if `preset` is set. |
+

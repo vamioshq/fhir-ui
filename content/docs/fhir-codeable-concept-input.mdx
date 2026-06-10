@@ -57,21 +57,25 @@ export default function DiagnosisForm() {
 
 ---
 
-## Key Features to Know
+---
 
-### SATUSEHAT System Badges
+## Key Features & FHIR Mapping
+
+### Key Features
+
+#### SATUSEHAT System Badges
 The component automatically recognizes common SATUSEHAT terminology systems and renders a distinct visual badge next to the item in the dropdown:
 - **ICD-10**: `http://hl7.org/fhir/sid/icd-10`
 - **KFA**: `http://sys-ids.kemkes.go.id/kfa`
 - **LOINC**: `http://loinc.org`
 - **SNOMED**: `http://snomed.info/sct`
 
-### Terminology System Filtering
+#### Terminology System Filtering
 You can lock the input to a specific system by providing the `system` prop (e.g. `system="http://hl7.org/fhir/sid/icd-10"`). 
 * **Scoped Async Search**: When `system` is defined, it is forwarded as the second parameter to `onSearch(query, system)`. This allows your API lookup logic to filter results on the server-side.
 * **Auto-Hiding Redundant Badges**: When the component is locked to a specific system, displaying the taxonomy badge (e.g. "ICD-10" on every row) becomes redundant. The component automatically detects this and hides the badges inside the dropdown list for a cleaner UI.
 
-### SATUSEHAT System Presets
+#### SATUSEHAT System Presets
 To make integration even easier, you can use the `preset` prop to automatically configure the label, placeholder, and system terminology for SATUSEHAT standard terminologies.
 
 Available presets:
@@ -82,7 +86,7 @@ Available presets:
 
 Using a preset automatically hides redundant badges in the dropdown list, since the system is already scoped.
 
-### Data Fetching Strategies
+#### Data Fetching Strategies
 You can feed data into the component using two primary methods depending on your needs:
 
 1. **Async Searching (`onSearch`)**: Best for massive terminology lists like ICD-10 or KFA. The developer provides an async function that queries a backend and returns a `CodeableConcept[]`. 
@@ -90,9 +94,9 @@ You can feed data into the component using two primary methods depending on your
 
 ---
 
-## Quick Integration Example
+### Quick Integration Example
 
-### Scoped Terminology Search (e.g., ICD-10 Diagnoses)
+#### Scoped Terminology Search (e.g., ICD-10 Diagnoses)
 
 To lock the input to diagnoses, simply specify the `preset` and consume the `system` parameter in your query callback:
 
@@ -121,7 +125,7 @@ export default function DiagnosisPicker() {
 }
 ```
 
-### Static Options
+#### Static Options
 
 If you have a small, known list of options, you can use the `options` prop directly without `onSearch`:
 
@@ -155,6 +159,8 @@ export default function StaticConceptForm() {
 
 ---
 
+---
+
 ## Component API Reference
 
 ### Props
@@ -170,3 +176,4 @@ export default function StaticConceptForm() {
 | `options` | `CodeableConcept[]` | `[]` | Static list of options. Useful for small, finite value sets. |
 | `onSearch` | `(query: string, system?: string) => Promise<CodeableConcept[]>` | `undefined` | Async function for fetching terminology options remotely on user input. Receives the resolved `system` as the second parameter. |
 | `system` | `string` | `undefined` | Custom coding system URL used to scope searches. Ignored if `preset` is set. |
+

@@ -42,9 +42,13 @@ export default function PatientForm() {
 
 ---
 
-## Output Format
+---
 
-### Indonesia Birth Place
+## Key Features & FHIR Mapping
+
+### Output Format
+
+#### Indonesia Birth Place
 
 When "Indonesia" is selected:
 
@@ -58,7 +62,7 @@ When "Indonesia" is selected:
 }
 ```
 
-### Foreign Birth Place (Luar Negeri)
+#### Foreign Birth Place (Luar Negeri)
 
 When "Luar Negeri" is selected, the `country` field is omitted from `valueAddress`:
 
@@ -70,6 +74,8 @@ When "Luar Negeri" is selected, the `country` field is omitted from `valueAddres
   }
 }
 ```
+
+---
 
 ---
 
@@ -85,6 +91,8 @@ When "Luar Negeri" is selected, the `country` field is omitted from `valueAddres
 | `description` | `string` | `undefined` | Additional helper text displayed below the label. |
 | `placeholder` | `string` | `"e.g., Bandung, Singapore, etc."` | Input placeholder text. |
 | `readOnly` | `boolean` | `false` | Disables the input if set to `true`. |
+
+---
 
 ---
 
