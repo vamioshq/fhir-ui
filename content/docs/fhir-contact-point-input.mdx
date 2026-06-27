@@ -78,6 +78,39 @@ The `simple` variant renders a compact, single-field layout.
 The `detailed` variant renders inputs directly inline inside an accessible fieldset.
 * **Main UI Fields:** Exposes the contact value input and the Usage selector dropdown inline side-by-side.
 
+<ComponentPreview 
+  component="fhir-contact-point-input" 
+  example="preview-detailed"
+  code={`import React from "react";
+import { FHIRContactPointInput } from "@/registry/fhir-ui/fhir-contact-point-input"
+import { FHIRContactPointInputDemo } from "@/components/docs/fhir-contact-point-input-demo";
+import { type ContactPoint } from "@medplum/fhirtypes";
+
+export default function ContactChannelsForm() {
+  const [phone, setPhone] = React.useState<ContactPoint>({});
+  const [email, setEmail] = React.useState<ContactPoint>({});
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <FHIRContactPointInput
+        variant="detailed"
+        system="phone"
+        label="Phone Number"
+        onChange={setPhone}
+      />
+      <FHIRContactPointInput
+        variant="detailed"
+        system="email"
+        label="Email Address"
+        onChange={setEmail}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRContactPointInputDemo variant="detailed" />
+</ComponentPreview>
+
 ---
 
 ---

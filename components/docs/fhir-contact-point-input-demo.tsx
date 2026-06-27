@@ -4,7 +4,11 @@ import * as React from "react";
 import { FHIRContactPointInput } from "@/registry/fhir-ui/fhir-contact-point-input";
 import { type ContactPoint } from "@medplum/fhirtypes";
 
-export function FHIRContactPointInputDemo() {
+interface FHIRContactPointInputDemoProps {
+  variant?: "simple" | "detailed";
+}
+
+export function FHIRContactPointInputDemo({ variant = "simple" }: FHIRContactPointInputDemoProps = {}) {
   const [phone, setPhone] = React.useState<ContactPoint>({});
   const [email, setEmail] = React.useState<ContactPoint>({});
   const [url, setUrl] = React.useState<ContactPoint>({});
@@ -32,39 +36,46 @@ export function FHIRContactPointInputDemo() {
     <div className="w-full space-y-6">
       <div className="grid gap-4 sm:grid-cols-2">
         <FHIRContactPointInput
+          variant={variant}
           system="phone"
           label="Phone Number"
           description="Include country code, e.g., +62"
           onChange={setPhone}
         />
         <FHIRContactPointInput
+          variant={variant}
           system="email"
           label="Email Address"
           description="Primary email for medical reports"
           onChange={setEmail}
         />
         <FHIRContactPointInput
+          variant={variant}
           system="url"
           label="Website URL"
           onChange={setUrl}
         />
         <FHIRContactPointInput
+          variant={variant}
           system="sms"
           label="SMS Number"
           onChange={setSms}
         />
         <FHIRContactPointInput
+          variant={variant}
           system="fax"
           label="Fax Number"
           onChange={setFax}
         />
         <FHIRContactPointInput
+          variant={variant}
           system="pager"
           label="Pager Code"
           onChange={setPager}
         />
         <div className="sm:col-span-2">
           <FHIRContactPointInput
+            variant={variant}
             system="other"
             label="Alternative Contact"
             onChange={setOther}

@@ -2,5 +2,421 @@
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "fhir-ui",
   "homepage": "https://acme.com",
-  "items": []
+  "items": [
+    {
+      "name": "fhir-address-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-address-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "fhir-country-selector",
+        "fhir-regional-selector"
+      ],
+      "metadata": {
+        "title": "FHIR Address Input",
+        "description": "FHIR R4 Address Input component with Kemenkes SATUSEHAT integration",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-attachment-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-attachment-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Attachment Input",
+        "description": "FHIR R4 Attachment Input component for file uploads",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-birth-place-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-birth-place-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Birth Place Input",
+        "description": "Free text input with country dropdown for birth place",
+        "category": "satusehat-specific"
+      }
+    },
+    {
+      "name": "fhir-citizenship-status-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-citizenship-status-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Citizenship Status Input",
+        "description": "Select dropdown for WNI/WNA citizenship status",
+        "category": "satusehat-specific"
+      }
+    },
+    {
+      "name": "fhir-codeable-concept-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-codeable-concept-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR CodeableConcept Input",
+        "description": "FHIR R4 CodeableConcept Input component for SATUSEHAT terminologies",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-contact-point-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-contact-point-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Contact Point Input",
+        "description": "FHIR R4 ContactPoint Input component with usage selector",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-country-selector",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-country-selector/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Country Selector",
+        "description": "ISO-3166-1 alpha-2 country selector with search",
+        "category": "satusehat-specific"
+      }
+    },
+    {
+      "name": "fhir-date-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-date-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Date Input",
+        "description": "FHIR R4 timezone-naive Date Input for birth dates",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-datetime-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-datetime-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR DateTime Input",
+        "description": "Specialized input for dates, times, and Indonesian timezone offsets",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-dosage-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-dosage-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Dosage Input",
+        "description": "FHIR R4 Dosage Input with automated instruction synthesis",
+        "category": "specialized"
+      }
+    },
+    {
+      "name": "fhir-gender-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-gender-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Gender Input",
+        "description": "Toggle group and select for FHIR R4 AdministrativeGender",
+        "category": "satusehat-specific"
+      }
+    },
+    {
+      "name": "fhir-human-name-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-human-name-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Human Name Input",
+        "description": "FHIR R4 Human Name Input with automatic text parsing",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-identifier-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-identifier-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Identifier Input",
+        "description": "FHIR R4 Identifier Input with SATUSEHAT validation presets",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-location-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-location-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Location Input",
+        "description": "FHIR R4 Location Input for healthcare facilities",
+        "category": "resources"
+      }
+    },
+    {
+      "name": "fhir-marital-status-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-marital-status-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Marital Status Input",
+        "description": "Button group and select for marital status codes",
+        "category": "satusehat-specific"
+      }
+    },
+    {
+      "name": "fhir-money-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-money-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Money Input",
+        "description": "FHIR R4 Money Input with currency selector",
+        "category": "specialized"
+      }
+    },
+    {
+      "name": "fhir-odontogram-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-odontogram-input/component.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/fhir-ui/fhir-odontogram-input/lib/fhir-odontogram-tooth.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Odontogram Input",
+        "description": "Interactive SVG component for dental charts (Rekam Medis Gigi)",
+        "category": "specialized"
+      }
+    },
+    {
+      "name": "fhir-organization-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-organization-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Organization Input",
+        "description": "FHIR R4 Organization Input for SATUSEHAT facilities",
+        "category": "resources"
+      }
+    },
+    {
+      "name": "fhir-period-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-period-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "fhir-datetime-input"
+      ],
+      "metadata": {
+        "title": "FHIR Period Input",
+        "description": "Composite input for FHIR Period with range validation",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-practitioner-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-practitioner-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Practitioner Input",
+        "description": "FHIR R4 Practitioner Input for SATUSEHAT healthcare workers",
+        "category": "resources"
+      }
+    },
+    {
+      "name": "fhir-quantity-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-quantity-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Quantity Input",
+        "description": "FHIR R4 Quantity Input with unit configurations",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-reference-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-reference-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Reference Input",
+        "description": "FHIR R4 Reference Input for linking resources",
+        "category": "basic-fhir-types"
+      }
+    },
+    {
+      "name": "fhir-regional-selector",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-regional-selector/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Regional Selector",
+        "description": "Indonesian regional selector for province, city, district, village",
+        "category": "satusehat-specific"
+      }
+    },
+    {
+      "name": "fhir-religion-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-religion-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "metadata": {
+        "title": "FHIR Religion Input",
+        "description": "Select dropdown for patient religion mapping to SATUSEHAT",
+        "category": "satusehat-specific"
+      }
+    },
+    {
+      "name": "fhir-vital-signs-input",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "registry/fhir-ui/fhir-vital-signs-input/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "fhir-quantity-input"
+      ],
+      "metadata": {
+        "title": "FHIR Vital Signs Input",
+        "description": "FHIR R4 Vital Signs Input with SATUSEHAT validation presets",
+        "category": "specialized"
+      }
+    },
+    {
+      "name": "patient-registration-form",
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "registry/fhir-ui/patient-registration-form/component.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "card",
+        "button",
+        "fhir-human-name-input",
+        "fhir-date-input",
+        "fhir-gender-input",
+        "fhir-citizenship-status-input",
+        "fhir-religion-input",
+        "fhir-marital-status-input",
+        "fhir-address-input"
+      ],
+      "metadata": {
+        "title": "Patient Registration Form",
+        "description": "Indonesian SATUSEHAT-compliant Patient Registration Form Block",
+        "category": "blocks"
+      }
+    }
+  ]
 }

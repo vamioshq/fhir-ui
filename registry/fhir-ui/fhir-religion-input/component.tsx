@@ -30,6 +30,8 @@ const RELIGION_OPTIONS: ReligionOption[] = [
   { code: "4", display: "Hindu" },
   { code: "5", display: "Buddha" },
   { code: "6", display: "Khonghucu" },
+  { code: "7", display: "Penghayat Kepercayaan" },
+  { code: "8", display: "Lainnya" },
 ];
 
 const RELIGION_EXTENSION_URL = "https://fhir.kemkes.go.id/r4/StructureDefinition/patient-religion";

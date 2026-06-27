@@ -4,7 +4,11 @@ import * as React from "react";
 import { type Identifier } from "@medplum/fhirtypes";
 import { FHIRIdentifierInput } from "@/registry/fhir-ui/fhir-identifier-input";
 
-export function FHIRIdentifierInputDemo() {
+interface FHIRIdentifierInputDemoProps {
+  variant?: "simple" | "detailed";
+}
+
+export function FHIRIdentifierInputDemo({ variant = "simple" }: FHIRIdentifierInputDemoProps = {}) {
   const [nik, setNik] = React.useState<Identifier | undefined>(undefined);
   const [bpjs, setBpjs] = React.useState<Identifier | undefined>(undefined);
   const [ihs, setIhs] = React.useState<Identifier | undefined>(undefined);
@@ -14,6 +18,7 @@ export function FHIRIdentifierInputDemo() {
       <div className="grid gap-6 w-full max-w-md">
         {/* IHS Input */}
         <FHIRIdentifierInput
+          variant={variant}
           preset="ihs"
           value={ihs}
           onChange={setIhs}
@@ -22,6 +27,7 @@ export function FHIRIdentifierInputDemo() {
 
         {/* NIK Input */}
         <FHIRIdentifierInput
+          variant={variant}
           preset="nik"
           value={nik}
           onChange={setNik}
@@ -30,6 +36,7 @@ export function FHIRIdentifierInputDemo() {
 
         {/* BPJS Input */}
         <FHIRIdentifierInput
+          variant={variant}
           preset="bpjs"
           value={bpjs}
           onChange={setBpjs}

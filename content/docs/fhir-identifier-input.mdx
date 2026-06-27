@@ -16,7 +16,9 @@ This component supports prop-based configuration presets for common Indonesian *
 
 ## Interactive Preview
 
-The preview below showcases two instances of the `FHIRIdentifierInput` using presets for **NIK (National ID)** and **BPJS Kesehatan**. Try entering invalid lengths to trigger the visual validation indicators.
+### 1. Simple Variant (Default)
+
+The `simple` variant provides a compact layout with an advanced details editing dialog triggered by the settings icon.
 
 <ComponentPreview 
   component="fhir-identifier-input" 
@@ -49,7 +51,47 @@ export default function RegistrationForm() {
   );
 }`}
 >
-  <FHIRIdentifierInputDemo />
+  <FHIRIdentifierInputDemo variant="simple" />
+</ComponentPreview>
+
+### 2. Detailed Variant
+
+The `detailed` variant renders all inputs directly inline as an open grid layout, exposing fields like the Validity Period (start/end dates) and the Use case selector dropdown.
+
+<ComponentPreview 
+  component="fhir-identifier-input" 
+  example="preview-detailed"
+  code={`import React from "react";
+import { type Identifier } from "@medplum/fhirtypes";
+import { FHIRIdentifierInput } from "@/registry/fhir-ui/fhir-identifier-input"
+import { FHIRIdentifierInputDemo } from "@/components/docs/fhir-identifier-input-demo";
+
+export default function DetailedRegistrationForm() {
+  const [nik, setNik] = React.useState<Identifier>();
+  const [bpjs, setBpjs] = React.useState<Identifier>();
+
+  return (
+    <div className="space-y-4 max-w-md">
+      {/* NIK Input */}
+      <FHIRIdentifierInput
+        variant="detailed"
+        preset="nik"
+        value={nik}
+        onChange={setNik}
+      />
+
+      {/* BPJS Input */}
+      <FHIRIdentifierInput
+        variant="detailed"
+        preset="bpjs"
+        value={bpjs}
+        onChange={setBpjs}
+      />
+    </div>
+  );
+}`}
+>
+  <FHIRIdentifierInputDemo variant="detailed" />
 </ComponentPreview>
 
 ---

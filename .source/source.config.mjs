@@ -13,12 +13,25 @@ var docs = defineDocs({
     schema: metaSchema
   }
 });
+var blocks = defineDocs({
+  dir: "content/blocks",
+  docs: {
+    schema: pageSchema,
+    postprocess: {
+      includeProcessedMarkdown: true
+    }
+  },
+  meta: {
+    schema: metaSchema
+  }
+});
 var source_config_default = defineConfig({
   mdxOptions: {
     // MDX options
   }
 });
 export {
+  blocks,
   source_config_default as default,
   docs
 };

@@ -86,7 +86,7 @@ export default function PatientLinker() {
   );
 }`}
 >
-  <FHIRReferenceInputDemo />
+  <FHIRReferenceInputDemo resourceType="Patient" />
 </ComponentPreview>
 
 * **Scoped Searching:** When `resourceType` is defined, it is passed as the second argument to `onSearch(query, resourceType)`. This lets you cleanly route API calls on the backend.

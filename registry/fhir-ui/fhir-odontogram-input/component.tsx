@@ -6,7 +6,7 @@ import {
   FHIROdontogramTooth,
   ToothSurface,
   ToothConditionType,
-} from "@/registry/fhir-ui/fhir-odontogram-tooth";
+} from "./lib/fhir-odontogram-tooth";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Card } from "@/components/ui/card";
 import {
@@ -254,26 +254,85 @@ const TOOLS: {
 ];
 
 // Simplified SNOMED mapping for demo purposes
-const SNOMED_MAPPING: Record<ToolType, { code: string; display: string; type: "Condition" | "Procedure" }> = {
-  select: { code: "", display: "", type: "Condition" },
-  eraser: { code: "", display: "", type: "Condition" },
-  caries: { code: "64228005", display: "Dental caries", type: "Condition" },
-  amalgam: { code: "37731006", display: "Amalgam filling", type: "Procedure" },
-  composite: { code: "278142004", display: "Composite filling", type: "Procedure" },
-  crown: { code: "105570003", display: "Dental crown", type: "Procedure" },
-  missing: { code: "109675001", display: "Missing tooth", type: "Condition" },
-  "root-canal": { code: "394770001", display: "Root canal therapy", type: "Procedure" },
-  sealant: { code: "61022005", display: "Dental sealant", type: "Procedure" },
-  radix: { code: "370962002", display: "Retained tooth root", type: "Condition" },
-  unerupted: { code: "109677009", display: "Unerupted tooth", type: "Condition" },
-  fracture: { code: "312351000", display: "Fracture of tooth", type: "Condition" },
-  bridge: { code: "448275005", display: "Dental bridge construction", type: "Procedure" },
+const SNOMED_MAPPING: Record<ToolType, { code: string; display: string }> = {
+  select: { code: "", display: "" },
+  eraser: { code: "", display: "" },
+  caries: { code: "64228005", display: "Dental caries" },
+  amalgam: { code: "37731006", display: "Amalgam filling" },
+  composite: { code: "278142004", display: "Composite filling" },
+  crown: { code: "105570003", display: "Dental crown" },
+  missing: { code: "109675001", display: "Missing tooth" },
+  "root-canal": { code: "394770001", display: "Root canal therapy" },
+  sealant: { code: "61022005", display: "Dental sealant" },
+  radix: { code: "370962002", display: "Retained tooth root" },
+  unerupted: { code: "109677009", display: "Unerupted tooth" },
+  fracture: { code: "312351000", display: "Fracture of tooth" },
+  bridge: { code: "448275005", display: "Dental bridge construction" },
 };
 
-// FDI to SNOMED CT BodySite mapping (abbreviated for example)
+// Full FDI to SNOMED CT BodySite mapping for all 32 permanent and 20 deciduous teeth
 const TOOTH_SNOMED: Record<number, { code: string; display: string }> = {
-  11: { code: "127949000", display: "Upper right central incisor" },
-  // ... in a production app, this would map all 32 + 20 teeth
+  // Permanent teeth
+  11: { code: "22120004", display: "Structure of permanent maxillary right central incisor tooth" },
+  12: { code: "11712009", display: "Structure of permanent maxillary right lateral incisor tooth" },
+  13: { code: "80647007", display: "Structure of permanent maxillary right canine tooth" },
+  14: { code: "57826002", display: "Structure of permanent maxillary right first premolar tooth" },
+  15: { code: "36492000", display: "Structure of permanent maxillary right second premolar tooth" },
+  16: { code: "5140004", display: "Structure of permanent maxillary right first molar tooth" },
+  17: { code: "7121006", display: "Structure of permanent maxillary right second molar tooth" },
+  18: { code: "68085002", display: "Structure of permanent maxillary right third molar tooth" },
+
+  21: { code: "31982000", display: "Structure of permanent maxillary left central incisor tooth" },
+  22: { code: "25748002", display: "Structure of permanent maxillary left lateral incisor tooth" },
+  23: { code: "72876007", display: "Structure of permanent maxillary left canine tooth" },
+  24: { code: "61897005", display: "Structure of permanent maxillary left first premolar tooth" },
+  25: { code: "23226009", display: "Structure of permanent maxillary left second premolar tooth" },
+  26: { code: "23427002", display: "Structure of permanent maxillary left first molar tooth" },
+  27: { code: "66303006", display: "Structure of permanent maxillary left second molar tooth" },
+  28: { code: "87704003", display: "Structure of permanent maxillary left third molar tooth" },
+
+  31: { code: "245611006", display: "Structure of permanent mandibular left central incisor tooth" },
+  32: { code: "245610007", display: "Structure of permanent mandibular left lateral incisor tooth" },
+  33: { code: "245608005", display: "Structure of permanent mandibular left canine tooth" },
+  34: { code: "245607000", display: "Structure of permanent mandibular left first premolar tooth" },
+  35: { code: "245606009", display: "Structure of permanent mandibular left second premolar tooth" },
+  36: { code: "245604007", display: "Structure of permanent mandibular left first molar tooth" },
+  37: { code: "245603001", display: "Structure of permanent mandibular left second molar tooth" },
+  38: { code: "245602006", display: "Structure of permanent mandibular left third molar tooth" },
+
+  41: { code: "245600003", display: "Structure of permanent mandibular right central incisor tooth" },
+  42: { code: "245599001", display: "Structure of permanent mandibular right lateral incisor tooth" },
+  43: { code: "245597004", display: "Structure of permanent mandibular right canine tooth" },
+  44: { code: "245596008", display: "Structure of permanent mandibular right first premolar tooth" },
+  45: { code: "245595007", display: "Structure of permanent mandibular right second premolar tooth" },
+  46: { code: "245592005", display: "Structure of permanent mandibular right first molar tooth" },
+  47: { code: "245591003", display: "Structure of permanent mandibular right second molar tooth" },
+  48: { code: "245589006", display: "Structure of permanent mandibular right third molar tooth" },
+
+  // Deciduous teeth
+  51: { code: "88824007", display: "Structure of deciduous maxillary right central incisor tooth" },
+  52: { code: "65624003", display: "Structure of deciduous maxillary right lateral incisor tooth" },
+  53: { code: "30618001", display: "Structure of deciduous maxillary right canine tooth" },
+  54: { code: "17505006", display: "Structure of deciduous maxillary right first molar tooth" },
+  55: { code: "27855007", display: "Structure of deciduous maxillary right second molar tooth" },
+
+  61: { code: "51678005", display: "Structure of deciduous maxillary left central incisor tooth" },
+  62: { code: "43622005", display: "Structure of deciduous maxillary left lateral incisor tooth" },
+  63: { code: "73937000", display: "Structure of deciduous maxillary left canine tooth" },
+  64: { code: "45234009", display: "Structure of deciduous maxillary left first molar tooth" },
+  65: { code: "51943008", display: "Structure of deciduous maxillary left second molar tooth" },
+
+  71: { code: "89552004", display: "Structure of deciduous mandibular left central incisor tooth" },
+  72: { code: "14770005", display: "Structure of deciduous mandibular left lateral incisor tooth" },
+  73: { code: "43281008", display: "Structure of deciduous mandibular left canine tooth" },
+  74: { code: "38896004", display: "Structure of deciduous mandibular left first molar tooth" },
+  75: { code: "49330006", display: "Structure of deciduous mandibular left second molar tooth" },
+
+  81: { code: "67834006", display: "Structure of deciduous mandibular right central incisor tooth" },
+  82: { code: "22445006", display: "Structure of deciduous mandibular right lateral incisor tooth" },
+  83: { code: "6062009", display: "Structure of deciduous mandibular right canine tooth" },
+  84: { code: "58646007", display: "Structure of deciduous mandibular right first molar tooth" },
+  85: { code: "61868007", display: "Structure of deciduous mandibular right second molar tooth" },
 };
 
 export function FHIROdontogramInput({
@@ -286,48 +345,64 @@ export function FHIROdontogramInput({
   const [viewMode, setViewMode] = useState<"adult" | "child" | "mixed">("mixed");
   const [, forceUpdate] = useState({});
 
-  // Derive teeth state from FHIR resources
+  // Derive teeth state from FHIR resources conforming to SATUSEHAT Observation format
   const teethState = useMemo(() => {
     const state: Record<number, Partial<Record<ToothSurface, ToothConditionType>>> = {};
 
-    // In a real FHIR parser, we would iterate over value[] (Conditions, Procedures)
-    // and map their SNOMED CT bodySite codes to FDI numbers, and their clinical codes
-    // to ToothConditionType. For this component, we simulate parsing by reading a custom extension
-    // or relying on a simplified state for demonstration.
-
-    // To make the demo interactive without a massive FHIR parsing engine:
-    // We will assume the resources have a simplified structure or we just build state
-    // purely from what the user clicks for now.
     value.forEach(res => {
-      // Very naive parser for demo
-      const fdiExt = res.bodySite?.[0]?.coding?.find((c: any) => c.system === "http://terminology.hl7.org/CodeSystem/FDI-tooth")?.code;
-      if (fdiExt) {
-        const toothId = parseInt(fdiExt, 10);
-        if (!state[toothId]) state[toothId] = {};
+      if (res.resourceType !== "Observation") return;
+      const isOdontogram = res.code?.coding?.some(
+        (c: any) => c.system === "http://terminology.kemkes.go.id/CodeSystem/clinical-term" && c.code === "OC000061"
+      );
+      if (!isOdontogram) return;
 
-        const code = res.code?.coding?.[0]?.code;
-        const condition = Object.keys(SNOMED_MAPPING).find(
-          k => SNOMED_MAPPING[k as ToolType].code === code
-        ) as ToothConditionType;
+      const toothSnomedCode = res.bodySite?.coding?.find((c: any) => c.system === "http://snomed.info/sct")?.code;
+      if (!toothSnomedCode) return;
 
-        if (condition) {
-          if (condition === "missing" || condition === "crown" || condition === "radix" || condition === "unerupted" || condition === "fracture" || condition === "bridge") {
-            // Apply to all surfaces
-            ["O", "M", "D", "V", "L", "ROOT"].forEach(s => {
-              if (state[toothId]) {
-                state[toothId]![s as ToothSurface] = condition;
-              }
-            });
-          } else {
-            // Retrieve the surface from extension or second coding
-            const surfaceCode = res.extension?.find((e: any) => e.url === "http://example.org/fhir/StructureDefinition/tooth-surface")?.valueCode
-              || res.bodySite?.[0]?.coding?.find((c: any) => c.system === "http://terminology.hl7.org/CodeSystem/FDI-surface")?.code;
+      const toothKey = Object.keys(TOOTH_SNOMED).find(
+        k => TOOTH_SNOMED[parseInt(k, 10)].code === toothSnomedCode
+      );
+      if (!toothKey) return;
+      const toothId = parseInt(toothKey, 10);
 
-            const activeSurface = (surfaceCode || "O") as ToothSurface;
-            if (state[toothId]) {
-              state[toothId]![activeSurface] = condition;
-            }
+      if (!state[toothId]) state[toothId] = {};
+
+      const condComp = res.component?.find(
+        (comp: any) => comp.code?.coding?.some((c: any) => c.system === "http://terminology.kemkes.go.id/CodeSystem/odontogram-component" && c.code === "cond")
+      );
+      const condCode = condComp?.valueCodeableConcept?.coding?.[0]?.code;
+      if (!condCode) return;
+
+      const condition = Object.keys(SNOMED_MAPPING).find(
+        k => SNOMED_MAPPING[k as ToolType].code === condCode
+      ) as ToothConditionType;
+
+      if (!condition) return;
+
+      const surfComp = res.component?.find(
+        (comp: any) => comp.code?.coding?.some((c: any) => c.system === "http://terminology.kemkes.go.id/CodeSystem/odontogram-component" && c.code === "surf")
+      );
+      const surfCode = surfComp?.valueCodeableConcept?.coding?.[0]?.code;
+
+      const isWholeTooth =
+        condition === "missing" ||
+        condition === "crown" ||
+        condition === "radix" ||
+        condition === "unerupted" ||
+        condition === "fracture" ||
+        condition === "bridge";
+
+      if (isWholeTooth || !surfCode) {
+        // Apply to all surfaces
+        ["O", "M", "D", "V", "L", "ROOT"].forEach(s => {
+          if (state[toothId]) {
+            state[toothId]![s as ToothSurface] = condition;
           }
+        });
+      } else {
+        const activeSurface = (surfCode === "R" ? "ROOT" : surfCode) as ToothSurface;
+        if (state[toothId]) {
+          state[toothId]![activeSurface] = condition;
         }
       }
     });
@@ -341,19 +416,35 @@ export function FHIROdontogramInput({
     if (selectedTool === "eraser") {
       if (onChange) {
         const newResources = value.filter(res => {
-          const fdiExt = res.bodySite?.[0]?.coding?.find((c: any) => c.system === "http://terminology.hl7.org/CodeSystem/FDI-tooth")?.code;
-          const surfaceCode = res.extension?.find((e: any) => e.url === "http://example.org/fhir/StructureDefinition/tooth-surface")?.valueCode
-            || res.bodySite?.[0]?.coding?.find((c: any) => c.system === "http://terminology.hl7.org/CodeSystem/FDI-surface")?.code;
+          if (res.resourceType !== "Observation") return true;
 
-          const isSameTooth = fdiExt === toothId.toString();
-          const isSameSurface = (surfaceCode || "O") === surface;
+          const toothSnomedCode = res.bodySite?.coding?.find((c: any) => c.system === "http://snomed.info/sct")?.code;
+          if (!toothSnomedCode) return true;
 
-          // If it's missing or crown, it affects the whole tooth, so if they click any surface, we clear it.
-          // Otherwise, we only clear if it's the exact surface.
-          const code = res.code?.coding?.[0]?.code;
-          const condition = Object.keys(SNOMED_MAPPING).find(
-            k => SNOMED_MAPPING[k as ToolType].code === code
+          const toothKey = Object.keys(TOOTH_SNOMED).find(
+            k => TOOTH_SNOMED[parseInt(k, 10)].code === toothSnomedCode
           );
+          if (!toothKey) return true;
+          const toothIdFromResource = parseInt(toothKey, 10);
+
+          const isSameTooth = toothIdFromResource === toothId;
+
+          const surfComp = res.component?.find(
+            (comp: any) => comp.code?.coding?.some((c: any) => c.system === "http://terminology.kemkes.go.id/CodeSystem/odontogram-component" && c.code === "surf")
+          );
+          const surfCode = surfComp?.valueCodeableConcept?.coding?.[0]?.code;
+          const resourceSurface = surfCode === "R" ? "ROOT" : (surfCode || "O");
+
+          const isSameSurface = resourceSurface === surface;
+
+          const condComp = res.component?.find(
+            (comp: any) => comp.code?.coding?.some((c: any) => c.system === "http://terminology.kemkes.go.id/CodeSystem/odontogram-component" && c.code === "cond")
+          );
+          const condCode = condComp?.valueCodeableConcept?.coding?.[0]?.code;
+          const condition = Object.keys(SNOMED_MAPPING).find(
+            k => SNOMED_MAPPING[k as ToolType].code === condCode
+          );
+
           const isWholeTooth =
             condition === "missing" ||
             condition === "crown" ||
@@ -363,10 +454,10 @@ export function FHIROdontogramInput({
             condition === "bridge";
 
           if (isSameTooth) {
-            if (isWholeTooth) return false; // erase whole tooth
-            return !isSameSurface; // erase specific surface
+            if (isWholeTooth) return false;
+            return !isSameSurface;
           }
-          return true; // keep other teeth
+          return true;
         });
         onChange(newResources);
       }
@@ -376,15 +467,64 @@ export function FHIROdontogramInput({
     const mapping = SNOMED_MAPPING[selectedTool];
     if (!mapping.code) return;
 
-    // Generate a new FHIR Resource with specific surface information in coding and extensions
-    const newResource = {
-      resourceType: mapping.type,
-      id: `generated-${Date.now()}`,
-      clinicalStatus: mapping.type === "Condition" ? {
-        coding: [{ system: "http://terminology.hl7.org/CodeSystem/condition-clinical", code: "active" }]
-      } : undefined,
-      status: mapping.type === "Procedure" ? "completed" : undefined,
+    const toothSnomed = TOOTH_SNOMED[toothId];
+    if (!toothSnomed) return;
+
+    const isWholeTooth =
+      selectedTool === "missing" ||
+      selectedTool === "crown" ||
+      selectedTool === "radix" ||
+      selectedTool === "unerupted" ||
+      selectedTool === "fracture" ||
+      selectedTool === "bridge";
+
+    const components: any[] = [];
+
+    // Surface component (only if not whole tooth)
+    if (!isWholeTooth) {
+      components.push({
+        code: {
+          coding: [
+            {
+              system: "http://terminology.kemkes.go.id/CodeSystem/odontogram-component",
+              code: "surf",
+              display: "Permukaan gigi",
+            },
+          ],
+        },
+        valueCodeableConcept: {
+          coding: [
+            {
+              system: "http://terminology.kemkes.go.id/CodeSystem/dental-surface",
+              code: surface === "ROOT" ? "R" : surface,
+              display: surface === "O" ? "Oklusal" :
+                surface === "M" ? "Mesial" :
+                  surface === "D" ? "Distal" :
+                    surface === "V" ? "Vestibular" :
+                      surface === "L" ? "Lingual" : "Akar",
+            },
+          ],
+          text: surface === "O" ? "Oklusal" :
+            surface === "M" ? "Mesial" :
+              surface === "D" ? "Distal" :
+                surface === "V" ? "Vestibular" :
+                  surface === "L" ? "Lingual" : "Akar",
+        },
+      });
+    }
+
+    // Condition component
+    components.push({
       code: {
+        coding: [
+          {
+            system: "http://terminology.kemkes.go.id/CodeSystem/odontogram-component",
+            code: "cond",
+            display: "Keadaan Gigi",
+          },
+        ],
+      },
+      valueCodeableConcept: {
         coding: [
           {
             system: "http://snomed.info/sct",
@@ -394,51 +534,82 @@ export function FHIROdontogramInput({
         ],
         text: mapping.display,
       },
-      bodySite: [
+    });
+
+    const newResource = {
+      resourceType: "Observation",
+      id: `generated-${Date.now()}`,
+      status: "final",
+      category: [
         {
           coding: [
             {
-              system: "http://terminology.hl7.org/CodeSystem/FDI-tooth",
-              code: toothId.toString(),
-              display: `Tooth ${toothId}`,
+              system: "http://terminology.hl7.org/CodeSystem/observation-category",
+              code: "exam",
+              display: "Exam",
             },
-            {
-              system: "http://terminology.hl7.org/CodeSystem/FDI-surface",
-              code: surface,
-              display: surface === "O" ? "Occlusal" :
-                surface === "M" ? "Mesial" :
-                  surface === "D" ? "Distal" :
-                    surface === "V" ? "Vestibular" :
-                      surface === "L" ? "Lingual" : "Root"
-            }
-          ]
-        }
+          ],
+        },
       ],
-      extension: [
-        {
-          url: "http://example.org/fhir/StructureDefinition/tooth-surface",
-          valueCode: surface
-        }
-      ]
-      // recordedDate / performedDateTime would go here
+      code: {
+        coding: [
+          {
+            system: "http://terminology.kemkes.go.id/CodeSystem/clinical-term",
+            code: "OC000061",
+            display: "Pemeriksaan Odontogram",
+          },
+        ],
+        text: "Pemeriksaan Odontogram",
+      },
+      subject: {
+        reference: "Patient/example-patient"
+      },
+      bodySite: {
+        coding: [
+          {
+            system: "http://snomed.info/sct",
+            code: toothSnomed.code,
+            display: toothSnomed.display,
+          },
+        ],
+        text: toothSnomed.display,
+      },
+      component: components,
     };
 
     if (onChange) {
       // Filter out any existing resource for this specific surface on this tooth
       const filteredValue = value.filter(res => {
-        const fdiExt = res.bodySite?.[0]?.coding?.find((c: any) => c.system === "http://terminology.hl7.org/CodeSystem/FDI-tooth")?.code;
-        const surfaceCode = res.extension?.find((e: any) => e.url === "http://example.org/fhir/StructureDefinition/tooth-surface")?.valueCode
-          || res.bodySite?.[0]?.coding?.find((c: any) => c.system === "http://terminology.hl7.org/CodeSystem/FDI-surface")?.code;
+        if (res.resourceType !== "Observation") return true;
 
-        const isSameTooth = fdiExt === toothId.toString();
-        const isSameSurface = (surfaceCode || "O") === surface;
+        const toothSnomedCode = res.bodySite?.coding?.find((c: any) => c.system === "http://snomed.info/sct")?.code;
+        if (!toothSnomedCode) return true;
 
-        // Also check if the existing resource is a whole tooth condition (like missing/crown)
-        const code = res.code?.coding?.[0]?.code;
-        const condition = Object.keys(SNOMED_MAPPING).find(
-          k => SNOMED_MAPPING[k as ToolType].code === code
+        const toothKey = Object.keys(TOOTH_SNOMED).find(
+          k => TOOTH_SNOMED[parseInt(k, 10)].code === toothSnomedCode
         );
-        const isWholeTooth =
+        if (!toothKey) return true;
+        const toothIdFromResource = parseInt(toothKey, 10);
+
+        const isSameTooth = toothIdFromResource === toothId;
+
+        const surfComp = res.component?.find(
+          (comp: any) => comp.code?.coding?.some((c: any) => c.system === "http://terminology.kemkes.go.id/CodeSystem/odontogram-component" && c.code === "surf")
+        );
+        const surfCode = surfComp?.valueCodeableConcept?.coding?.[0]?.code;
+        const resourceSurface = surfCode === "R" ? "ROOT" : (surfCode || "O");
+
+        const isSameSurface = resourceSurface === surface;
+
+        const condComp = res.component?.find(
+          (comp: any) => comp.code?.coding?.some((c: any) => c.system === "http://terminology.kemkes.go.id/CodeSystem/odontogram-component" && c.code === "cond")
+        );
+        const condCode = condComp?.valueCodeableConcept?.coding?.[0]?.code;
+        const condition = Object.keys(SNOMED_MAPPING).find(
+          k => SNOMED_MAPPING[k as ToolType].code === condCode
+        );
+
+        const isWholeToothInResource =
           condition === "missing" ||
           condition === "crown" ||
           condition === "radix" ||
@@ -447,21 +618,26 @@ export function FHIROdontogramInput({
           condition === "bridge";
 
         if (isSameTooth) {
-          if (isWholeTooth) {
-            // Overwrite whole tooth condition
+          if (isWholeToothInResource) {
             return false;
           }
-          // Overwrite the specific surface condition
           return !isSameSurface;
         }
         return true;
       });
 
-      // For whole tooth tools (missing, crown), we clear all other surface conditions for this tooth first
-      const finalFilteredValue = (selectedTool === "missing" || selectedTool === "crown" || selectedTool === "radix" || selectedTool === "unerupted" || selectedTool === "fracture" || selectedTool === "bridge")
+      // For whole tooth tools, we clear all other surface conditions for this tooth first
+      const finalFilteredValue = isWholeTooth
         ? filteredValue.filter(res => {
-          const fdiExt = res.bodySite?.[0]?.coding?.find((c: any) => c.system === "http://terminology.hl7.org/CodeSystem/FDI-tooth")?.code;
-          return fdiExt !== toothId.toString();
+          if (res.resourceType !== "Observation") return true;
+          const toothSnomedCode = res.bodySite?.coding?.find((c: any) => c.system === "http://snomed.info/sct")?.code;
+          if (!toothSnomedCode) return true;
+          const toothKey = Object.keys(TOOTH_SNOMED).find(
+            k => TOOTH_SNOMED[parseInt(k, 10)].code === toothSnomedCode
+          );
+          if (!toothKey) return true;
+          const toothIdFromResource = parseInt(toothKey, 10);
+          return toothIdFromResource !== toothId;
         })
         : filteredValue;
 

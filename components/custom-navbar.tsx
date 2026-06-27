@@ -19,6 +19,12 @@ export function CustomNavbar() {
         >
           Docs
         </Link>
+        <Link
+          href="/blocks"
+          className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Blocks
+        </Link>
       </div>
     </nav>
   );

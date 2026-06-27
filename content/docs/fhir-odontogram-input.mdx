@@ -10,7 +10,7 @@ import { FHIROdontogramInputDemo } from "@/components/docs/fhir-odontogram-input
 
 The `FHIROdontogramInput` component captures dental chart (Rekam Medis Gigi) data conforming to the **SATUSEHAT** FHIR R4 implementation guidelines.
 
-FHIR doesn't natively have an "Odontogram" resource. SATUSEHAT models dental records using an array of `Observation`, `Condition`, and `Procedure` resources, with each action explicitly tied to a `bodySite` using SNOMED CT codes representing specific teeth (FDI notation).
+FHIR doesn't natively have an "Odontogram" resource. SATUSEHAT models dental records using an array of **`Observation`** resources with the clinical term code `OC000061` ("Pemeriksaan Odontogram"), where each action is explicitly tied to a tooth in `bodySite` using SNOMED CT concepts and detailed in `component` sub-structures.
 
 You interact visually with a chart of 32 permanent and 20 deciduous teeth, and the component dynamically generates a list of strict FHIR Resources.
 
@@ -79,21 +79,27 @@ export default function DentalChartForm() {
 
 | Condition | SNOMED CT | Description |
 | :--- | :--- | :--- |
-| Caries | `274899004` | Dental caries (karies gigi) |
-| Missing | `274768008` | Missing tooth (gigi tanggal) |
-| Crown | `242458000` | Crown restoration (mahkota tiruan) |
-| Sealant | `414151009` | Pit and fissure sealant (sealant) |
-| Amalgam | `282514008` | Amalgam restoration (tambalan amalgam) |
-| Composite | `282449005` | Composite restoration (tambalan komposit) |
-| Root Canal | `282507008` | Root canal treatment (saluran akar) |
+| Caries | `64228005` | Dental caries (karies gigi) |
+| Amalgam | `37731006` | Amalgam filling (tambalan amalgam) |
+| Composite | `278142004` | Composite filling (tambalan komposit) |
+| Crown | `105570003` | Dental crown (mahkota tiruan) |
+| Missing | `109675001` | Missing tooth (gigi tanggal) |
+| Root Canal | `394770001` | Root canal therapy (perawatan saluran akar) |
+| Sealant | `61022005` | Dental sealant (sealant gigi) |
+| Radix | `370962002` | Retained tooth root (sisa akar) |
+| Unerupted | `109677009` | Unerupted tooth (gigi belum tumbuh) |
+| Fracture | `312351000` | Fracture of tooth (fraktur gigi) |
+| Bridge | `448275005` | Dental bridge construction (jembatan gigi) |
 
 #### FHIR Resource Generation
 
-Each tooth action generates appropriate FHIR resources:
+Each tooth action strictly generates a SATUSEHAT-compliant `Observation` resource:
 
-- **Condition** for clinical findings (Caries, Missing)
-- **Procedure** for treatments performed (Extraction, Restoration)
-- **Observation** for assessments (Tooth mobility, Periodontal status)
+- **`Observation.code`**: `OC000061` ("Pemeriksaan Odontogram") under `http://terminology.kemkes.go.id/CodeSystem/clinical-term`
+- **`Observation.bodySite`**: Mapped to the specific tooth's SNOMED CT structure code.
+- **`Observation.component`**:
+  - `surf` (Permukaan gigi): value from Kemenkes dental-surface system (`O`, `M`, `D`, `V`, `L`, `R`). Omitted for whole-tooth conditions.
+  - `cond` (Keadaan Gigi): clinical finding SNOMED CT code.
 
 ---
 
@@ -115,7 +121,7 @@ npx shadcn@latest add toggle toggle-group
 
 | Prop Name | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `value` | `any[]` | `[]` | Array of FHIR Resources (`Condition`, `Procedure`, `Observation`) representing the chart state. |
+| `value` | `any[]` | `[]` | Array of SATUSEHAT-compliant `Observation` resources representing the chart state. |
 | `onChange` | `(resources: any[]) => void` | `undefined` | Callback fired when a new resource is generated. |
 | `readOnly` | `boolean` | `false` | Disables interactivity, transforming the component into a read-only visualizer. |
 

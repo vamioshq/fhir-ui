@@ -50,8 +50,9 @@ export const IDENTIFIER_PRESETS: Record<string, PresetConfig> = {
     label: "SATUSEHAT ID (Practitioner)",
     system: "https://fhir.kemkes.go.id/id/nakes-his-number",
     systemName: "Nakes",
-    placeholder: "e.g. N10000001",
-    validate: (val) => val.trim().length > 0,
+    placeholder: "e.g. 1000000001",
+    validate: (val) => /^\d{10}$/.test(val.trim()),
+    format: (val) => val.replace(/\D/g, "").slice(0, 10),
   },
   bpjs: {
     label: "BPJS Kesehatan",

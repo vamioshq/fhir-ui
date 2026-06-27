@@ -1,0 +1,88 @@
+---
+title: Patient Registration Form
+description: A complete Patient Registration Form Block that aggregates demographics and addresses into a valid FHIR R4 Patient Resource conforming to Kemenkes SATUSEHAT standards.
+---
+
+import { PatientRegistrationForm } from "@/registry/fhir-ui/patient-registration-form"
+import { PatientRegistrationFormDemo } from "@/components/docs/patient-registration-form-demo"
+
+# Patient Registration Form
+
+The `PatientRegistrationForm` is a pre-assembled composite form **Block** that binds multiple basic FHIR inputs together to manage patient intake. It compiles all form fields reactively into a single, valid HL7 FHIR R4 **`Patient`** Resource payload containing Indonesian **SATUSEHAT** extensions.
+
+---
+
+## Interactive Preview
+
+Fill out the patient details below, including name, birth date, gender, religion, citizenship, and address, then click **Generate FHIR Patient** to inspect the live JSON payload.
+
+<ComponentPreview
+  component="patient-registration-form"
+  example="preview"
+  code={`import React from "react";
+import { type Patient } from "@medplum/fhirtypes";
+import { PatientRegistrationForm } from "@/registry/fhir-ui/patient-registration-form";
+
+export default function RegistrationPage() {
+  const handleRegistrationSubmit = (patientResource: Patient) => {
+    // Send standard FHIR resource to your backend or SATUSEHAT endpoint
+    fetch("https://api-satusehat.kemkes.go.id/fhir/Patient", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/fhir+json",
+        "Authorization": "Bearer <accessToken>"
+      },
+      body: JSON.stringify(patientResource)
+    })
+    .then(res => res.json())
+    .then(data => console.log("Registered patient:", data));
+  };
+
+  return (
+    <div className="w-full max-w-4xl py-10">
+      <PatientRegistrationForm onSubmitSuccess={handleRegistrationSubmit} />
+    </div>
+  );
+}`}
+>
+  <PatientRegistrationFormDemo />
+</ComponentPreview>
+
+---
+
+## Key Features & Composed Components
+
+Instead of manually stitching inputs together, this block handles the orchestration of the following FHIR elements out-of-the-box:
+
+| Form Element | Input Component | FHIR Property | SATUSEHAT Extension / Coding |
+| :--- | :--- | :--- | :--- |
+| **Patient Name** | `FHIRHumanNameInput` | `Patient.name` | Multiple prefixes, given name, family name |
+| **Birth Date** | `FHIRDateInput` | `Patient.birthDate` | Timezone-naive date picker (`YYYY-MM-DD`) |
+| **Gender** | `FHIRGenderInput` | `Patient.gender` | Standard HL7 AdministrativeGender mapping |
+| **Citizenship** | `FHIRCitizenshipStatusInput` | `Patient.extension` | `https://fhir.kemkes.go.id/r4/StructureDefinition/citizenshipStatus` |
+| **Religion** | `FHIRReligionInput` | `Patient.extension` | `https://fhir.kemkes.go.id/r4/StructureDefinition/patient-religion` |
+| **Marital Status** | `FHIRMaritalStatusInput` | `Patient.maritalStatus` | `http://terminology.hl7.org/CodeSystem/v3-MaritalStatus` |
+| **Home Address** | `FHIRAddressInput` | `Patient.address` | Cascading Indonesian regional structure codes |
+
+---
+
+## Installation
+
+This is a block. You install it using the `shadcn` CLI, which automatically pulls down **all dependent inputs** in a single operation:
+
+```bash
+npx shadcn@latest add https://<your-registry-url>/r/patient-registration-form.json
+```
+
+*(Note: Replace `<your-registry-url>` with the actual deployment URL of this registry once published).*
+
+---
+
+## Component API Reference
+
+### Props
+
+| Prop Name | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `onSubmitSuccess` | `(patient: Patient) => void` | `undefined` | Callback fired when the form validates and generates a FHIR Patient resource payload. |
+| `readOnly` | `boolean` | `false` | Disables form inputs and actions, turning it into a read-only registration viewer. |
