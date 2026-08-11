@@ -38,15 +38,65 @@ test("address input has an accessible label and emits a FHIR Address", async ({ 
   await expectNoSeriousAccessibilityViolations(page);
 });
 
-test("patient registration assembles a FHIR Patient and is accessible", async ({ page }) => {
+test("patient registration blocks invalid input and focuses the first error", async ({ page }) => {
   const section = page.getByTestId("registration-section");
-  await section.getByLabel("Name Information").fill("Siti Aminah");
-  await section.getByRole("button", { name: "Generate FHIR Patient" }).click();
+  const name = section.getByLabel("Nama lengkap *");
+  await name.fill("");
+  await section.getByRole("button", { name: "Simpan pasien" }).click();
+  await expect(section.getByRole("alert")).toContainText("Nama lengkap wajib diisi");
+  await expect(name).toBeFocused();
+  await expect(page.getByTestId("submit-attempts")).toHaveText("0");
+  await name.fill("Siti Aminah");
+  await expect(section.getByText("Nama lengkap wajib diisi.")).toHaveCount(0);
+  await expectNoSeriousAccessibilityViolations(page);
+});
+
+test("patient registration assembles and submits a valid FHIR Patient", async ({ page }) => {
+  const section = page.getByTestId("registration-section");
+  await section.getByRole("button", { name: "Simpan pasien" }).click();
 
   const output = page.getByTestId("patient-output");
   await expect(output).toContainText('"resourceType":"Patient"');
   await expect(output).toContainText('"text":"Siti Aminah"');
   await expect(output).toContainText('"given":["Siti"]');
   await expect(output).toContainText('"family":"Aminah"');
+  await expectNoSeriousAccessibilityViolations(page);
+});
+
+test("server failure preserves data and retry succeeds", async ({ page }) => {
+  await page.goto("/e2e?registration=failure");
+  const section = page.getByTestId("registration-section");
+  await section.getByRole("button", { name: "Simpan pasien" }).click();
+  await expect(section.getByText("Pengiriman gagal")).toBeVisible();
+  await expect(section.getByLabel("Nama lengkap *")).toHaveValue("Siti Aminah");
+  await section.getByRole("button", { name: "Coba lagi" }).click();
+  await expect(section.getByText("Data pasien berhasil diproses.")).toBeVisible();
+  await expect(page.getByTestId("submit-attempts")).toHaveText("2");
+});
+
+test("duplicate warning requires an explicit confirmation", async ({ page }) => {
+  await page.goto("/e2e?registration=duplicate");
+  const section = page.getByTestId("registration-section");
+  await section.getByRole("button", { name: "Simpan pasien" }).click();
+  await expect(section.getByText("Kemungkinan pasien sudah terdaftar.")).toBeVisible();
+  await expect(page.getByTestId("submit-attempts")).toHaveText("0");
+  await section.getByRole("button", { name: "Tetap lanjutkan" }).click();
+  await expect(page.getByTestId("submit-attempts")).toHaveText("1");
+});
+
+test("validator errors map back to their field", async ({ page }) => {
+  await page.goto("/e2e?registration=validation-error");
+  const section = page.getByTestId("registration-section");
+  await section.getByRole("button", { name: "Simpan pasien" }).click();
+  await expect(section.getByRole("link", { name: "Nama ditolak oleh validator uji." })).toBeVisible();
+  await expect(section.getByLabel("Nama lengkap *")).toBeFocused();
+  await expect(page.getByTestId("submit-attempts")).toHaveText("0");
+});
+
+test("read-only registration disables editing and submission", async ({ page }) => {
+  await page.goto("/e2e?registration=readonly");
+  const section = page.getByTestId("registration-section");
+  await expect(section.getByLabel("Nama lengkap *")).toBeDisabled();
+  await expect(section.getByRole("button", { name: "Simpan pasien" })).toBeDisabled();
   await expectNoSeriousAccessibilityViolations(page);
 });

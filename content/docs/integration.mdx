@@ -67,3 +67,35 @@ Before submitting to a FHIR or SATUSEHAT server:
 3. Keep OAuth credentials and SATUSEHAT tokens server-side.
 4. Treat bundled mock search functions as examples, not network integrations.
 5. Record validation failures without logging unnecessary patient data.
+
+## Patient registration validator adapter
+
+The registration block performs deterministic local checks before calling your server adapter. Return field-addressable issues so the form can explain the problem and move focus to the affected control.
+
+```tsx
+import { PatientRegistrationForm, type RegistrationIssue } from "@/components/patient-registration-form"
+
+async function validateResource(patient): Promise<RegistrationIssue[]> {
+  const response = await fetch("/api/patients/validate", {
+    method: "POST",
+    headers: { "content-type": "application/fhir+json" },
+    body: JSON.stringify(patient),
+  })
+  if (!response.ok) throw new Error("Validator unavailable")
+  return response.json()
+}
+
+<PatientRegistrationForm
+  validateResource={validateResource}
+  onSubmit={async (patient) => {
+    const response = await fetch("/api/patients", {
+      method: "POST",
+      headers: { "content-type": "application/fhir+json" },
+      body: JSON.stringify(patient),
+    })
+    if (!response.ok) throw new Error("Submission failed")
+  }}
+/>
+```
+
+An issue uses `{ path, code, severity, message }`. Errors block submission. Warnings, including possible duplicate matches, require the operator to explicitly confirm before continuing.

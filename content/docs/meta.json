@@ -3,6 +3,7 @@
     "index",
     "conformance",
     "integration",
+    "practitioner-usability-testing",
     "--- Basic FHIR Types ---",
     "fhir-address-input",
     "fhir-attachment-input",

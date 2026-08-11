@@ -17,6 +17,7 @@ export interface FHIRDateInputProps
   showLabel?: boolean;
   label?: string;
   readOnly?: boolean;
+  controlId?: string;
 }
 
 export function FHIRDateInput({
@@ -25,10 +26,12 @@ export function FHIRDateInput({
   showLabel = false,
   label = "Date",
   readOnly = false,
+  controlId,
   className,
   ...props
 }: FHIRDateInputProps) {
-  const inputId = React.useId();
+  const generatedId = React.useId();
+  const inputId = controlId ?? generatedId;
   // Parse YYYY-MM-DD string to local Date object securely without timezone shifting issues
   const selectedDate = React.useMemo(() => parseFHIRDate(value), [value]);
 

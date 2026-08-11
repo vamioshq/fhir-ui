@@ -6,7 +6,7 @@ import { PatientRegistrationForm } from "@/registry/fhir-ui/patient-registration
 export function PatientRegistrationFormDemo() {
   return (
     <div className="w-full flex justify-center items-center py-6">
-      <PatientRegistrationForm />
+      <PatientRegistrationForm onSubmit={async () => undefined} />
     </div>
   );
 }

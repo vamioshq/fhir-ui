@@ -16,6 +16,7 @@ export interface FHIRGenderInputProps
   showLabel?: boolean;
   label?: string;
   readOnly?: boolean;
+  controlId?: string;
 }
 
 const GENDER_OPTIONS = [
@@ -32,6 +33,7 @@ export function FHIRGenderInput({
   showLabel = false,
   label = "Administrative Gender",
   readOnly = false,
+  controlId,
   className,
   ...props
 }: FHIRGenderInputProps) {
@@ -77,7 +79,7 @@ export function FHIRGenderInput({
           onValueChange={(val) => handleValueChange(val === "none" ? "" : val)}
           disabled={readOnly}
         >
-          <SelectTrigger className="w-full" aria-label={label}>
+          <SelectTrigger id={controlId} className="w-full" aria-label={label}>
             <SelectValue placeholder="Select Gender" />
           </SelectTrigger>
           <SelectContent position="popper">

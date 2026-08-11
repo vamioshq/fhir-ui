@@ -1008,36 +1008,44 @@
           "path": "registry/fhir-ui/patient-registration-form/component.tsx",
           "type": "registry:component",
           "target": "components/patient-registration-form.tsx"
+        },
+        {
+          "path": "registry/fhir-ui/patient-registration-form/patient-registration-validation.ts",
+          "type": "registry:lib",
+          "target": "components/patient-registration-validation.ts"
         }
       ],
       "registryDependencies": [
+        "alert",
         "button",
         "card",
         "fhir-address-input",
         "fhir-citizenship-status-input",
+        "fhir-contact-point-input",
         "fhir-date-input",
         "fhir-gender-input",
         "fhir-human-name-input",
+        "fhir-identifier-input",
         "fhir-marital-status-input",
-        "fhir-religion-input"
+        "fhir-religion-input",
+        "spinner"
       ],
       "metadata": {
         "title": "Patient Registration Form",
-        "description": "Indonesian SATUSEHAT-compliant Patient Registration Form Block",
+        "description": "Practitioner-testable Indonesian outpatient registration block with FHIR-shaped Patient output",
         "category": "blocks",
         "conformance": {
           "reviewedOn": "2026-08-10",
           "target": "Patient",
-          "maturity": "demo",
+          "maturity": "beta",
           "levels": [
             "fhir-shaped",
-            "satusehat-mapped",
-            "demo-only"
+            "satusehat-mapped"
           ],
-          "integration": "demo",
+          "integration": "adapter",
           "limitations": [
-            "Demonstration block, not a complete registration workflow",
-            "No server validation, consent, identity verification, or submission integration"
+            "Practitioner usability has not yet been validated with field participants",
+            "Server validation, identity verification, consent, and duplicate matching remain consumer responsibilities"
           ]
         }
       },

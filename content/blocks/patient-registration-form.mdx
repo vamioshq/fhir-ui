@@ -10,7 +10,7 @@ import { PatientRegistrationFormDemo } from "@/components/docs/patient-registrat
 
 <ComponentConformanceSummary slug="patient-registration-form" />
 
-The `PatientRegistrationForm` is a pre-assembled demonstration block that binds multiple FHIR inputs together. It produces a FHIR-shaped **`Patient`** payload with Indonesian **SATUSEHAT** mappings, but it does not replace server validation, identity checks, consent, or a complete registration workflow.
+The `PatientRegistrationForm` is a practitioner-testable outpatient registration block. It provides Bahasa Indonesia copy, accessible validation and recovery states, and a FHIR-shaped **`Patient`** payload with Indonesian **SATUSEHAT** mappings. Server validation, identity checks, consent, and duplicate matching remain application responsibilities.
 
 ---
 
@@ -26,23 +26,20 @@ import { type Patient } from "@medplum/fhirtypes";
 import { PatientRegistrationForm } from "@/registry/fhir-ui/patient-registration-form";
 
 export default function RegistrationPage() {
-  const handleRegistrationSubmit = (patientResource: Patient) => {
-    // Send standard FHIR resource to your backend or SATUSEHAT endpoint
-    fetch("https://api-satusehat.kemkes.go.id/fhir/Patient", {
+  const handleRegistrationSubmit = async (patientResource: Patient) => {
+    const response = await fetch("/api/patients", {
       method: "POST",
       headers: {
-        "Content-Type": "application/fhir+json",
-        "Authorization": "Bearer <accessToken>"
+        "Content-Type": "application/fhir+json"
       },
       body: JSON.stringify(patientResource)
-    })
-    .then(res => res.json())
-    .then(data => console.log("Registered patient:", data));
+    });
+    if (!response.ok) throw new Error("Registration failed");
   };
 
   return (
     <div className="w-full max-w-4xl py-10">
-      <PatientRegistrationForm onSubmitSuccess={handleRegistrationSubmit} />
+      <PatientRegistrationForm onSubmit={handleRegistrationSubmit} />
     </div>
   );
 }`}
@@ -59,8 +56,10 @@ Instead of manually stitching inputs together, this block handles the orchestrat
 | Form Element | Input Component | FHIR Property | SATUSEHAT Extension / Coding |
 | :--- | :--- | :--- | :--- |
 | **Patient Name** | `FHIRHumanNameInput` | `Patient.name` | Multiple prefixes, given name, family name |
+| **NIK (optional)** | `FHIRIdentifierInput` | `Patient.identifier` | SATUSEHAT NIK system and 16-digit format |
 | **Birth Date** | `FHIRDateInput` | `Patient.birthDate` | Timezone-naive date picker (`YYYY-MM-DD`) |
 | **Gender** | `FHIRGenderInput` | `Patient.gender` | Standard HL7 AdministrativeGender mapping |
+| **Phone** | `FHIRContactPointInput` | `Patient.telecom` | Mobile contact point |
 | **Citizenship** | `FHIRCitizenshipStatusInput` | `Patient.extension` | `https://fhir.kemkes.go.id/r4/StructureDefinition/citizenshipStatus` |
 | **Religion** | `FHIRReligionInput` | `Patient.extension` | `https://fhir.kemkes.go.id/r4/StructureDefinition/patient-religion` |
 | **Marital Status** | `FHIRMaritalStatusInput` | `Patient.maritalStatus` | `http://terminology.hl7.org/CodeSystem/v3-MaritalStatus` |
@@ -86,5 +85,11 @@ npx shadcn@latest add https://<your-registry-url>/r/patient-registration-form.js
 
 | Prop Name | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `onSubmitSuccess` | `(patient: Patient) => void` | `undefined` | Callback fired when the form validates and generates a FHIR Patient resource payload. |
+| `initialPatient` | `Patient` | `undefined` | Optional Patient used to initialize review or editing. |
+| `onSubmit` | `(patient: Patient) => Promise<void>` | required | Async application submission boundary. Rejection shows a retry state without clearing data. |
+| `validateResource` | `(patient: Patient) => Promise<RegistrationIssue[]>` | `undefined` | Optional server/profile validator adapter. Errors block; warnings require confirmation. |
 | `readOnly` | `boolean` | `false` | Disables form inputs and actions, turning it into a read-only registration viewer. |
+
+## Practitioner testing
+
+Use the [Bahasa Indonesia usability-testing package](/docs/practitioner-usability-testing) before describing the workflow as practitioner-validated. It includes fictional scenarios, consent guidance, observation metrics, interview prompts, and a feedback template that excludes patient-identifying information.

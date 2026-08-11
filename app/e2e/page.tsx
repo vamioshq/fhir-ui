@@ -2,16 +2,35 @@
 
 import * as React from "react";
 import type { Address, Patient } from "@medplum/fhirtypes";
+import { useSearchParams } from "next/navigation";
 import { FHIRAddressInput } from "@/registry/fhir-ui/fhir-address-input";
 import { FHIRDateInput } from "@/registry/fhir-ui/fhir-date-input";
 import { FHIRDateTimeInput } from "@/registry/fhir-ui/fhir-datetime-input";
 import { PatientRegistrationForm } from "@/registry/fhir-ui/patient-registration-form";
 
-export default function E2EHarnessPage() {
+function E2EHarnessPage() {
+  const searchParams = useSearchParams();
   const [date, setDate] = React.useState("1990-05-15");
   const [dateTime, setDateTime] = React.useState("2026-06-05T02:35:00+07:00");
   const [address, setAddress] = React.useState<Address>({});
   const [patient, setPatient] = React.useState<Patient | null>(null);
+  const [submitAttempts, setSubmitAttempts] = React.useState(0);
+  const registrationMode = searchParams.get("registration") ?? "success";
+  const initialPatient: Patient = {
+    resourceType: "Patient",
+    name: [{ use: "official", text: "Siti Aminah", given: ["Siti"], family: "Aminah" }],
+    birthDate: "1990-05-15",
+    gender: "female",
+    telecom: [{ system: "phone", use: "mobile", value: "081234567890" }],
+    address: [{ use: "home", line: ["Jl. Merdeka 10"], city: "Jakarta", country: "ID" }],
+  };
+
+  const submitRegistration = async (value: Patient) => {
+    const nextAttempt = submitAttempts + 1;
+    setSubmitAttempts(nextAttempt);
+    if (registrationMode === "failure" && nextAttempt === 1) throw new Error("simulated failure");
+    setPatient(value);
+  };
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-10 p-6 sm:p-10">
@@ -33,11 +52,29 @@ export default function E2EHarnessPage() {
       </section>
       <section data-testid="registration-section" className="flex flex-col gap-3">
         <h2 className="text-lg font-medium">Patient registration</h2>
-        <PatientRegistrationForm onSubmitSuccess={setPatient} />
+        <PatientRegistrationForm
+          initialPatient={initialPatient}
+          onSubmit={submitRegistration}
+          readOnly={registrationMode === "readonly"}
+          validateResource={registrationMode === "duplicate"
+            ? async () => [{ path: "resource", code: "duplicate", severity: "warning", message: "Kemungkinan pasien sudah terdaftar." }]
+            : registrationMode === "validation-error"
+              ? async () => [{ path: "name", code: "server-rejected", severity: "error", message: "Nama ditolak oleh validator uji." }]
+              : undefined}
+        />
         <output data-testid="patient-output">
           <pre>{patient ? JSON.stringify(patient) : ""}</pre>
         </output>
+        <output data-testid="submit-attempts">{submitAttempts}</output>
       </section>
     </main>
+  );
+}
+
+export default function E2EPage() {
+  return (
+    <React.Suspense fallback={<main className="p-6">Loading testbed…</main>}>
+      <E2EHarnessPage />
+    </React.Suspense>
   );
 }

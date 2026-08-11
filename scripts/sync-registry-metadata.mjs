@@ -58,6 +58,8 @@ for (const item of registry.items) {
       file.target = `components/${item.name}.tsx`;
     } else if (file.path.endsWith("/fhir-odontogram-tooth.tsx")) {
       file.target = "components/lib/fhir-odontogram-tooth.tsx";
+    } else if (file.path.endsWith("/patient-registration-validation.ts")) {
+      file.target = "components/patient-registration-validation.ts";
     } else {
       file.target = file.path;
     }
