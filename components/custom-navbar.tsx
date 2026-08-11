@@ -25,6 +25,12 @@ export function CustomNavbar() {
         >
           Blocks
         </Link>
+        <Link
+          href="/docs/conformance"
+          className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Conformance
+        </Link>
       </div>
     </nav>
   );

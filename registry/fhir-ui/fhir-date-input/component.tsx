@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { formatFHIRDate, parseFHIRDate } from "@/lib/fhir/date";
 
 export interface FHIRDateInputProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange" | "value"> {
@@ -27,22 +28,9 @@ export function FHIRDateInput({
   className,
   ...props
 }: FHIRDateInputProps) {
+  const inputId = React.useId();
   // Parse YYYY-MM-DD string to local Date object securely without timezone shifting issues
-  const selectedDate = React.useMemo(() => {
-    if (!value) return undefined;
-    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (match) {
-      // Create date locally at midnight (match groups are guaranteed by regex)
-      const year = parseInt(match[1]!, 10);
-      const month = parseInt(match[2]!, 10);
-      const day = parseInt(match[3]!, 10);
-      const d = new Date(year, month - 1, day);
-      return isNaN(d.getTime()) ? undefined : d;
-    }
-    // Fallback if not perfectly matching format
-    const d = new Date(`${value}T00:00:00`);
-    return isNaN(d.getTime()) ? undefined : d;
-  }, [value]);
+  const selectedDate = React.useMemo(() => parseFHIRDate(value), [value]);
 
   const handleSelect = (date: Date | undefined) => {
     if (readOnly) return;
@@ -53,20 +41,18 @@ export function FHIRDateInput({
     }
 
     // Format reliably using date-fns or manual string assembly to avoid local timezone offset shifts
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-
-    onChange?.(`${year}-${month}-${day}`);
+    onChange?.(formatFHIRDate(date));
   };
 
   return (
     <div className={cn("w-full flex flex-col gap-2", className)} {...props}>
-      {showLabel && <Label className="text-xs font-semibold text-muted-foreground">{label}</Label>}
+      {showLabel && <Label htmlFor={inputId} className="text-xs font-semibold text-muted-foreground">{label}</Label>}
 
       <Popover>
         <PopoverTrigger asChild>
           <Button
+            id={inputId}
+            aria-label={label}
             variant="outline"
             disabled={readOnly}
             className={cn(

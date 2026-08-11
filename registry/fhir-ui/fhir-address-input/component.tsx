@@ -22,6 +22,7 @@ import {
   mockFetchAllSubdistricts,
 } from "@/registry/fhir-ui/fhir-regional-selector";
 import { FHIRCountrySelector } from "@/registry/fhir-ui/fhir-country-selector";
+import { buildSATUSEHATAddress, getSATUSEHATAdministrativeCode } from "@/lib/fhir/address";
 
 export interface FHIRAddressInputProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
@@ -40,24 +41,7 @@ export interface FHIRAddressInputProps
 
 // Helper to extract Kemkes administrative codes from FHIR extension (supporting complex and flat structures)
 function getAdminCode(address: Address | undefined, subUrl: string): string {
-  if (!address?.extension) return "";
-
-  // 1. Try official complex nested extension (administrativeCode or legacy administrative-address)
-  const complexUrls = [
-    "https://fhir.kemkes.go.id/r4/StructureDefinition/administrativeCode",
-    "https://fhir.kemkes.go.id/r4/StructureDefinition/administrative-address"
-  ];
-  for (const url of complexUrls) {
-    const adminExt = address.extension.find((e) => e.url === url);
-    if (adminExt?.extension) {
-      const subExt = adminExt.extension.find((sub) => sub.url === subUrl);
-      if (subExt?.valueCode) return subExt.valueCode;
-    }
-  }
-
-  // 2. Fallback: Parse flat extensions directly on the root extension list
-  const flatExt = address.extension.find((e) => e.url === subUrl);
-  return flatExt?.valueCode || "";
+  return getSATUSEHATAdministrativeCode(address, subUrl);
 }
 
 // Helper to construct FHIR compliant Address with Kemkes extensions
@@ -75,60 +59,7 @@ function buildFhirAddress(
   rt: string,
   rw: string
 ): Address {
-  const cleanLine = line.filter(Boolean);
-  const isIndonesian = country.trim().toUpperCase() === "ID";
-
-  // Format RT / RW to be 3 digits (e.g. "005") if they are numeric
-  const formattedRt = rt && /^\d+$/.test(rt.trim()) ? rt.trim().padStart(3, "0") : rt.trim();
-  const formattedRw = rw && /^\d+$/.test(rw.trim()) ? rw.trim().padStart(3, "0") : rw.trim();
-
-  // Create Kemenkes administrative address sub-extensions (only for Indonesia)
-  const subExtensions: Array<{ url: string; valueCode: string }> = [];
-  if (isIndonesian) {
-    if (provinceCode.trim()) subExtensions.push({ url: "province", valueCode: provinceCode.trim() });
-    if (cityCode.trim()) subExtensions.push({ url: "city", valueCode: cityCode.trim() });
-    if (districtCode.trim()) subExtensions.push({ url: "district", valueCode: districtCode.trim() });
-    if (villageCode.trim()) subExtensions.push({ url: "village", valueCode: villageCode.trim() });
-    if (formattedRt) subExtensions.push({ url: "rt", valueCode: formattedRt });
-    if (formattedRw) subExtensions.push({ url: "rw", valueCode: formattedRw });
-  }
-
-  const extensions = (isIndonesian && subExtensions.length > 0) ? [
-    {
-      url: "https://fhir.kemkes.go.id/r4/StructureDefinition/administrativeCode",
-      extension: subExtensions,
-    }
-  ] : undefined;
-
-  // Build a readable text dump of the address for clinical logs (stripping RT/RW prefix for international)
-  const textParts = isIndonesian ? [
-    cleanLine.join(", "),
-    formattedRt ? `RT ${formattedRt}` : "",
-    formattedRw ? `RW ${formattedRw}` : "",
-    city.trim(),
-    province.trim(),
-    postalCode.trim(),
-    country.trim() || "ID"
-  ].filter(Boolean) : [
-    cleanLine.join(", "),
-    city.trim(),
-    province.trim(),
-    postalCode.trim(),
-    country.trim()
-  ].filter(Boolean);
-
-  return {
-    use: "home",
-    type: "both",
-    line: cleanLine.length > 0 ? cleanLine : undefined,
-    city: city.trim() || undefined,
-    district: district.trim() || undefined,
-    state: province.trim() || undefined,
-    postalCode: postalCode.trim() || undefined,
-    country: country.trim() || "ID",
-    text: textParts.join(", ") || undefined,
-    extension: extensions,
-  };
+  return buildSATUSEHATAddress({ line, city, province, district, postalCode, country, provinceCode, cityCode, districtCode, villageCode, rt, rw });
 }
 
 export function FHIRAddressInput({

@@ -8,6 +8,8 @@ import { FHIROdontogramInputDemo } from "@/components/docs/fhir-odontogram-input
 
 # FHIR Odontogram Input
 
+<ComponentConformanceSummary slug="fhir-odontogram-input" />
+
 The `FHIROdontogramInput` component captures dental chart (Rekam Medis Gigi) data conforming to the **SATUSEHAT** FHIR R4 implementation guidelines.
 
 FHIR doesn't natively have an "Odontogram" resource. SATUSEHAT models dental records using an array of **`Observation`** resources with the clinical term code `OC000061` ("Pemeriksaan Odontogram"), where each action is explicitly tied to a tooth in `bodySite` using SNOMED CT concepts and detailed in `component` sub-structures.

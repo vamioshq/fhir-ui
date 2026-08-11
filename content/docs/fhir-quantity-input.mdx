@@ -8,6 +8,8 @@ import { FHIRQuantityInputDemo } from "@/components/docs/fhir-quantity-input-dem
 
 # FHIR Quantity Input
 
+<ComponentConformanceSummary slug="fhir-quantity-input" />
+
 The `FHIRQuantityInput` component captures measurements and clinical quantities conforming to the FHIR R4 standard.
 
 To guarantee clinical database integrity and eliminate unit name pollution (e.g. users typing `"kg"`, `"KG"`, or `"kilograms"` in a free-text input), the measurement units are configured as developer-locked component props. The unit renders as a clean, read-only badge on the right of the single inline `<InputGroup>`.

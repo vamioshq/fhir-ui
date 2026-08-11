@@ -1,0 +1,28 @@
+---
+title: Conformance and maturity
+description: What each FHIR UI claim means, the evidence behind it, and current limitations.
+---
+
+# Conformance and maturity
+
+FHIR UI publishes evidence levels instead of treating “FHIR compatible” as a single certification. The catalog below is generated from the same source used by registry metadata and was last reviewed on **August 10, 2026**.
+
+## How to read the labels
+
+- **FHIR-shaped** means a component reads or emits structures compatible with FHIR R4 TypeScript types. It does not guarantee resource or profile validity.
+- **FHIR R4 tested** means documented conversion constraints have automated tests. It is not a substitute for validating the final resource or Bundle.
+- **SATUSEHAT mapped** means known SATUSEHAT systems, codes, or extensions are represented. It does not mean the component passed a complete SATUSEHAT profile validator.
+- **Profile validated** is reserved for components tested against a named, versioned StructureDefinition. No component currently carries this label.
+- **Demo / adapter** identifies mock data, placeholder API helpers, or integrations that must be supplied by the consuming application.
+
+## Component matrix
+
+<ConformanceMatrix />
+
+## Safety boundary
+
+FHIR UI is a data-entry toolkit, not clinical decision-support software. Displayed ranges and badges are general interface guidance. Applications remain responsible for authorization, identity verification, terminology services, server-side validation, audit logging, consent, and clinical governance.
+
+## Promotion criteria
+
+A component advances from experimental to beta only after its core transformations have deterministic tests and its limitations are documented. Stable status additionally requires interaction, accessibility, compatibility, and release-regression coverage. `satusehat-profile-validated` requires a named canonical profile, versioned fixtures, and validation evidence.

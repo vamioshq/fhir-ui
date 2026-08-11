@@ -1,66 +1,62 @@
-# FHIR UI Components Registry
+# FHIR UI
 
-Premium, strictly-typed React component library designed for healthcare. Built on the shadcn/ui architecture, Tailwind CSS v4, and Medplum FHIR types, providing the building blocks for creating modern, accessible, and compliant healthcare applications.
+Open-source React building blocks for FHIR R4 forms, distributed through a shadcn registry with first-class SATUSEHAT mappings.
 
-Specialized integration presets are provided for the Indonesian Ministry of Health (**Kemenkes SATUSEHAT**) platform.
+FHIR UI distinguishes between FHIR-compatible TypeScript structures, tested conversion logic, SATUSEHAT mappings, and full profile validation. See the [conformance catalog](./lib/conformance.json) before using a component in production.
 
----
+## Quick start
 
-## 🚀 Key Features
+From a shadcn-enabled React project:
 
-* **Strictly Typed**: Full TypeScript support using native `@medplum/fhirtypes` definitions.
-* **Tailwind CSS v4**: Built on the latest Tailwind framework with modern design primitives.
-* **SATUSEHAT Ready**: Includes validation presets and mapping structures for Indonesian healthcare standards (gender, religion, marital status, citizenship, and administrative divisions).
-* **Interactive SVG Odontogram**: Complete interactive dental chart (Rekam Medis Gigi) mapping to FHIR `Observation` arrays.
-* **Component Registry**: Serve components directly via `shadcn` CLI without bulky npm package dependencies.
-
----
-
-## 🛠️ Getting Started
-
-### 1. Build and Run Registry Locally
 ```bash
-# Install dependencies
+pnpm dlx shadcn@latest add https://raw.githubusercontent.com/vamioshq/fhir-ui/main/public/r/fhir-date-input.json
+```
+
+The registry installs the component source, required shadcn primitives, helper files, and npm dependencies into your application.
+
+```tsx
+import { FHIRDateInput } from "@/registry/fhir-ui/fhir-date-input"
+
+<FHIRDateInput
+  value={patient.birthDate}
+  onChange={(birthDate) => setPatient({ ...patient, birthDate })}
+  showLabel
+  label="Date of birth"
+/>
+```
+
+## Evidence levels
+
+| Label | Meaning |
+| --- | --- |
+| FHIR-shaped | Uses FHIR R4-compatible structures; profile validity is not implied. |
+| FHIR R4 tested | Documented conversion constraints have automated tests. |
+| SATUSEHAT mapped | Includes documented Indonesian codes, systems, or extensions. |
+| Profile validated | Tested against a named and versioned StructureDefinition. No component currently carries this label. |
+| Demo / adapter | Includes mock data or requires a consumer-supplied integration. |
+
+The machine-readable catalog records every component’s target, maturity, evidence, terminology, tests, integration boundary, and known limitations.
+
+## Development
+
+```bash
 pnpm install
-
-# Run development server with docs
 pnpm dev
-
-# Build the registry components statically
+pnpm test
+pnpm lint
+pnpm types:check
+pnpm registry:sync
 pnpm registry:build
+pnpm registry:audit
+pnpm artifacts:check
+pnpm test:clean-install
+pnpm test:e2e
 ```
 
-### 2. Configure Shadcn UI in Your Client App
-Ensure your target React project is set up with shadcn/ui:
-```bash
-npx shadcn@latest init
-```
+Pull requests run the same quality gate on GitHub Actions. The clean-install check creates an isolated `src`-based consumer, installs all registry items through the shadcn CLI, verifies their target files, and type-checks the installed source.
 
-### 3. Install Medplum FHIR Types
-The registry components rely on strict type contracts from Medplum:
-```bash
-npm install @medplum/fhirtypes
-```
+`REGISTRY_BASE_URL` can override the default GitHub-hosted dependency origin during registry builds.
 
-### 4. Fetch and Inject Components
-Add components directly using the `shadcn` CLI:
-```bash
-npx shadcn@latest add https://<your-registry-url>/r/<component-name>.json
-```
-*(Note: Replace `<your-registry-url>` with the actual deployment URL of this registry once published, or `http://localhost:3000` during local testing).*
+## Production responsibilities
 
----
-
-## 📂 Project Architecture
-
-```
-├── app/                  # Next.js app pages and layouts
-├── components/           # Documentation-specific layout components and previews
-├── content/              # MDX files and navigation structure for Fumadocs
-├── registry/             # Source code of the FHIR components
-│   └── fhir-ui/          # 26 components (Address, Vital Signs, Odontogram, etc.)
-├── registry.json         # Shadcn registry manifests and metadata
-└── source.config.ts      # Fumadocs content collection config
-```
-
-Jah bless clean healthcare interfaces! 🇯🇲✨
+FHIR UI is a data-entry toolkit, not a terminology server, identity service, profile validator, or clinical decision-support system. Consuming applications remain responsible for final resource validation, authentication, authorization, consent, audit logging, terminology validation, and clinical governance.

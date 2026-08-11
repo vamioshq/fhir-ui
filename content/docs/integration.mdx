@@ -1,0 +1,69 @@
+---
+title: Integration patterns
+description: Controlled inputs, React Hook Form, server validation, and production boundaries.
+---
+
+# Integration patterns
+
+FHIR UI components are controlled React inputs. Keep the FHIR value in your form state, validate again at the server boundary, and submit only after resource-level validation.
+
+## Controlled component
+
+```tsx
+"use client"
+
+import { useState } from "react"
+import type { Address } from "@medplum/fhirtypes"
+import { FHIRAddressInput } from "@/registry/fhir-ui/fhir-address-input"
+
+export function PatientAddressField() {
+  const [address, setAddress] = useState<Address>()
+  return <FHIRAddressInput value={address} onChange={setAddress} />
+}
+```
+
+## React Hook Form
+
+Install `react-hook-form` in the consuming application, then use `Controller` for structured FHIR values.
+
+```tsx
+import { Controller, useForm } from "react-hook-form"
+import type { Patient } from "@medplum/fhirtypes"
+import { FHIRDateInput } from "@/registry/fhir-ui/fhir-date-input"
+
+type PatientFields = Pick<Patient, "birthDate">
+
+export function PatientForm() {
+  const { control, handleSubmit } = useForm<PatientFields>()
+
+  return (
+    <form onSubmit={handleSubmit(async (fields) => {
+      const patient: Patient = { resourceType: "Patient", ...fields }
+      await fetch("/api/patients", {
+        method: "POST",
+        headers: { "content-type": "application/fhir+json" },
+        body: JSON.stringify(patient),
+      })
+    })}>
+      <Controller
+        control={control}
+        name="birthDate"
+        render={({ field }) => (
+          <FHIRDateInput value={field.value} onChange={field.onChange} showLabel label="Date of birth" />
+        )}
+      />
+      <button type="submit">Create patient</button>
+    </form>
+  )
+}
+```
+
+## Production boundary
+
+Before submitting to a FHIR or SATUSEHAT server:
+
+1. Validate the complete resource against the profiles supported by your server.
+2. Resolve and validate terminology using an appropriate terminology service.
+3. Keep OAuth credentials and SATUSEHAT tokens server-side.
+4. Treat bundled mock search functions as examples, not network integrations.
+5. Record validation failures without logging unnecessary patient data.

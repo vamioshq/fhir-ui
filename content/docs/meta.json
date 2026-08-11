@@ -1,6 +1,8 @@
 {
   "pages": [
     "index",
+    "conformance",
+    "integration",
     "--- Basic FHIR Types ---",
     "fhir-address-input",
     "fhir-attachment-input",

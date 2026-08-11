@@ -8,6 +8,8 @@ import { FHIRBirthPlaceInputDemo } from "@/components/docs/fhir-birth-place-inpu
 
 # FHIR Birth Place Input
 
+<ComponentConformanceSummary slug="fhir-birth-place-input" />
+
 The `FHIRBirthPlaceInput` component is a specialized input for capturing patient birth place information. It uses a free text input for the city name with a country dropdown (Indonesia / Luar Negeri).
 
 This component returns a FHIR R4 `Extension` object with the SATUSEHAT `birthPlace` structure. For foreign births, the `country` field is omitted from `valueAddress`.

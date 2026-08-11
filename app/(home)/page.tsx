@@ -5,7 +5,10 @@ import {
   ShieldCheck,
   Accessibility,
   Boxes,
+  FlaskConical,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { conformanceCounts } from "@/lib/conformance";
 
 const components = [
   "fhir-human-name-input",
@@ -27,13 +30,13 @@ const components = [
 const features = [
   {
     icon: ShieldCheck,
-    title: "Typed to the spec",
-    body: "Every input is modeled on @medplum/fhirtypes, so the data you collect is valid FHIR from the first keystroke.",
+    title: "Evidence, not slogans",
+    body: "Every component publishes its target, maturity, tested behavior, integration boundary, and known limitations.",
   },
   {
     icon: Accessibility,
-    title: "Accessible by default",
-    body: "Built on Radix primitives and shadcn/ui — keyboard navigation, screen-reader semantics, and focus management handled for you.",
+    title: "Accessible foundations",
+    body: "Built on shadcn/ui primitives with accessibility as a design goal. Full interaction and assistive-technology coverage is tracked honestly.",
   },
   {
     icon: Boxes,
@@ -43,8 +46,8 @@ const features = [
 ];
 
 const stats = [
-  { value: "25", label: "Input components" },
-  { value: "R4", label: "FHIR compliant" },
+  { value: "26", label: "Registry items" },
+  { value: String(conformanceCounts.beta ?? 0), label: "Beta components" },
   { value: "0", label: "Lock-in" },
   { value: "MIT", label: "Licensed" },
 ];
@@ -66,7 +69,7 @@ export default function Home() {
         <span
           className="fd-reveal inline-flex items-center gap-2.5 rounded-full border border-border bg-background/70 px-3.5 py-1.5 font-mono text-xs uppercase tracking-[0.22em] backdrop-blur-sm"
         >
-          FHIR R4 · Component Registry
+          FHIR R4 · Evidence-led registry
         </span>
 
         <h1
@@ -83,12 +86,13 @@ export default function Home() {
           className="fd-reveal mt-8 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg"
           style={{ animationDelay: "180ms" }}
         >
-          25+ accessible, themeable inputs — typed against{" "}
+          Typed, themeable inputs with explicit evidence for FHIR behavior and
+          SATUSEHAT mappings. No blanket compliance claims. {" "}
           <code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.82em] text-foreground">
             @medplum/fhirtypes
           </code>{" "}
-          and built on shadcn/ui. Model patient data the way the standard already
-          does.
+          provides the resource contracts; the conformance catalog tells you what
+          is actually tested.
         </p>
 
         <div
@@ -101,6 +105,12 @@ export default function Home() {
           >
             Browse components
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+          <Link
+            href="/docs/conformance"
+            className="inline-flex w-full items-center justify-center rounded-full border border-border bg-background px-7 py-3.5 text-sm font-medium text-foreground transition-colors hover:bg-accent sm:w-auto"
+          >
+            View conformance
           </Link>
         </div>
 
@@ -135,6 +145,34 @@ export default function Home() {
             </div>
           ))}
         </dl>
+      </section>
+
+      <section className="relative mx-auto max-w-4xl px-6 py-20">
+        <div className="rounded-2xl border border-border bg-card p-7 sm:p-10">
+          <div className="flex items-start gap-4">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-secondary text-secondary-foreground">
+              <FlaskConical />
+            </div>
+            <div className="flex flex-col gap-4">
+              <div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Trust model</p>
+                <h2 className="mt-2 font-serif text-3xl font-medium tracking-tight">Know what each component guarantees.</h2>
+              </div>
+              <p className="max-w-2xl leading-relaxed text-muted-foreground">
+                FHIR-shaped, FHIR R4 tested, SATUSEHAT mapped, and profile validated are different claims. Every registry item carries machine-readable evidence and limitations.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="secondary">FHIR-shaped</Badge>
+                <Badge variant="secondary">FHIR R4 tested</Badge>
+                <Badge variant="secondary">SATUSEHAT mapped</Badge>
+                <Badge variant="outline">Demo / adapter</Badge>
+              </div>
+              <Link href="/docs/conformance" className="inline-flex items-center gap-2 text-sm font-medium underline underline-offset-4">
+                Explore the component matrix <ArrowUpRight />
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* WHAT'S INSIDE */}

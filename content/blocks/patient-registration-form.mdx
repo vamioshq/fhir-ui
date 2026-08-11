@@ -1,6 +1,6 @@
 ---
 title: Patient Registration Form
-description: A complete Patient Registration Form Block that aggregates demographics and addresses into a valid FHIR R4 Patient Resource conforming to Kemenkes SATUSEHAT standards.
+description: A demonstration Patient Registration Form Block that aggregates demographics and SATUSEHAT-oriented address mappings into a FHIR-shaped Patient resource.
 ---
 
 import { PatientRegistrationForm } from "@/registry/fhir-ui/patient-registration-form"
@@ -8,7 +8,9 @@ import { PatientRegistrationFormDemo } from "@/components/docs/patient-registrat
 
 # Patient Registration Form
 
-The `PatientRegistrationForm` is a pre-assembled composite form **Block** that binds multiple basic FHIR inputs together to manage patient intake. It compiles all form fields reactively into a single, valid HL7 FHIR R4 **`Patient`** Resource payload containing Indonesian **SATUSEHAT** extensions.
+<ComponentConformanceSummary slug="patient-registration-form" />
+
+The `PatientRegistrationForm` is a pre-assembled demonstration block that binds multiple FHIR inputs together. It produces a FHIR-shaped **`Patient`** payload with Indonesian **SATUSEHAT** mappings, but it does not replace server validation, identity checks, consent, or a complete registration workflow.
 
 ---
 

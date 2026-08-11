@@ -8,6 +8,8 @@ import { FHIRDateInputDemo } from "@/components/docs/fhir-date-input-demo"
 
 # FHIR Date Input
 
+<ComponentConformanceSummary slug="fhir-date-input" />
+
 The `FHIRDateInput` component handles capturing plain dates conforming strictly to the FHIR R4 \`date\` data type format (YYYY-MM-DD).
 
 Unlike a full \`dateTime\` component, this input ensures that the value is entirely timezone-naive. This is crucial for demographics like `Patient.birthDate`, where a person's birthday remains the same calendar date regardless of the server's or browser's local timezone.

@@ -8,6 +8,8 @@ import { FHIRAttachmentInputDemo } from "@/components/docs/fhir-attachment-input
 
 # FHIR Attachment Input
 
+<ComponentConformanceSummary slug="fhir-attachment-input" />
+
 The `FHIRAttachmentInput` component is an intuitive drag-and-drop file uploader designed to automatically convert local files into the FHIR R4 `Attachment` data type.
 
 It handles reading the file locally, extracting metadata (filename, content type, and size), and encoding the payload into a Base64 string (`Attachment.data`), which is the standard format used by FHIR APIs and the Kemenkes SATUSEHAT platform for document submissions (e.g., KTP/Identity Card scans or lab result PDFs).

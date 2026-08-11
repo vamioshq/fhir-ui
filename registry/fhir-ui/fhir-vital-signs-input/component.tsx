@@ -7,6 +7,7 @@ import { FHIRQuantityInput, type QuantityPreset, cleanAndParseQuantity, getQuant
 import { Field, FieldLabel } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Badge } from "@/components/ui/badge";
+import { observationsToVitalSigns, vitalSignsToObservations, type VitalSignsState } from "@/lib/fhir/vital-signs";
 
 export type VitalSignsPreset = QuantityPreset | "blood-pressure" | "height-weight";
 
@@ -19,18 +20,6 @@ export interface FHIRVitalSignsInputProps {
   className?: string;
   preset?: VitalSignsPreset;
   patientGender?: "male" | "female";
-}
-
-interface VitalSignsState {
-  systolic?: number;
-  diastolic?: number;
-  heartRate?: number;
-  temperature?: number;
-  respiratoryRate?: number;
-  spo2?: number;
-  weight?: number;
-  height?: number;
-  waistCircumference?: number;
 }
 
 const syncDisplay = (value: number | undefined, currentDisplay: string, setDisplay: (v: string) => void) => {
@@ -66,54 +55,7 @@ export function FHIRVitalSignsInput({
   patientGender,
 }: FHIRVitalSignsInputProps) {
   // Parse state from incoming FHIR Observations
-  const vitals: VitalSignsState = useMemo(() => {
-    const state: VitalSignsState = {};
-
-    value.forEach((res) => {
-      const code = res.code?.coding?.[0]?.code;
-      if (!code) return;
-
-      switch (code) {
-        case "85354-9": {
-          // Blood Pressure Panel
-          res.component?.forEach((comp) => {
-            const compCode = comp.code?.coding?.[0]?.code;
-            if (compCode === "8480-6") {
-              state.systolic = comp.valueQuantity?.value;
-            } else if (compCode === "8462-4") {
-              state.diastolic = comp.valueQuantity?.value;
-            }
-          });
-          break;
-        }
-        case "8867-4":
-          state.heartRate = res.valueQuantity?.value;
-          break;
-        case "8310-5":
-          state.temperature = res.valueQuantity?.value;
-          break;
-        case "9279-1":
-          state.respiratoryRate = res.valueQuantity?.value;
-          break;
-        case "2708-6":
-          state.spo2 = res.valueQuantity?.value;
-          break;
-        case "29463-7":
-          state.weight = res.valueQuantity?.value;
-          break;
-        case "8302-2":
-          state.height = res.valueQuantity?.value;
-          break;
-        case "8280-0":
-          state.waistCircumference = res.valueQuantity?.value;
-          break;
-        default:
-          break;
-      }
-    });
-
-    return state;
-  }, [value]);
+  const vitals: VitalSignsState = useMemo(() => observationsToVitalSigns(value), [value]);
 
   // Combined input states for controlled textual syncing
   const [sysDisplay, setSysDisplay] = React.useState<string>("");
@@ -133,152 +75,7 @@ export function FHIRVitalSignsInput({
     if (readOnly || !onChange) return;
 
     const nextState = { ...vitals, [field]: val };
-    const observations: Observation[] = [];
-
-    // Common observation template creator
-    const createObservation = (
-      loincCode: string,
-      display: string,
-      quantityValue: number,
-      unitCode: string,
-      unitDisplay: string
-    ): Observation => ({
-      resourceType: "Observation",
-      id: `obs-${loincCode}-${Date.now()}`,
-      status: "final",
-      category: [
-        {
-          coding: [
-            {
-              system: "http://terminology.hl7.org/CodeSystem/observation-category",
-              code: "vital-signs",
-              display: "Vital Signs",
-            },
-          ],
-        },
-      ],
-      code: {
-        coding: [
-          {
-            system: "http://loinc.org",
-            code: loincCode,
-            display,
-          },
-        ],
-        text: display,
-      },
-      subject: {
-        reference: `Patient/${patientId}`,
-      },
-      encounter: {
-        reference: `Encounter/${encounterId}`,
-      },
-      effectiveDateTime: new Date().toISOString(),
-      valueQuantity: {
-        value: quantityValue,
-        unit: unitDisplay,
-        system: "http://unitsofmeasure.org",
-        code: unitCode,
-      },
-    });
-
-    // 1. Blood Pressure Panel (Systolic & Diastolic components)
-    if (nextState.systolic !== undefined || nextState.diastolic !== undefined) {
-      const components = [];
-      if (nextState.systolic !== undefined) {
-        components.push({
-          code: {
-            coding: [{ system: "http://loinc.org", code: "8480-6", display: "Systolic blood pressure" }],
-          },
-          valueQuantity: {
-            value: nextState.systolic,
-            unit: "mmHg",
-            system: "http://unitsofmeasure.org",
-            code: "mm[Hg]",
-          },
-        });
-      }
-      if (nextState.diastolic !== undefined) {
-        components.push({
-          code: {
-            coding: [{ system: "http://loinc.org", code: "8462-4", display: "Diastolic blood pressure" }],
-          },
-          valueQuantity: {
-            value: nextState.diastolic,
-            unit: "mmHg",
-            system: "http://unitsofmeasure.org",
-            code: "mm[Hg]",
-          },
-        });
-      }
-
-      observations.push({
-        resourceType: "Observation",
-        id: `obs-bp-${Date.now()}`,
-        status: "final",
-        category: [
-          {
-            coding: [
-              {
-                system: "http://terminology.hl7.org/CodeSystem/observation-category",
-                code: "vital-signs",
-                display: "Vital Signs",
-              },
-            ],
-          },
-        ],
-        code: {
-          coding: [{ system: "http://loinc.org", code: "85354-9", display: "Blood pressure panel with all children" }],
-          text: "Blood Pressure",
-        },
-        subject: { reference: `Patient/${patientId}` },
-        encounter: { reference: `Encounter/${encounterId}` },
-        effectiveDateTime: new Date().toISOString(),
-        component: components,
-      });
-    }
-
-    // 2. Heart Rate
-    if (nextState.heartRate !== undefined) {
-      observations.push(createObservation("8867-4", "Heart rate", nextState.heartRate, "/min", "bpm"));
-    }
-
-    // 3. Body Temperature
-    if (nextState.temperature !== undefined) {
-      observations.push(createObservation("8310-5", "Body temperature", nextState.temperature, "Cel", "°C"));
-    }
-
-    // 4. Respiratory Rate
-    if (nextState.respiratoryRate !== undefined) {
-      observations.push(createObservation("9279-1", "Respiratory rate", nextState.respiratoryRate, "/min", "breaths/min"));
-    }
-
-    // 5. Oxygen Saturation
-    if (nextState.spo2 !== undefined) {
-      observations.push(createObservation("2708-6", "Oxygen saturation in Arterial blood by Pulse oximetry", nextState.spo2, "%", "%"));
-    }
-
-    // 6. Weight
-    if (nextState.weight !== undefined) {
-      observations.push(createObservation("29463-7", "Body weight", nextState.weight, "kg", "kg"));
-    }
-
-    // 7. Height
-    if (nextState.height !== undefined) {
-      observations.push(createObservation("8302-2", "Body height", nextState.height, "cm", "cm"));
-    }
-
-    // 8. Auto-calculated BMI
-    if (nextState.weight !== undefined && nextState.height !== undefined && nextState.height > 0) {
-      const heightInMeters = nextState.height / 100;
-      const bmi = parseFloat((nextState.weight / (heightInMeters * heightInMeters)).toFixed(1));
-      observations.push(createObservation("39156-5", "Body mass index", bmi, "kg/m2", "kg/m²"));
-    }
-
-    // 9. Waist Circumference
-    if (nextState.waistCircumference !== undefined) {
-      observations.push(createObservation("8280-0", "Waist Circumference", nextState.waistCircumference, "cm", "cm"));
-    }
+    const observations = vitalSignsToObservations(nextState, { patientId, encounterId });
 
     onChange(observations);
   };

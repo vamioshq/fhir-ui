@@ -24,8 +24,11 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FHIR UI",
-  description: "A collection of FHIR-themed UI components",
+  title: {
+    default: "FHIR UI — React inputs for FHIR R4",
+    template: "%s | FHIR UI",
+  },
+  description: "Open-source React building blocks for FHIR R4 forms, with explicit SATUSEHAT mappings, evidence levels, and limitations.",
   // metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   // Uncomment above and set NEXT_PUBLIC_SITE_URL in .env for production OG images
 };
