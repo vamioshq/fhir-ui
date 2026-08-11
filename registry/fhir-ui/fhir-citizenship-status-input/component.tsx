@@ -94,7 +94,7 @@ export function FHIRCitizenshipStatusInput({
           onValueChange={handleValueChange}
           disabled={readOnly}
         >
-          <SelectTrigger className="h-8 w-full">
+          <SelectTrigger className="h-8 w-full" aria-label={label}>
             <SelectValue placeholder="Select citizenship status" />
           </SelectTrigger>
           <SelectContent>

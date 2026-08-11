@@ -1,15 +1,17 @@
 "use client";
 
 import * as React from "react";
-import type { Address } from "@medplum/fhirtypes";
+import type { Address, Patient } from "@medplum/fhirtypes";
 import { FHIRAddressInput } from "@/registry/fhir-ui/fhir-address-input";
 import { FHIRDateInput } from "@/registry/fhir-ui/fhir-date-input";
 import { FHIRDateTimeInput } from "@/registry/fhir-ui/fhir-datetime-input";
+import { PatientRegistrationForm } from "@/registry/fhir-ui/patient-registration-form";
 
 export default function E2EHarnessPage() {
   const [date, setDate] = React.useState("1990-05-15");
   const [dateTime, setDateTime] = React.useState("2026-06-05T02:35:00+07:00");
   const [address, setAddress] = React.useState<Address>({});
+  const [patient, setPatient] = React.useState<Patient | null>(null);
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-10 p-6 sm:p-10">
@@ -28,6 +30,13 @@ export default function E2EHarnessPage() {
         <h2 className="text-lg font-medium">Address</h2>
         <FHIRAddressInput value={address} onChange={setAddress} variant="simple" />
         <output data-testid="address-output"><pre>{JSON.stringify(address)}</pre></output>
+      </section>
+      <section data-testid="registration-section" className="flex flex-col gap-3">
+        <h2 className="text-lg font-medium">Patient registration</h2>
+        <PatientRegistrationForm onSubmitSuccess={setPatient} />
+        <output data-testid="patient-output">
+          <pre>{patient ? JSON.stringify(patient) : ""}</pre>
+        </output>
       </section>
     </main>
   );

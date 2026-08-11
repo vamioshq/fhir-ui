@@ -106,7 +106,7 @@ export function FHIRReligionInput({
           onValueChange={(val) => handleValueChange(val === "none" ? "" : val)}
           disabled={readOnly}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full" aria-label={label}>
             <SelectValue placeholder="Select Religion" />
           </SelectTrigger>
           <SelectContent position="popper">

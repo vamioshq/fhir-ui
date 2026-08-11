@@ -99,7 +99,7 @@ export function FHIRMaritalStatusInput({
           onValueChange={(val) => handleValueChange(val === "none" ? "" : val)}
           disabled={readOnly}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full" aria-label={label}>
             <SelectValue placeholder="Select Marital Status" />
           </SelectTrigger>
           <SelectContent position="popper">

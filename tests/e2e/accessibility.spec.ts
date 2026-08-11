@@ -31,9 +31,22 @@ test("dateTime editing emits an offset-aware value", async ({ page }) => {
 });
 
 test("address input has an accessible label and emits a FHIR Address", async ({ page }) => {
-  const street = page.getByLabel("Street Address (Alamat Jalan)");
+  const street = page.getByTestId("address-section").getByLabel("Street Address (Alamat Jalan)");
   await street.fill("Jl. Merdeka 10");
   await expect(page.getByTestId("address-output")).toContainText("Jl. Merdeka 10");
   await expect(page.getByTestId("address-output")).toContainText('"country":"ID"');
+  await expectNoSeriousAccessibilityViolations(page);
+});
+
+test("patient registration assembles a FHIR Patient and is accessible", async ({ page }) => {
+  const section = page.getByTestId("registration-section");
+  await section.getByLabel("Name Information").fill("Siti Aminah");
+  await section.getByRole("button", { name: "Generate FHIR Patient" }).click();
+
+  const output = page.getByTestId("patient-output");
+  await expect(output).toContainText('"resourceType":"Patient"');
+  await expect(output).toContainText('"text":"Siti Aminah"');
+  await expect(output).toContainText('"given":["Siti"]');
+  await expect(output).toContainText('"family":"Aminah"');
   await expectNoSeriousAccessibilityViolations(page);
 });
