@@ -47,7 +47,7 @@ export function FHIRAttachmentInputDemo() {
             <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
               Allowed Types
             </label>
-            <Select value={acceptFilter} onValueChange={setAcceptFilter}>
+            <Select items={{ all: "Any Format", images: "Images Only", documents: "Documents (PDF, Word)" }} value={acceptFilter} onValueChange={(v) => v && setAcceptFilter(v)}>
               <SelectTrigger className="h-8 text-xs font-mono">
                 <SelectValue />
               </SelectTrigger>
@@ -63,7 +63,7 @@ export function FHIRAttachmentInputDemo() {
             <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
               Demo Mode
             </label>
-            <Select value={demoMode} onValueChange={(v) => setDemoMode(v as "single" | "multiple")}>
+            <Select items={{ single: "Single File", multiple: "Multiple Files" }} value={demoMode} onValueChange={(v) => setDemoMode(v as "single" | "multiple")}>
               <SelectTrigger className="h-8 text-xs font-mono">
                 <SelectValue />
               </SelectTrigger>

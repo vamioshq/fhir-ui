@@ -74,9 +74,8 @@ export function FHIRMaritalStatusInput({
 
       {variant === "toggle" ? (
         <ToggleGroup
-          type="single"
-          value={activeCode}
-          onValueChange={handleValueChange}
+          value={activeCode ? [activeCode] : []}
+          onValueChange={(vals) => vals[0] && handleValueChange(vals[0])}
           disabled={readOnly}
           className="flex flex-row items-center border border-input rounded-lg overflow-hidden w-fit gap-0 bg-transparent h-8"
         >
@@ -95,14 +94,18 @@ export function FHIRMaritalStatusInput({
         </ToggleGroup>
       ) : (
         <Select
+          items={[
+            { value: "none", label: "Select Marital Status" },
+            ...MARITAL_OPTIONS.map((o) => ({ value: o.code, label: `${o.label} (${o.display})` })),
+          ]}
           value={activeCode || "none"}
-          onValueChange={(val) => handleValueChange(val === "none" ? "" : val)}
+          onValueChange={(val) => val && handleValueChange(val === "none" ? "" : val)}
           disabled={readOnly}
         >
           <SelectTrigger className="w-full" aria-label={label}>
             <SelectValue placeholder="Select Marital Status" />
           </SelectTrigger>
-          <SelectContent position="popper">
+          <SelectContent alignItemWithTrigger={false}>
             <SelectItem value="none">Select Marital Status</SelectItem>
             {MARITAL_OPTIONS.map((opt) => (
               <SelectItem key={opt.code} value={opt.code}>

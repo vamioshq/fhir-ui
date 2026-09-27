@@ -699,9 +699,9 @@ export function FHIROdontogramInput({
         {!readOnly && (
           <div className="p-2 border-b flex flex-wrap items-center gap-2 bg-muted/20">
             <ToggleGroup
-              type="single"
-              value={selectedTool}
-              onValueChange={(val) => {
+              value={[selectedTool]}
+              onValueChange={(vals) => {
+                const val = vals[0];
                 if (val) {
                   setSelectedTool(val as ToolType);
                 } else {
@@ -721,24 +721,18 @@ export function FHIROdontogramInput({
                       <div className="w-px h-12 bg-border mx-1 self-center hidden sm:block shrink-0" />
                     )}
                     <Tooltip>
-                      <TooltipTrigger asChild>
-                        <ToggleGroupItem
-                          value={tool.id}
-                          aria-label={tool.label}
-                          className={cn(
-                            "flex size-16 flex-col items-center justify-center relative transition-all duration-200",
-                            isSelected ? tool.selectedClass : "hover:bg-muted"
-                          )}
-                        >
-                          {tool.icon}
-                          <span className="text-xs text-muted-foreground">{tool.label}</span>
-                          {isSelected && (
-                            <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
-                              <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", tool.badgeColor)}></span>
-                              <span className={cn("relative inline-flex rounded-full h-2.5 w-2.5", tool.badgeColor)}></span>
-                            </span>
-                          )}
-                        </ToggleGroupItem>
+                      <TooltipTrigger render={<ToggleGroupItem value={tool.id} aria-label={tool.label} className={cn(
+                          "flex size-16 flex-col items-center justify-center relative transition-all duration-200",
+                          isSelected ? tool.selectedClass : "hover:bg-muted"
+                        )} />}>
+                        {tool.icon}
+                        <span className="text-xs text-muted-foreground">{tool.label}</span>
+                        {isSelected && (
+                          <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+                            <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", tool.badgeColor)}></span>
+                            <span className={cn("relative inline-flex rounded-full h-2.5 w-2.5", tool.badgeColor)}></span>
+                          </span>
+                        )}
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>{tool.tooltip}</p>
@@ -751,9 +745,9 @@ export function FHIROdontogramInput({
 
             <div className="ml-auto flex gap-1">
               <ToggleGroup
-                type="single"
-                value={viewMode}
-                onValueChange={(val) => {
+                value={[viewMode]}
+                onValueChange={(vals) => {
+                  const val = vals[0];
                   if (val) {
                     setViewMode(val as "adult" | "child" | "mixed");
                   } else {
@@ -764,13 +758,8 @@ export function FHIROdontogramInput({
                 size="default"
               >
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <ToggleGroupItem
-                      value="mixed"
-                      className="h-9 px-3 text-xs font-semibold"
-                    >
-                      Adult + Child
-                    </ToggleGroupItem>
+                  <TooltipTrigger render={<ToggleGroupItem value="mixed" className="h-9 px-3 text-xs font-semibold" />}>
+                    Adult + Child
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Mixed dentition (All 52 teeth)</p>
@@ -778,13 +767,8 @@ export function FHIROdontogramInput({
                 </Tooltip>
 
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <ToggleGroupItem
-                      value="adult"
-                      className="h-9 px-3 text-xs font-semibold"
-                    >
-                      Adult
-                    </ToggleGroupItem>
+                  <TooltipTrigger render={<ToggleGroupItem value="adult" className="h-9 px-3 text-xs font-semibold" />}>
+                    Adult
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Permanent dentition (32 teeth)</p>
@@ -792,13 +776,8 @@ export function FHIROdontogramInput({
                 </Tooltip>
 
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <ToggleGroupItem
-                      value="child"
-                      className="h-9 px-3 text-xs font-semibold"
-                    >
-                      Child
-                    </ToggleGroupItem>
+                  <TooltipTrigger render={<ToggleGroupItem value="child" className="h-9 px-3 text-xs font-semibold" />}>
+                    Child
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Deciduous dentition (20 teeth)</p>

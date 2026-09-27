@@ -15,6 +15,9 @@ function E2EHarnessPage() {
   const [address, setAddress] = React.useState<Address>({});
   const [patient, setPatient] = React.useState<Patient | null>(null);
   const [submitAttempts, setSubmitAttempts] = React.useState(0);
+  // Set after hydration, so tests can wait for client-side ARIA wiring (such as combobox labels).
+  const [hydrated, setHydrated] = React.useState(false);
+  React.useEffect(() => setHydrated(true), []);
   const registrationMode = searchParams.get("registration") ?? "success";
   const initialPatient: Patient = {
     resourceType: "Patient",
@@ -33,7 +36,7 @@ function E2EHarnessPage() {
   };
 
   return (
-    <main className="mx-auto flex max-w-3xl flex-col gap-10 p-6 sm:p-10">
+    <main data-hydrated={hydrated || undefined} className="mx-auto flex max-w-3xl flex-col gap-10 p-6 sm:p-10">
       <h1 className="text-2xl font-semibold">FHIR UI interaction testbed</h1>
       <section data-testid="date-section" className="flex flex-col gap-3">
         <h2 className="text-lg font-medium">Date</h2>

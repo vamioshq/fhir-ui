@@ -66,7 +66,7 @@ try {
   const itemUrls = registry.items.map((item) => `${registryBaseUrl}/r/${item.name}.json`);
   await run(
     "pnpm",
-    ["dlx", "shadcn@4.10.0", "add", ...itemUrls, "--yes"],
+    ["dlx", "shadcn@4.21.0", "add", ...itemUrls, "--yes"],
     { cwd: consumerDirectory },
   );
 

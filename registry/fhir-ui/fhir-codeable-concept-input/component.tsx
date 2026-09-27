@@ -12,6 +12,7 @@ import {
   ComboboxItem,
   ComboboxEmpty,
 } from "@/components/ui/combobox";
+import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { Badge } from "@/components/ui/badge";
 
 export const SATUSEHAT_SYSTEMS: Record<string, { label: string }> = {
@@ -162,11 +163,11 @@ export function FHIRCodeableConceptInput({
   return (
     <div className={cn("w-full max-w-md text-foreground", className)} {...props}>
       <Field>
-        {activeLabel && <FieldLabel>{activeLabel}</FieldLabel>}
         <Combobox
           value={activeCode}
           onValueChange={handleValueChange as any} // base-ui onValueChange
         >
+<ComboboxPrimitive.Label render={<FieldLabel className={activeLabel ? undefined : "sr-only"} />}>{activeLabel || "Code"}</ComboboxPrimitive.Label>
           <ComboboxInput
             placeholder={activePlaceholder}
             value={inputValue}

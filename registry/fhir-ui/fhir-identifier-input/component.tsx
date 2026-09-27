@@ -189,7 +189,8 @@ export function FHIRIdentifierInput({
     setIsTouched(true);
   };
 
-  const handleUseChange = (val: string) => {
+  const handleUseChange = (val: string | null) => {
+    if (!val) return;
     const nextUse = val as Identifier["use"];
     setUse(nextUse);
     updateIdentifier(idValue, nextUse, periodStart, periodEnd);
@@ -247,7 +248,7 @@ export function FHIRIdentifierInput({
               {/* Identifier Use */}
               <Field>
                 <FieldLabel htmlFor="detailed-id-use">Use Case</FieldLabel>
-                <Select value={use || "official"} onValueChange={handleUseChange}>
+                <Select items={{ official: "Official", usual: "Usual", temp: "Temporary", secondary: "Secondary", old: "Old / Previous" }} value={use || "official"} onValueChange={handleUseChange}>
                   <SelectTrigger id="detailed-id-use" className="w-full">
                     <SelectValue placeholder="Select use" />
                   </SelectTrigger>
@@ -305,12 +306,8 @@ export function FHIRIdentifierInput({
               <InputGroupAddon align="inline-end">
                 <Dialog>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <DialogTrigger asChild>
-                        <InputGroupButton size="icon-xs" variant="ghost" aria-label="Edit identifier meta">
-                          <SlidersHorizontal className="size-4" />
-                        </InputGroupButton>
-                      </DialogTrigger>
+                    <TooltipTrigger render={<DialogTrigger render={<InputGroupButton size="icon-xs" variant="ghost" aria-label="Edit identifier meta" />} />}>
+                      <SlidersHorizontal className="size-4" />
                     </TooltipTrigger>
                     <TooltipContent side="top">Edit details</TooltipContent>
                   </Tooltip>
@@ -336,7 +333,7 @@ export function FHIRIdentifierInput({
                       {/* Use Cases */}
                       <Field>
                         <FieldLabel htmlFor="dialog-id-use">Use Case</FieldLabel>
-                        <Select value={use || "official"} onValueChange={handleUseChange}>
+                        <Select items={{ official: "Official", usual: "Usual", temp: "Temporary", secondary: "Secondary", old: "Old / Previous" }} value={use || "official"} onValueChange={handleUseChange}>
                           <SelectTrigger id="dialog-id-use" className="w-full">
                             <SelectValue placeholder="Select use" />
                           </SelectTrigger>

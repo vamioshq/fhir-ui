@@ -13,6 +13,7 @@ import {
   ComboboxItem,
   ComboboxEmpty,
 } from "@/components/ui/combobox";
+import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { Badge } from "@/components/ui/badge";
 import { Loader2Icon } from "lucide-react";
 
@@ -287,7 +288,6 @@ export function FHIRPractitionerInput({
   return (
     <div className={cn("w-full max-w-md text-foreground", className)} {...props}>
       <Field>
-        {label && <FieldLabel>{label}</FieldLabel>}
         <Combobox
           value={activePractitionerId}
           onValueChange={handleValueChange as any}
@@ -295,6 +295,7 @@ export function FHIRPractitionerInput({
           onOpenChange={handleOpenChange}
           disabled={disabled}
         >
+<ComboboxPrimitive.Label render={<FieldLabel className={label ? undefined : "sr-only"} />}>{label || "Practitioner"}</ComboboxPrimitive.Label>
           <div className="relative">
             <UserRound className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/70 z-10" />
             <ComboboxInput

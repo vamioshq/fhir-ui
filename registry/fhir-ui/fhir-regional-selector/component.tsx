@@ -9,6 +9,7 @@ import {
   ComboboxItem,
   ComboboxEmpty,
 } from "@/components/ui/combobox";
+import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { Field, FieldLabel, FieldDescription } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -153,47 +154,47 @@ export function FHIRRegionalSelector({
 
   return (
     <Field className={cn(className)}>
-      <FieldLabel>{label}</FieldLabel>
-      <div className="relative">
-        <Combobox
-          open={open}
-          onOpenChange={handleOpenChange}
-          value={valueCode || null}
-          onValueChange={handleValueChange}
-          disabled={disabled}
-        >
+      <Combobox
+        open={open}
+        onOpenChange={handleOpenChange}
+        value={valueCode || null}
+        onValueChange={handleValueChange}
+        disabled={disabled}
+      >
+        <ComboboxPrimitive.Label render={<FieldLabel />}>{label}</ComboboxPrimitive.Label>
+        <div className="relative">
           <ComboboxInput
-            placeholder={placeholder}
-            className="w-full"
-            value={search}
-            onChange={handleInputChange}
-            onFocus={(e) => e.currentTarget.select()}
-            disabled={disabled}
-            autoComplete="off"
-          />
-          <ComboboxContent className="w-full min-w-[240px]">
-            <ComboboxList>
-              {loading && (
-                <div className="flex items-center justify-center py-6 text-sm text-muted-foreground gap-2">
-                  <Loader2Icon className="animate-spin size-4 text-primary" />
-                  <span>Loading data...</span>
-                </div>
-              )}
-              {!loading && mergedItems.map((item) => (
-                <ComboboxItem key={item.code} value={item.code}>
-                  <span className="font-mono text-sm text-muted-foreground mr-2">{item.code}</span>
-                  <span className="font-medium text-sm">{item.name}</span>
-                </ComboboxItem>
-              ))}
-              {!loading && mergedItems.length === 0 && (
-                <ComboboxEmpty className="py-6 text-center text-sm text-muted-foreground">
-                  No regional data found
-                </ComboboxEmpty>
-              )}
-            </ComboboxList>
-          </ComboboxContent>
-        </Combobox>
-      </div>
+              placeholder={placeholder}
+              className="w-full"
+              value={search}
+              onChange={handleInputChange}
+              onFocus={(e) => e.currentTarget.select()}
+              disabled={disabled}
+              autoComplete="off"
+            />
+            <ComboboxContent className="w-full min-w-[240px]">
+              <ComboboxList>
+                {loading && (
+                  <div className="flex items-center justify-center py-6 text-sm text-muted-foreground gap-2">
+                    <Loader2Icon className="animate-spin size-4 text-primary" />
+                    <span>Loading data...</span>
+                  </div>
+                )}
+                {!loading && mergedItems.map((item) => (
+                  <ComboboxItem key={item.code} value={item.code}>
+                    <span className="font-mono text-sm text-muted-foreground mr-2">{item.code}</span>
+                    <span className="font-medium text-sm">{item.name}</span>
+                  </ComboboxItem>
+                ))}
+                {!loading && mergedItems.length === 0 && (
+                  <ComboboxEmpty className="py-6 text-center text-sm text-muted-foreground">
+                    No regional data found
+                  </ComboboxEmpty>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
+        </div>
+      </Combobox>
     </Field>
   );
 }
@@ -727,49 +728,49 @@ export function FHIRCombinedSubdistrictSelector({
 
   return (
     <Field className={cn(className)}>
-      <FieldLabel>{label}</FieldLabel>
-      <div className="relative">
-        <Combobox
-          open={open}
-          onOpenChange={handleOpenChange}
-          value={valueCode || null}
-          onValueChange={handleValueChange}
-          disabled={disabled}
-        >
+      <Combobox
+        open={open}
+        onOpenChange={handleOpenChange}
+        value={valueCode || null}
+        onValueChange={handleValueChange}
+        disabled={disabled}
+      >
+        <ComboboxPrimitive.Label render={<FieldLabel />}>{label}</ComboboxPrimitive.Label>
+        <div className="relative">
           <ComboboxInput
-            placeholder={placeholder}
-            className="w-full"
-            value={search}
-            onChange={handleInputChange}
-            onFocus={(e) => e.currentTarget.select()}
-            disabled={disabled}
-            autoComplete="off"
-          />
-          <ComboboxContent className="w-full min-w-[280px]">
-            <ComboboxList>
-              {loading && (
-                <div className="flex items-center justify-center py-6 text-sm text-muted-foreground gap-2">
-                  <Loader2Icon className="animate-spin size-4 text-primary" />
-                  <span>Loading data...</span>
-                </div>
-              )}
-              {!loading && mergedItems.map((item) => (
-                <ComboboxItem key={item.code} value={item.code}>
-                  <div className="flex flex-col text-left py-0.5">
-                    <span className="font-mono text-[10px] text-muted-foreground">{item.code}</span>
-                    <span className="font-medium text-sm leading-tight">{item.fullName}</span>
+              placeholder={placeholder}
+              className="w-full"
+              value={search}
+              onChange={handleInputChange}
+              onFocus={(e) => e.currentTarget.select()}
+              disabled={disabled}
+              autoComplete="off"
+            />
+            <ComboboxContent className="w-full min-w-[280px]">
+              <ComboboxList>
+                {loading && (
+                  <div className="flex items-center justify-center py-6 text-sm text-muted-foreground gap-2">
+                    <Loader2Icon className="animate-spin size-4 text-primary" />
+                    <span>Loading data...</span>
                   </div>
-                </ComboboxItem>
-              ))}
-              {!loading && mergedItems.length === 0 && (
-                <ComboboxEmpty className="py-6 text-center text-sm text-muted-foreground">
-                  No subdistricts found
-                </ComboboxEmpty>
-              )}
-            </ComboboxList>
-          </ComboboxContent>
-        </Combobox>
-      </div>
+                )}
+                {!loading && mergedItems.map((item) => (
+                  <ComboboxItem key={item.code} value={item.code}>
+                    <div className="flex flex-col text-left py-0.5">
+                      <span className="font-mono text-[10px] text-muted-foreground">{item.code}</span>
+                      <span className="font-medium text-sm leading-tight">{item.fullName}</span>
+                    </div>
+                  </ComboboxItem>
+                ))}
+                {!loading && mergedItems.length === 0 && (
+                  <ComboboxEmpty className="py-6 text-center text-sm text-muted-foreground">
+                    No subdistricts found
+                  </ComboboxEmpty>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
+        </div>
+      </Combobox>
     </Field>
   );
 }

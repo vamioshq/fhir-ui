@@ -50,9 +50,8 @@ export function FHIRGenderInput({
 
       {variant === "toggle" ? (
         <ToggleGroup
-          type="single"
-          value={value || ""}
-          onValueChange={handleValueChange}
+          value={value ? [value] : []}
+          onValueChange={(vals) => vals[0] && handleValueChange(vals[0])}
           disabled={readOnly}
           className="flex flex-row items-center border border-input rounded-lg overflow-hidden w-fit gap-0 bg-transparent h-8"
         >
@@ -75,14 +74,15 @@ export function FHIRGenderInput({
         </ToggleGroup>
       ) : (
         <Select
+          items={[{ value: "none", label: "Select Gender" }, ...GENDER_OPTIONS]}
           value={value || "none"}
-          onValueChange={(val) => handleValueChange(val === "none" ? "" : val)}
+          onValueChange={(val) => val && handleValueChange(val === "none" ? "" : val)}
           disabled={readOnly}
         >
           <SelectTrigger id={controlId} className="w-full" aria-label={label}>
             <SelectValue placeholder="Select Gender" />
           </SelectTrigger>
-          <SelectContent position="popper">
+          <SelectContent alignItemWithTrigger={false}>
             <SelectItem value="none">Select Gender</SelectItem>
             {GENDER_OPTIONS.map((opt) => (
               <SelectItem key={opt.value} value={opt.value}>

@@ -69,9 +69,11 @@ export function FHIRCitizenshipStatusInput({
 
       {variant === "toggle" ? (
         <ToggleGroup
-          type="single"
-          value={status}
-          onValueChange={(val) => val && handleValueChange(val as CitizenshipStatus)}
+          value={[status]}
+          onValueChange={(vals) => {
+            const next = vals[0];
+            if (next === "WNI" || next === "WNA") handleValueChange(next);
+          }}
           disabled={readOnly}
           className="flex flex-row items-center border border-input rounded-lg overflow-hidden w-fit gap-0 bg-transparent h-8"
         >
@@ -90,8 +92,9 @@ export function FHIRCitizenshipStatusInput({
         </ToggleGroup>
       ) : (
         <Select
+          items={CITIZENSHIP_OPTIONS}
           value={status}
-          onValueChange={handleValueChange}
+          onValueChange={(next) => next && handleValueChange(next)}
           disabled={readOnly}
         >
           <SelectTrigger className="h-8 w-full" aria-label={label}>

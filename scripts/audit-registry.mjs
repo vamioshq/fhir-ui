@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { packageName } from "./package-name.mjs";
 
 const root = process.cwd();
 const registry = JSON.parse(fs.readFileSync(path.join(root, "registry.json"), "utf8"));
@@ -50,7 +51,7 @@ for (const item of registry.items) {
         !specifier.startsWith("@/") &&
         !specifier.startsWith("./") &&
         specifier !== "react" &&
-        !declaredDependencies.has(specifier)
+        !declaredDependencies.has(packageName(specifier))
       ) {
         errors.push(`${item.name}: undeclared package dependency ${specifier}`);
       }

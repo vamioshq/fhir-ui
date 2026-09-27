@@ -108,22 +108,15 @@ export function FHIRMoneyInput({
           {/* Currency Select Dropdown Addon on the left */}
           <InputGroupAddon>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <InputGroupButton
-                  variant="ghost"
-                  aria-label="Select currency"
-                  className="font-mono text-xs px-2.5 h-6 flex items-center justify-center disabled:opacity-85"
-                  disabled={readOnly}
-                >
-                  {currency}
-                </InputGroupButton>
+              <DropdownMenuTrigger render={<InputGroupButton variant="ghost" aria-label="Select currency" className="font-mono text-xs px-2.5 h-6 flex items-center justify-center disabled:opacity-85" disabled={readOnly} />}>
+                {currency}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="max-h-48 overflow-y-auto">
                 <DropdownMenuGroup>
                   {currencies.map((curr) => (
                     <DropdownMenuItem
                       key={curr}
-                      onSelect={() => handleCurrencyChange(curr)}
+                      onClick={() => handleCurrencyChange(curr)}
                       className="font-mono text-xs"
                     >
                       {curr}

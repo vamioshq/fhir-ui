@@ -384,12 +384,8 @@ export function FHIRAddressInput({
                 <InputGroupAddon align="inline-end">
                   <Dialog>
                     <Tooltip>
-                      <TooltipTrigger asChild>
-                        <DialogTrigger asChild>
-                          <InputGroupButton size="icon-xs" variant="ghost" aria-label="Edit detailed fields">
-                            <SlidersHorizontal className="size-4" />
-                          </InputGroupButton>
-                        </DialogTrigger>
+                      <TooltipTrigger render={<DialogTrigger render={<InputGroupButton size="icon-xs" variant="ghost" aria-label="Edit detailed fields" />} />}>
+                        <SlidersHorizontal className="size-4" />
                       </TooltipTrigger>
                       <TooltipContent side="top">Edit detailed fields</TooltipContent>
                     </Tooltip>

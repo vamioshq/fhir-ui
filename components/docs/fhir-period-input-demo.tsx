@@ -23,7 +23,7 @@ export function FHIRPeriodInputDemo() {
           <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
             Default Offset
           </label>
-          <Select value={defaultOffset} onValueChange={setDefaultOffset}>
+          <Select items={{ "+07:00": "+07:00 (WIB)", "+08:00": "+08:00 (WITA)", "+09:00": "+09:00 (WIT)", Z: "Z (UTC)" }} value={defaultOffset} onValueChange={(v) => v && setDefaultOffset(v)}>
             <SelectTrigger className="h-8 text-xs font-mono">
               <SelectValue />
             </SelectTrigger>

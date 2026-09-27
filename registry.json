@@ -199,6 +199,7 @@
         "field"
       ],
       "dependencies": [
+        "@base-ui/react",
         "@medplum/fhirtypes"
       ]
     },
@@ -272,6 +273,9 @@
       "registryDependencies": [
         "combobox",
         "field"
+      ],
+      "dependencies": [
+        "@base-ui/react"
       ]
     },
     {
@@ -566,6 +570,7 @@
         "field"
       ],
       "dependencies": [
+        "@base-ui/react",
         "@medplum/fhirtypes",
         "lucide-react"
       ]
@@ -722,6 +727,7 @@
         "field"
       ],
       "dependencies": [
+        "@base-ui/react",
         "@medplum/fhirtypes",
         "lucide-react"
       ]
@@ -797,6 +803,7 @@
         "field"
       ],
       "dependencies": [
+        "@base-ui/react",
         "@medplum/fhirtypes",
         "lucide-react"
       ]
@@ -875,6 +882,7 @@
         "field"
       ],
       "dependencies": [
+        "@base-ui/react",
         "@medplum/fhirtypes",
         "lucide-react"
       ]
@@ -914,6 +922,7 @@
         "input"
       ],
       "dependencies": [
+        "@base-ui/react",
         "lucide-react"
       ]
     },

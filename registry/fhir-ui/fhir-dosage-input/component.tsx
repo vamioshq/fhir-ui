@@ -395,28 +395,21 @@ export function FHIRDosageInput({
                 {/* Period Unit Select Dropdown */}
                 <InputGroupAddon align="inline-end">
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <InputGroupButton
-                        variant="ghost"
-                        aria-label="Select unit"
-                        className="font-mono text-xs px-2.5 h-6 flex items-center justify-center disabled:opacity-85"
-                        disabled={readOnly}
-                      >
-                        {getPeriodUnitLabel(state.periodUnit)}
-                      </InputGroupButton>
+                    <DropdownMenuTrigger render={<InputGroupButton variant="ghost" aria-label="Select unit" className="font-mono text-xs px-2.5 h-6 flex items-center justify-center disabled:opacity-85" disabled={readOnly} />}>
+                      {getPeriodUnitLabel(state.periodUnit)}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="max-h-48 overflow-y-auto">
                       <DropdownMenuGroup>
-                        <DropdownMenuItem onSelect={() => handleStateChange({ periodUnit: "d" })} className="font-sans text-xs">
+                        <DropdownMenuItem onClick={() => handleStateChange({ periodUnit: "d" })} className="font-sans text-xs">
                           Day
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => handleStateChange({ periodUnit: "h" })} className="font-sans text-xs">
+                        <DropdownMenuItem onClick={() => handleStateChange({ periodUnit: "h" })} className="font-sans text-xs">
                           Hour
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => handleStateChange({ periodUnit: "wk" })} className="font-sans text-xs">
+                        <DropdownMenuItem onClick={() => handleStateChange({ periodUnit: "wk" })} className="font-sans text-xs">
                           Week
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => handleStateChange({ periodUnit: "mo" })} className="font-sans text-xs">
+                        <DropdownMenuItem onClick={() => handleStateChange({ periodUnit: "mo" })} className="font-sans text-xs">
                           Month
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
@@ -429,15 +422,15 @@ export function FHIRDosageInput({
 
           <div className={cn(layout === "grid" ? "lg:col-span-2" : "flex-1 min-w-[150px]")}>
             {showLabel && <Label className="mb-1.5 block text-xs">Meal Instruction</Label>}
-            <Select
+            <Select items={{ none: "-", AC: "Before Meals (AC)", PC: "After Meals (PC)", CC: "With Meals (CC)", HS: "Before Sleep (HS)" }}
               value={state.when || "none"}
-              onValueChange={(val) => handleStateChange({ when: val === "none" ? undefined : val })}
+              onValueChange={(val) => handleStateChange({ when: !val || val === "none" ? undefined : val })}
               disabled={readOnly}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="-" />
               </SelectTrigger>
-              <SelectContent position="popper">
+              <SelectContent alignItemWithTrigger={false}>
                 <SelectItem value="none">-</SelectItem>
                 <SelectItem value="AC">Before Meals (AC)</SelectItem>
                 <SelectItem value="PC">After Meals (PC)</SelectItem>
@@ -466,23 +459,16 @@ export function FHIRDosageInput({
               {/* Dose Unit selector dropdown */}
               <InputGroupAddon align="inline-end">
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <InputGroupButton
-                      variant="ghost"
-                      aria-label="Select dose unit"
-                      className="font-mono text-xs px-2.5 h-6 flex items-center justify-center disabled:opacity-85 text-muted-foreground"
-                      disabled={readOnly}
-                    >
-                      {UNIT_OPTIONS[state.doseUnit]?.label || state.doseUnit || "Unit"}
-                    </InputGroupButton>
+                  <DropdownMenuTrigger render={<InputGroupButton variant="ghost" aria-label="Select dose unit" className="font-mono text-xs px-2.5 h-6 flex items-center justify-center disabled:opacity-85 text-muted-foreground" disabled={readOnly} />}>
+                    {UNIT_OPTIONS[state.doseUnit]?.label || state.doseUnit || "Unit"}
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="max-h-48 overflow-y-auto">
                     <DropdownMenuGroup>
-                      <DropdownMenuItem onSelect={() => handleStateChange({ doseUnit: "" })} className="font-sans text-xs">
+                      <DropdownMenuItem onClick={() => handleStateChange({ doseUnit: "" })} className="font-sans text-xs">
                         -
                       </DropdownMenuItem>
                       {Object.entries(UNIT_OPTIONS).map(([key, opt]) => (
-                        <DropdownMenuItem key={key} onSelect={() => handleStateChange({ doseUnit: key })} className="font-sans text-xs">
+                        <DropdownMenuItem key={key} onClick={() => handleStateChange({ doseUnit: key })} className="font-sans text-xs">
                           {opt.label}
                         </DropdownMenuItem>
                       ))}
@@ -496,12 +482,13 @@ export function FHIRDosageInput({
           <div className={cn(layout === "grid" ? "lg:col-span-2" : "flex-1 min-w-[200px]")}>
             {showLabel && <Label className="mb-1.5 block text-xs">Route</Label>}
             <Select
+              items={[{ value: "none", label: "-" }, ...ROUTE_OPTIONS.map((r) => ({ value: r.code, label: r.label }))]}
               value={state.routeCode || "none"}
               onValueChange={(val) => {
                 const opt = ROUTE_OPTIONS.find((r) => r.code === val);
                 handleStateChange({
-                  routeCode: val === "none" ? undefined : val,
-                  routeDisplay: val === "none" ? undefined : opt?.display,
+                  routeCode: !val || val === "none" ? undefined : val,
+                  routeDisplay: !val || val === "none" ? undefined : opt?.display,
                 });
               }}
               disabled={readOnly}
@@ -509,7 +496,7 @@ export function FHIRDosageInput({
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="-" />
               </SelectTrigger>
-              <SelectContent position="popper">
+              <SelectContent alignItemWithTrigger={false}>
                 <SelectItem value="none">-</SelectItem>
                 {ROUTE_OPTIONS.map((opt) => (
                   <SelectItem key={opt.code} value={opt.code}>

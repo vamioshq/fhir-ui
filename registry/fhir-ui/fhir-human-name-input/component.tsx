@@ -173,7 +173,7 @@ interface DetailedFieldsFormProps {
   given: string[];
   prefix: string[];
   suffix: string[];
-  handleUseChange: (val: string) => void;
+  handleUseChange: (val: string | null) => void;
   handleFamilyChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleGivenChange: (index: number, val: string) => void;
   addGiven: () => void;
@@ -203,7 +203,7 @@ function DetailedFieldsForm({
           {/* Use Type */}
           <Field>
             <FieldLabel htmlFor="name-use">Use Type</FieldLabel>
-            <Select value={use} onValueChange={handleUseChange}>
+            <Select items={{ usual: "Usual (Common name)", official: "Official (Legal/Passport)", temp: "Temporary", nickname: "Nickname", anonymous: "Anonymous", old: "Old / Previous Name", maiden: "Maiden Name" }} value={use} onValueChange={handleUseChange}>
               <SelectTrigger id="name-use" className="w-full">
                 <SelectValue placeholder="Select use type" />
               </SelectTrigger>
@@ -262,17 +262,8 @@ function DetailedFieldsForm({
                 />
                 {given.length > 1 && (
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => removeGiven(idx)}
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
-                        aria-label="Remove name"
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
+                    <TooltipTrigger render={<Button type="button" variant="ghost" size="icon-sm" onClick={() => removeGiven(idx)} className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0" aria-label="Remove name" />}>
+                      <Trash2 className="size-4" />
                     </TooltipTrigger>
                     <TooltipContent side="top">Remove name</TooltipContent>
                   </Tooltip>
@@ -402,7 +393,8 @@ export function FHIRHumanNameInput({
     onChange(parsed);
   };
 
-  const handleUseChange = (val: string) => {
+  const handleUseChange = (val: string | null) => {
+    if (!val) return;
     const nextUse = val as HumanName["use"];
     setUse(nextUse);
     updateName(nextUse, family, given, prefix, suffix);
@@ -483,12 +475,8 @@ export function FHIRHumanNameInput({
               <InputGroupAddon align="inline-end">
                 <Dialog>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <DialogTrigger asChild>
-                        <InputGroupButton size="icon-xs" variant="ghost" aria-label="Edit detailed fields">
-                          <SlidersHorizontal className="size-4" />
-                        </InputGroupButton>
-                      </DialogTrigger>
+                    <TooltipTrigger render={<DialogTrigger render={<InputGroupButton size="icon-xs" variant="ghost" aria-label="Edit detailed fields" />} />}>
+                      <SlidersHorizontal className="size-4" />
                     </TooltipTrigger>
                     <TooltipContent side="top">Edit detailed fields</TooltipContent>
                   </Tooltip>

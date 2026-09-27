@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { packageName } from "./package-name.mjs";
 
 const root = process.cwd();
 const registryPath = path.join(root, "registry.json");
@@ -13,6 +14,7 @@ const conformanceBySlug = new Map(
 const itemNames = new Set(registry.items.map((item) => item.name));
 
 const packageDependencies = new Set([
+  "@base-ui/react",
   "@medplum/fhirtypes",
   "date-fns",
   "lucide-react",
@@ -69,7 +71,7 @@ for (const item of registry.items) {
     ...new Set(imports.map(dependencyName).filter(Boolean)),
   ].sort();
   const dependencies = [
-    ...new Set(imports.filter((specifier) => packageDependencies.has(specifier))),
+    ...new Set(imports.map(packageName).filter((name) => packageDependencies.has(name))),
   ].sort();
 
   for (const specifier of imports.filter(

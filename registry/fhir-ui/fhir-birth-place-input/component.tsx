@@ -115,22 +115,15 @@ export function FHIRBirthPlaceInput({
           {/* Country Dropdown Addon */}
           <InputGroupAddon align="inline-end">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <InputGroupButton
-                  variant="ghost"
-                  aria-label="Select country"
-                  className="text-xs px-2.5 h-6 flex items-center justify-center disabled:opacity-85"
-                  disabled={readOnly}
-                >
-                  {COUNTRY_OPTIONS.find((c) => c.value === country)?.label}
-                </InputGroupButton>
+              <DropdownMenuTrigger render={<InputGroupButton variant="ghost" aria-label="Select country" className="text-xs px-2.5 h-6 flex items-center justify-center disabled:opacity-85" disabled={readOnly} />}>
+                {COUNTRY_OPTIONS.find((c) => c.value === country)?.label}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuGroup>
                   {COUNTRY_OPTIONS.map((opt) => (
                     <DropdownMenuItem
                       key={opt.value}
-                      onSelect={() => handleCountryChange(opt.value)}
+                      onClick={() => handleCountryChange(opt.value)}
                       className="text-xs"
                     >
                       {opt.label}

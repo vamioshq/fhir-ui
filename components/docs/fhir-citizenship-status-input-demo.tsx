@@ -24,7 +24,7 @@ export function FHIRCitizenshipStatusInputDemo() {
           <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
             Variant Mode
           </label>
-          <Select
+          <Select items={{ toggle: "Toggle Group", select: "Select Dropdown" }}
             value={variant}
             onValueChange={(val) => setVariant(val as "toggle" | "select")}
           >

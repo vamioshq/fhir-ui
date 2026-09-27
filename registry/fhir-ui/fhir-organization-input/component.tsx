@@ -13,6 +13,7 @@ import {
   ComboboxItem,
   ComboboxEmpty,
 } from "@/components/ui/combobox";
+import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { Badge } from "@/components/ui/badge";
 import { Loader2Icon } from "lucide-react";
 
@@ -219,7 +220,6 @@ export function FHIROrganizationInput({
   return (
     <div className={cn("w-full max-w-md text-foreground", className)} {...props}>
       <Field>
-        {label && <FieldLabel>{label}</FieldLabel>}
         <Combobox
           value={activeOrgId}
           onValueChange={handleValueChange as any}
@@ -227,6 +227,7 @@ export function FHIROrganizationInput({
           onOpenChange={handleOpenChange}
           disabled={disabled}
         >
+<ComboboxPrimitive.Label render={<FieldLabel className={label ? undefined : "sr-only"} />}>{label || "Organization"}</ComboboxPrimitive.Label>
           <div className="relative">
             <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/70 z-10" />
             <ComboboxInput

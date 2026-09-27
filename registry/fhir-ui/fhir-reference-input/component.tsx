@@ -12,6 +12,7 @@ import {
   ComboboxItem,
   ComboboxEmpty,
 } from "@/components/ui/combobox";
+import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { Badge } from "@/components/ui/badge";
 import { Link2 } from "lucide-react";
 
@@ -115,11 +116,11 @@ export function FHIRReferenceInput({
   return (
     <div className={cn("w-full max-w-md text-foreground", className)} {...props}>
       <Field>
-        {label && <FieldLabel>{label}</FieldLabel>}
         <Combobox
           value={activeKey}
           onValueChange={handleValueChange as any}
         >
+<ComboboxPrimitive.Label render={<FieldLabel className={label ? undefined : "sr-only"} />}>{label || "Reference"}</ComboboxPrimitive.Label>
           <div className="relative">
             <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground/70 z-10" />
             <ComboboxInput

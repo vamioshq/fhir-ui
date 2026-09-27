@@ -92,20 +92,12 @@ export function FHIRDateTimeInput({
       {showLabel && <Label htmlFor={inputId} className="text-xs font-semibold text-muted-foreground">{label}</Label>}
 
       <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            id={inputId}
-            aria-label={label}
-            variant="outline"
-            disabled={readOnly}
-            className={cn(
-              "w-full justify-start text-left font-mono text-xs h-8 px-3 border border-input rounded-lg transition-colors hover:bg-muted/50 hover:text-foreground",
-              !state.date && "text-muted-foreground"
-            )}
-          >
-            <CalendarIcon className="mr-2 h-3.5 w-3.5 shrink-0" />
-            <span>{formatDisplay(value)}</span>
-          </Button>
+        <PopoverTrigger render={<Button id={inputId} aria-label={label} variant="outline" disabled={readOnly} className={cn(
+            "w-full justify-start text-left font-mono text-xs h-8 px-3 border border-input rounded-lg transition-colors hover:bg-muted/50 hover:text-foreground",
+            !state.date && "text-muted-foreground"
+          )} />}>
+          <CalendarIcon className="mr-2 h-3.5 w-3.5 shrink-0" />
+          <span>{formatDisplay(value)}</span>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-3 flex flex-col gap-3" align="start">
           <Calendar
@@ -137,14 +129,15 @@ export function FHIRDateTimeInput({
             <div className="flex items-center gap-1.5 flex-1 min-w-[120px]">
               <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
               <Select
+                items={OFFSET_LABELS}
                 value={state.offset}
-                onValueChange={(val) => handleStateChange({ offset: val })}
+                onValueChange={(val) => val && handleStateChange({ offset: val })}
                 disabled={readOnly || !state.date || !state.time}
               >
                 <SelectTrigger aria-label={`${label} timezone`} className="h-8 text-xs font-mono flex-1 border-input">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent position="popper">
+                <SelectContent alignItemWithTrigger={false}>
                   {Object.entries(OFFSET_LABELS).map(([offsetVal, labelStr]) => (
                     <SelectItem key={offsetVal} value={offsetVal} className="text-xs font-mono">
                       {labelStr}

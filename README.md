@@ -6,7 +6,7 @@ FHIR UI distinguishes between FHIR-compatible TypeScript structures, tested conv
 
 ## Quick start
 
-From a shadcn-enabled React project:
+From a shadcn-enabled React project that uses a **Base UI** style (for example `base-mira`; fhir-ui is built and tested on `base-mira`). Releases up to v0.1.0 targeted Radix styles (`radix-mira`):
 
 ```bash
 pnpm dlx shadcn@latest add https://raw.githubusercontent.com/vamioshq/fhir-ui/main/public/r/fhir-date-input.json

@@ -69,7 +69,7 @@ export function FHIRRegionalSelectorDemo() {
           <label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
             Region Type
           </label>
-          <Select
+          <Select items={{ province: "Provinsi (Province)", city: "Kota/Kabupaten (City)", district: "Kecamatan (District)", village: "Kelurahan/Desa (Village)" }}
             value={regionType}
             onValueChange={(val) => {
               setRegionType(val as any);

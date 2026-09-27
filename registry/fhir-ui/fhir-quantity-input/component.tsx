@@ -290,22 +290,16 @@ export function FHIRQuantityInput({
           {!hideComparator && (
             <InputGroupAddon>
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <InputGroupButton
-                    variant="ghost"
-                    aria-label="Select comparator"
-                    className="font-mono text-xs w-8 h-6 flex items-center justify-center"
-                  >
-                    {comparator || "="}
-                  </InputGroupButton>
+                <DropdownMenuTrigger render={<InputGroupButton variant="ghost" aria-label="Select comparator" className="font-mono text-xs w-8 h-6 flex items-center justify-center" />}>
+                  {comparator || "="}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
                   <DropdownMenuGroup>
-                    <DropdownMenuItem onSelect={() => handleComparatorChange("=")}>=</DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => handleComparatorChange("<")}>&lt;</DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => handleComparatorChange("<=")}>&le;</DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => handleComparatorChange(">=")}>&ge;</DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => handleComparatorChange(">")}>&gt;</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleComparatorChange("=")}>=</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleComparatorChange("<")}>&lt;</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleComparatorChange("<=")}>&le;</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleComparatorChange(">=")}>&ge;</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleComparatorChange(">")}>&gt;</DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>

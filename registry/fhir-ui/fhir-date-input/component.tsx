@@ -52,20 +52,12 @@ export function FHIRDateInput({
       {showLabel && <Label htmlFor={inputId} className="text-xs font-semibold text-muted-foreground">{label}</Label>}
 
       <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            id={inputId}
-            aria-label={label}
-            variant="outline"
-            disabled={readOnly}
-            className={cn(
-              "w-full justify-start text-left font-mono text-xs h-8 px-3 border border-input rounded-lg transition-colors hover:bg-muted/50 hover:text-foreground",
-              !selectedDate && "text-muted-foreground"
-            )}
-          >
-            <CalendarIcon className="mr-2 h-3.5 w-3.5 shrink-0" />
-            {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
-          </Button>
+        <PopoverTrigger render={<Button id={inputId} aria-label={label} variant="outline" disabled={readOnly} className={cn(
+            "w-full justify-start text-left font-mono text-xs h-8 px-3 border border-input rounded-lg transition-colors hover:bg-muted/50 hover:text-foreground",
+            !selectedDate && "text-muted-foreground"
+          )} />}>
+          <CalendarIcon className="mr-2 h-3.5 w-3.5 shrink-0" />
+          {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar

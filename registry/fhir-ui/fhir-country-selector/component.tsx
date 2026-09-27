@@ -9,6 +9,7 @@ import {
   ComboboxItem,
   ComboboxEmpty,
 } from "@/components/ui/combobox";
+import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 
@@ -345,41 +346,41 @@ export function FHIRCountrySelector({
 
   return (
     <Field className={cn(className)}>
-      {label && <FieldLabel>{label}</FieldLabel>}
-      <div className="relative">
-        <Combobox
-          open={open}
-          onOpenChange={handleOpenChange}
-          value={valueCode || "ID"}
-          onValueChange={handleValueChange}
-          disabled={disabled}
-        >
+      <Combobox
+        open={open}
+        onOpenChange={handleOpenChange}
+        value={valueCode || "ID"}
+        onValueChange={handleValueChange}
+        disabled={disabled}
+      >
+        <ComboboxPrimitive.Label render={<FieldLabel className={label ? undefined : "sr-only"} />}>{label || "Country"}</ComboboxPrimitive.Label>
+        <div className="relative">
           <ComboboxInput
-            placeholder={placeholder}
-            className="w-full"
-            value={search}
-            onChange={handleInputChange}
-            onFocus={(e) => e.currentTarget.select()}
-            disabled={disabled}
-            autoComplete="off"
-          />
-          <ComboboxContent className="w-full min-w-[240px]">
-            <ComboboxList>
-              {filteredCountries.map((c) => (
-                <ComboboxItem key={c.code} value={c.code}>
-                  <span className="font-mono text-sm text-muted-foreground mr-2">{c.code}</span>
-                  <span className="font-medium text-sm">{c.name}</span>
-                </ComboboxItem>
-              ))}
-              {filteredCountries.length === 0 && (
-                <ComboboxEmpty className="py-6 text-center text-sm text-muted-foreground">
-                  No country found
-                </ComboboxEmpty>
-              )}
-            </ComboboxList>
-          </ComboboxContent>
-        </Combobox>
-      </div>
+              placeholder={placeholder}
+              className="w-full"
+              value={search}
+              onChange={handleInputChange}
+              onFocus={(e) => e.currentTarget.select()}
+              disabled={disabled}
+              autoComplete="off"
+            />
+            <ComboboxContent className="w-full min-w-[240px]">
+              <ComboboxList>
+                {filteredCountries.map((c) => (
+                  <ComboboxItem key={c.code} value={c.code}>
+                    <span className="font-mono text-sm text-muted-foreground mr-2">{c.code}</span>
+                    <span className="font-medium text-sm">{c.name}</span>
+                  </ComboboxItem>
+                ))}
+                {filteredCountries.length === 0 && (
+                  <ComboboxEmpty className="py-6 text-center text-sm text-muted-foreground">
+                    No country found
+                  </ComboboxEmpty>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
+        </div>
+      </Combobox>
     </Field>
   );
 }

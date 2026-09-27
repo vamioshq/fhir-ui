@@ -103,7 +103,8 @@ export function FHIRContactPointInput({
     updateContactPoint(use, val, rank, periodStart, periodEnd);
   };
 
-  const handleUseChange = (val: string) => {
+  const handleUseChange = (val: string | null) => {
+    if (!val) return;
     const nextUse = val as ContactPoint["use"];
     setUse(nextUse);
     updateContactPoint(nextUse, contactValue, rank, periodStart, periodEnd);
@@ -167,7 +168,7 @@ export function FHIRContactPointInput({
               {/* Usage Select */}
               <Field>
                 <FieldLabel htmlFor="detailed-contact-use">Usage</FieldLabel>
-                <Select value={use} onValueChange={handleUseChange}>
+                <Select items={{ home: "Home", work: "Work", mobile: "Mobile", temp: "Temporary", old: "Old / Previous" }} value={use} onValueChange={handleUseChange}>
                   <SelectTrigger id="detailed-contact-use" className="w-full">
                     <SelectValue placeholder="Select usage" />
                   </SelectTrigger>
@@ -232,12 +233,8 @@ export function FHIRContactPointInput({
               <InputGroupAddon align="inline-end">
                 <Dialog>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <DialogTrigger asChild>
-                        <InputGroupButton size="icon-xs" variant="ghost" aria-label="Edit detailed fields">
-                          <SlidersHorizontal className="size-4" />
-                        </InputGroupButton>
-                      </DialogTrigger>
+                    <TooltipTrigger render={<DialogTrigger render={<InputGroupButton size="icon-xs" variant="ghost" aria-label="Edit detailed fields" />} />}>
+                      <SlidersHorizontal className="size-4" />
                     </TooltipTrigger>
                     <TooltipContent side="top">Edit details</TooltipContent>
                   </Tooltip>
@@ -263,7 +260,7 @@ export function FHIRContactPointInput({
                         {/* Usage Dropdown */}
                         <Field>
                           <FieldLabel htmlFor="dialog-contact-use">Usage Type</FieldLabel>
-                          <Select value={use} onValueChange={handleUseChange}>
+                          <Select items={{ home: "Home", work: "Work", mobile: "Mobile", temp: "Temporary", old: "Old / Previous" }} value={use} onValueChange={handleUseChange}>
                             <SelectTrigger id="dialog-contact-use" className="w-full">
                               <SelectValue placeholder="Select usage" />
                             </SelectTrigger>

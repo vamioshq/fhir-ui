@@ -81,9 +81,8 @@ export function FHIRReligionInput({
 
       {variant === "toggle" ? (
         <ToggleGroup
-          type="single"
-          value={activeCode}
-          onValueChange={handleValueChange}
+          value={activeCode ? [activeCode] : []}
+          onValueChange={(vals) => vals[0] && handleValueChange(vals[0])}
           disabled={readOnly}
           className="flex flex-row flex-wrap items-center border border-input rounded-lg overflow-hidden w-fit gap-0 bg-transparent h-auto min-h-8"
         >
@@ -102,14 +101,18 @@ export function FHIRReligionInput({
         </ToggleGroup>
       ) : (
         <Select
+          items={[
+            { value: "none", label: "Select Religion" },
+            ...RELIGION_OPTIONS.map((o) => ({ value: o.code, label: o.display })),
+          ]}
           value={activeCode || "none"}
-          onValueChange={(val) => handleValueChange(val === "none" ? "" : val)}
+          onValueChange={(val) => val && handleValueChange(val === "none" ? "" : val)}
           disabled={readOnly}
         >
           <SelectTrigger className="w-full" aria-label={label}>
             <SelectValue placeholder="Select Religion" />
           </SelectTrigger>
-          <SelectContent position="popper">
+          <SelectContent alignItemWithTrigger={false}>
             <SelectItem value="none">Select Religion</SelectItem>
             {RELIGION_OPTIONS.map((opt) => (
               <SelectItem key={opt.code} value={opt.code}>
