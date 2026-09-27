@@ -21,7 +21,7 @@ Items on `main` point their dependencies at `main`. Each release tag is built so
 ```json
 {
   "registries": {
-    "@fhir-ui": "https://raw.githubusercontent.com/vamioshq/fhir-ui/v0.1.0/public/r/{name}.json"
+    "@fhir-ui": "https://raw.githubusercontent.com/vamioshq/fhir-ui/v0.2.0/public/r/{name}.json"
   }
 }
 ```
