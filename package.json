@@ -10,6 +10,7 @@
     "registry:build": "shadcn build && node scripts/rewrite-registry-dependencies.mjs",
     "registry:sync": "node scripts/sync-registry-metadata.mjs",
     "registry:audit": "node scripts/audit-registry.mjs",
+    "registry:release": "node scripts/release-registry.mjs",
     "docs:conformance": "node scripts/sync-conformance-docs.mjs",
     "artifacts:check": "node scripts/check-generated-artifacts.mjs",
     "test:clean-install": "node scripts/test-clean-install.mjs",

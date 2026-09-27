@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { RELEASE_TAG_PATTERN, registryBaseUrl } from "./registry-url.mjs";
 
 const root = process.cwd();
 const trackedRoots = ["registry.json", "public/r", "content/docs"];
@@ -23,6 +24,20 @@ function snapshot() {
   );
 }
 
+// A release tag's registry points its dependencies at that tag, so check it against the same URL.
+function releaseTagAtHead() {
+  const result = spawnSync("git", ["tag", "--points-at", "HEAD"], { cwd: root, encoding: "utf8" });
+  if (result.status !== 0) return undefined;
+  return result.stdout.split(/\r?\n/).find((tag) => RELEASE_TAG_PATTERN.test(tag));
+}
+
+const env = { ...process.env };
+const releaseTag = env.REGISTRY_BASE_URL ? undefined : releaseTagAtHead();
+if (releaseTag) {
+  env.REGISTRY_BASE_URL = registryBaseUrl(releaseTag);
+  console.log(`HEAD is release ${releaseTag}; checking registry dependencies against ${env.REGISTRY_BASE_URL}.`);
+}
+
 const before = snapshot();
 const commands = [
   ["pnpm", ["docs:conformance"]],
@@ -33,7 +48,7 @@ const commands = [
 for (const [command, args] of commands) {
   const result = spawnSync(command, args, {
     cwd: root,
-    env: process.env,
+    env,
     shell: process.platform === "win32",
     stdio: "inherit",
   });

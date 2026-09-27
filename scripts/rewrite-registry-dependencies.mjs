@@ -1,13 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
+import { DEFAULT_REGISTRY_BASE_URL } from "./registry-url.mjs";
 
 const root = process.cwd();
 const source = JSON.parse(fs.readFileSync(path.join(root, "registry.json"), "utf8"));
 const customItems = new Set(source.items.map((item) => item.name));
-const baseUrl = (
-  process.env.REGISTRY_BASE_URL
-  ?? "https://raw.githubusercontent.com/vamioshq/fhir-ui/main/public"
-).replace(/\/$/, "");
+const baseUrl = (process.env.REGISTRY_BASE_URL ?? DEFAULT_REGISTRY_BASE_URL).replace(/\/$/, "");
 const outputDirectory = path.join(root, "public", "r");
 
 for (const item of source.items) {

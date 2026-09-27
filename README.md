@@ -14,6 +14,24 @@ pnpm dlx shadcn@latest add https://raw.githubusercontent.com/vamioshq/fhir-ui/ma
 
 The registry installs the component source, required shadcn primitives, helper files, and npm dependencies into your application.
 
+### Pinning a release
+
+Items on `main` point their dependencies at `main`. Each release tag is built so that its items, and every fhir-ui item they depend on, point at that tag. For reproducible installs, register the tag as a named registry in your `components.json`:
+
+```json
+{
+  "registries": {
+    "@fhir-ui": "https://raw.githubusercontent.com/vamioshq/fhir-ui/v0.1.0/public/r/{name}.json"
+  }
+}
+```
+
+```bash
+pnpm dlx shadcn@latest add @fhir-ui/fhir-date-input
+```
+
+To upgrade, change the tag and reinstall. Treat installed files as vendored source: fix problems here and release, rather than editing them in your application.
+
 ```tsx
 import { FHIRDateInput } from "@/registry/fhir-ui/fhir-date-input"
 
@@ -52,6 +70,8 @@ pnpm artifacts:check
 pnpm test:clean-install
 pnpm test:e2e
 ```
+
+To release, bump `version` in `package.json` in a normal commit, then run `pnpm registry:release <version>` on that commit and push the tag it prints. The script commits the tag-pinned registry on a detached HEAD and tags it, so the branch keeps pointing at `main`.
 
 Pull requests run the same quality gate on GitHub Actions. The clean-install check creates an isolated `src`-based consumer, installs all registry items through the shadcn CLI, verifies their target files, and type-checks the installed source.
 
