@@ -6,7 +6,7 @@
   ],
   "registryDependencies": [
     "badge",
-    "https://raw.githubusercontent.com/vamioshq/fhir-ui/main/public/r/fhir-datetime-input.json",
+    "https://raw.githubusercontent.com/vamioshq/fhir-ui/v0.2.0/public/r/fhir-datetime-input.json",
     "label"
   ],
   "files": [

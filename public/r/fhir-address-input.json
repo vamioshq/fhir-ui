@@ -7,8 +7,8 @@
   ],
   "registryDependencies": [
     "dialog",
-    "https://raw.githubusercontent.com/vamioshq/fhir-ui/main/public/r/fhir-country-selector.json",
-    "https://raw.githubusercontent.com/vamioshq/fhir-ui/main/public/r/fhir-regional-selector.json",
+    "https://raw.githubusercontent.com/vamioshq/fhir-ui/v0.2.0/public/r/fhir-country-selector.json",
+    "https://raw.githubusercontent.com/vamioshq/fhir-ui/v0.2.0/public/r/fhir-regional-selector.json",
     "field",
     "input",
     "input-group",
